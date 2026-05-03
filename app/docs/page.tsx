@@ -281,11 +281,14 @@ export default function DocsPage() {
 
             <H id="work-types">Work types</H>
             <P>
-              Within every track, the coordinator opens six different
-              kinds of work order. A node picks which ones it accepts
-              based on hardware capability — a laptop can chew on
-              research analysis and CPU inference; a workstation with
-              a GPU can additionally run DiLoCo training and GPU
+              Within every track, the coordinator opens eight different
+              kinds of work order — four of them training variants
+              tuned for different hardware tiers and update cadences.
+              A node picks which ones it accepts based on hardware
+              capability — a laptop can chew on research analysis,
+              CPU training, and CPU inference; a workstation with a
+              GPU can additionally run GPU training rounds, DiLoCo
+              federated training, LoRA adapter training, and GPU
               inference. Pool sizes below are coord defaults and can
               be tuned by operator vote.
             </P>
@@ -297,24 +300,54 @@ export default function DocsPage() {
               graph. Top-3 analyses split <Code>60 / 25 / 15</Code>; an extra
               10 % goes to peer reviewers. Hardware: any node.
             </P>
-            <H level={3}>GPU training (DiLoCo)</H>
+            <H level={3}>GPU training (rounds)</H>
             <P>
-              <Code>21,000 SYN</Code> daily pool spread over 6 rounds / day
-              (each <Code>3,500 SYN</Code>). DiLoCo (Distributed Low-Communication
-              training) lets operator GPUs collaboratively fine-tune
-              large models with infrequent gradient sync — works over
-              regular consumer uplinks, not datacenter fabric. Top-3
-              split <Code>2,100 / 875 / 525</Code> per round. Hardware: GPU
-              required.
+              Regular GPU fine-tuning rounds: <Code>4,000 SYN</Code> per
+              round, <Code>4 rounds / day</Code> (6h each), <Code>16,000 SYN</Code> daily.
+              Each round splits <Code>2,400 / 1,000 / 600</Code> across
+              the top-3 (60 / 25 / 15). Standalone single-node GPU
+              training jobs queued via{' '}
+              <Code>WorkOrderType.TRAINING</Code> with the{' '}
+              <Code>gpu-medical</Code> domain. Hardware: GPU required.
+            </P>
+            <H level={3}>DiLoCo (federated GPU)</H>
+            <P>
+              <Code>3,500 SYN</Code> per round, irregular cadence — the
+              coordinator triggers DiLoCo (Distributed Low-Communication)
+              rounds on demand when a model checkpoint needs collaborative
+              updates. Operator GPUs sync gradients infrequently enough
+              that consumer uplinks suffice — no datacenter fabric
+              required. Top-3 split <Code>2,100 / 875 / 525</Code> per
+              round. Hardware: GPU required, multi-node coordination.
             </P>
             <H level={3}>CPU training</H>
             <P>
-              <Code>12,000 SYN</Code> daily pool, 4 rounds / day (each <Code>3,000 SYN</Code>).
-              Fine-tunes biomedical micro-transformers on the corpus
-              for tasks where a small specialised model beats the
-              giant generalist (entity extraction, BIO tagging, citation
-              parsing). Any node with Python + PyTorch can run a round.
-              Top-3 split <Code>1,800 / 750 / 450</Code>.
+              <Code>3,000 SYN</Code> per round, <Code>4 rounds / day</Code> (6h each),
+              <Code>12,000 SYN</Code> daily. Fine-tunes biomedical
+              micro-transformers on the corpus for tasks where a small
+              specialised model beats the giant generalist (entity
+              extraction, BIO tagging, citation parsing). Any node with
+              Python + PyTorch can run a round. Top-3 split{' '}
+              <Code>1,800 / 750 / 450</Code>.
+            </P>
+            <H level={3}>LoRA training</H>
+            <P>
+              Per-WO reward, <Code>7,500 SYN</Code> on validation pass —
+              not a pool. Mission admins queue adapter requests; the
+              coordinator mints a <Code>LORA_TRAINING</Code> work order
+              and the trainer node uploads the resulting adapter for
+              automated verification. Two subtypes:{' '}
+              <Code>LORA_CLASSIFICATION</Code> (PubMedBERT encoder, for
+              relation extraction and paper classification) and{' '}
+              <Code>LORA_GENERATION</Code> (BioGPT-Large decoder, for
+              hypothesis generation and summarisation). Reward only fires
+              if <Code>LoraVerificationService</Code> confirms the
+              adapter beats the prior verified baseline on held-out
+              validation metrics — failed adapters earn nothing, but
+              there is no monetary penalty (stake untouched). Each new
+              VERIFIED adapter SUPERSEDES the previous one for that
+              mission + base model. Hardware: GPU required, tier{' '}
+              <Code>T2+</Code> stake gate.
             </P>
             <H level={3}>CPU inference</H>
             <P>
@@ -548,15 +581,28 @@ export default function DocsPage() {
                 review quality.
               </li>
               <li>
-                <strong>GPU training (DiLoCo)</strong> — <Code>21,000 SYN</Code> daily pool,
-                6 rounds / day. Each round splits <Code>2,100 / 875 / 525</Code> top-3.
-                Distributed fine-tuning of large models across the
-                operator GPU set.
+                <strong>GPU training (rounds)</strong> — <Code>4,000 SYN</Code> per
+                round, 4 rounds / day (<Code>16,000 SYN</Code> daily). Each round
+                splits <Code>2,400 / 1,000 / 600</Code> top-3. Standalone
+                single-node GPU fine-tuning jobs.
               </li>
               <li>
-                <strong>CPU training</strong> — <Code>12,000 SYN</Code> daily pool, 4
-                rounds / day. Each round splits <Code>1,800 / 750 / 450</Code> top-3.
-                Fine-tunes biomedical micro-transformers on the corpus.
+                <strong>DiLoCo (federated GPU)</strong> — <Code>3,500 SYN</Code> per
+                round, irregular cadence triggered by checkpoint demand.
+                Top-3 split <Code>2,100 / 875 / 525</Code>. Multi-node
+                low-communication gradient sync.
+              </li>
+              <li>
+                <strong>CPU training</strong> — <Code>3,000 SYN</Code> per round, 4
+                rounds / day (<Code>12,000 SYN</Code> daily). Each round splits{' '}
+                <Code>1,800 / 750 / 450</Code> top-3. Fine-tunes biomedical
+                micro-transformers on the corpus.
+              </li>
+              <li>
+                <strong>LoRA training</strong> — <Code>7,500 SYN</Code> per work
+                order, paid only on automated validation pass. Two
+                subtypes: PubMedBERT (classification) and BioGPT-Large
+                (generation). GPU required, T2+ stake gate.
               </li>
               <li>
                 <strong>CPU inference</strong> — <Code>2 / 10 / 15 SYN</Code> per task
