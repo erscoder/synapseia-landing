@@ -655,20 +655,6 @@ export default function DocsPage() {
               </li>
             </UL>
 
-            <div className="mt-24 border-t border-white/[0.04] pt-8 text-center">
-              <p className="text-slate-500 text-sm">
-                Found a gap? The repository is{' '}
-                <a
-                  href="https://github.com/erscoder/synapseia-landing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-300 underline underline-offset-2 hover:text-blue-200"
-                >
-                  open source
-                </a>
-                . Submit a PR.
-              </p>
-            </div>
           </main>
         </div>
       </div>

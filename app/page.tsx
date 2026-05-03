@@ -139,10 +139,6 @@ export default function LandingPage() {
           hydration; Chrome's paint heuristic missed FCP entirely (FCP
           requires text/image, not the SpaceBackground canvas). */}
       <section className="min-h-screen flex flex-col items-center justify-center px-6 text-center pt-20">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full backdrop-blur-md bg-white/[0.05] border border-white/[0.08] text-xs text-slate-400 mb-8 tracking-widest uppercase">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          Live peer-to-peer research network
-        </div>
         <div className="mb-8">
           <Image src="/synapseia-logo.png" alt="Synapseia Network" width={120} height={120} priority className="w-24 h-24 sm:w-28 sm:h-28 mx-auto drop-shadow-[0_0_40px_rgba(100,120,255,0.15)]" />
         </div>

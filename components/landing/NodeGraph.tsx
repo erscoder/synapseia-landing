@@ -192,32 +192,18 @@ export function NodeGraph() {
         scene.add(label);
       });
 
-      // Only include active nodes (and coordinator) for edge connections
-      const coordNode = nodes.find((n) => n.isCoordinator);
-      const activePeerNodes = nodes.filter((n) => !n.isCoordinator && n.active !== false);
-
-      // Coordinator -> active peers (amber lines)
-      const coordEdgeVerts: number[] = [];
-      if (coordNode) {
-        activePeerNodes.forEach((peer) => {
-          coordEdgeVerts.push(coordNode.x, coordNode.y, coordNode.z);
-          coordEdgeVerts.push(peer.x, peer.y, peer.z);
-        });
-      }
-
-      // Peer-to-peer edges among active nodes only (blue lines, proximity-based)
+      // Full peer-to-peer mesh — every active node connects to every
+      // other active node, including the coord. Synapseia is P2P;
+      // there is no hub-and-spoke. Coord is just one of many peers
+      // visually highlighted (cyan, brighter) so the topology is
+      // legible, but its edges are not topologically special.
+      const meshNodes = nodes.filter((n) => n.isCoordinator || n.active !== false);
+      const coordEdgeVerts: number[] = []; // kept for API symmetry; empty
       const edgeVerts: number[] = [];
-      const threshold = 130;
-      for (let i = 0; i < activePeerNodes.length; i++) {
-        for (let j = i + 1; j < activePeerNodes.length; j++) {
-          const dx = activePeerNodes[i].x - activePeerNodes[j].x;
-          const dy = activePeerNodes[i].y - activePeerNodes[j].y;
-          const dz = activePeerNodes[i].z - activePeerNodes[j].z;
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-          if (dist < threshold) {
-            edgeVerts.push(activePeerNodes[i].x, activePeerNodes[i].y, activePeerNodes[i].z);
-            edgeVerts.push(activePeerNodes[j].x, activePeerNodes[j].y, activePeerNodes[j].z);
-          }
+      for (let i = 0; i < meshNodes.length; i++) {
+        for (let j = i + 1; j < meshNodes.length; j++) {
+          edgeVerts.push(meshNodes[i].x, meshNodes[i].y, meshNodes[i].z);
+          edgeVerts.push(meshNodes[j].x, meshNodes[j].y, meshNodes[j].z);
         }
       }
 
