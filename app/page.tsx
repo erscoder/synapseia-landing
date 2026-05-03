@@ -511,6 +511,127 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* OPEN & VERIFIABLE */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs text-purple-300 font-mono mb-4">OPEN &amp; VERIFIABLE</div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">Nothing happens off the record</h2>
+              <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                Every action on the network is signed, gossipped, and
+                replayable. No private servers in the data path, no
+                hidden moderation, no closed-source backend.
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <G className="p-5">
+                <div className="text-2xl mb-3">🔓</div>
+                <div className="text-sm font-semibold text-white mb-1">Open source</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Coordinator, node agent, desktop UI, Solana programs —
+                  all public. Audit it, fork it, run your own.
+                </p>
+              </G>
+              <G className="p-5">
+                <div className="text-2xl mb-3">⛓️</div>
+                <div className="text-sm font-semibold text-white mb-1">Solana on-chain</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  SYN is an SPL token. Stakes, claims, and discovery
+                  commitments land on Solana — timestamps cannot be
+                  rewritten.
+                </p>
+              </G>
+              <G className="p-5">
+                <div className="text-2xl mb-3">🔐</div>
+                <div className="text-sm font-semibold text-white mb-1">Ed25519 everywhere</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Every analysis, every peer review, every shard
+                  ownership grant is signed by an operator pubkey
+                  with a 60s replay window.
+                </p>
+              </G>
+              <G className="p-5">
+                <div className="text-2xl mb-3">🌐</div>
+                <div className="text-sm font-semibold text-white mb-1">CRDT consensus</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Leaderboards, ownership state, and reviews converge
+                  via conflict-free replicated data types — no quorum
+                  round-trips, no central authority breaks ties.
+                </p>
+              </G>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* HARDWARE TIERS */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 font-mono mb-4">HARDWARE</div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">Run a node on what you have</h2>
+              <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                The desktop app picks the work types your machine can
+                handle. Start with a laptop, add a GPU later — your
+                operator identity stays the same and your stake
+                follows you up the tiers.
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <G className="p-6">
+                <div className="text-[10px] uppercase tracking-widest text-slate-500 font-mono mb-2">Tier 0–1</div>
+                <div className="text-base font-semibold text-white mb-2">Laptop</div>
+                <ul className="text-xs text-slate-400 leading-relaxed space-y-1.5 list-disc pl-4 marker:text-slate-600">
+                  <li>Research analysis</li>
+                  <li>CPU inference (tokenize / embed / classify)</li>
+                  <li>Peer review</li>
+                  <li>Knowledge-graph hosting (small shards)</li>
+                </ul>
+              </G>
+              <G className="p-6">
+                <div className="text-[10px] uppercase tracking-widest text-slate-500 font-mono mb-2">Tier 2–3</div>
+                <div className="text-base font-semibold text-white mb-2">Workstation + consumer GPU</div>
+                <ul className="text-xs text-slate-400 leading-relaxed space-y-1.5 list-disc pl-4 marker:text-slate-600">
+                  <li>Everything in Tier 0-1</li>
+                  <li>CPU training (4 rounds / day)</li>
+                  <li>GPU inference (FCFS 30-50 SYN per task)</li>
+                  <li>Molecular docking pairs</li>
+                </ul>
+              </G>
+              <G className="p-6">
+                <div className="text-[10px] uppercase tracking-widest text-slate-500 font-mono mb-2">Tier 4–5</div>
+                <div className="text-base font-semibold text-white mb-2">Datacenter / multi-GPU</div>
+                <ul className="text-xs text-slate-400 leading-relaxed space-y-1.5 list-disc pl-4 marker:text-slate-600">
+                  <li>Everything in Tier 2-3</li>
+                  <li>GPU training (DiLoCo, 6 rounds / day)</li>
+                  <li>Heaviest peer-review workloads</li>
+                  <li>Top-3 placement on the highest pools</li>
+                </ul>
+              </G>
+            </div>
+          </Reveal>
+
+          <Reveal delay={200}>
+            <p className="text-center text-slate-500 text-xs mt-8 max-w-2xl mx-auto leading-relaxed">
+              Tier is determined by hardware capability AND staked SYN
+              — see{' '}
+              <a href="/docs#staking" className="text-blue-300 underline underline-offset-2 hover:text-blue-200">
+                Staking and tiers
+              </a>{' '}
+              for the full multiplier table.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
       {/* NODE GRAPH */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
@@ -523,29 +644,6 @@ export default function LandingPage() {
           <Reveal delay={100}><NodeGraph /></Reveal>
         </div>
       </section>
-
-      {/* LIVE STATUS TICKER */}
-      <Reveal>
-        <section className="py-6 px-6">
-          <div className="max-w-5xl mx-auto">
-            <G className="px-6 py-4">
-              <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs font-mono text-slate-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                <span>Peers: <span className="text-slate-500">soon</span></span>
-                <span className="text-slate-700">|</span>
-                <span>Best Config: <span className="text-slate-500">soon</span></span>
-                <span className="text-slate-700">|</span>
-                <span>Rounds: <span className="text-slate-500">soon</span></span>
-                <span className="text-slate-700">|</span>
-                <span>Papers Analyzed: <span className="text-slate-500">soon</span></span>
-                <span className="text-slate-700">|</span>
-                <span>Discoveries: <span className="text-slate-500">soon</span></span>
-              </div>
-            </G>
-          </div>
-        </section>
-      </Reveal>
-
 
       {/* EARN REWARDS */}
       <section className="py-20 px-6">
