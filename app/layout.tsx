@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SpaceBackground } from '@/components/landing/SpaceBackground';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -14,6 +15,11 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Root layout. Mounts the WebGL `SpaceBackground` (init deferred to
+ * `requestIdleCallback`) — same component the dashboard uses, so the
+ * landing visual matches the live app.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,7 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <SpaceBackground />
+        <div className="relative z-10">{children}</div>
+      </body>
     </html>
   );
 }

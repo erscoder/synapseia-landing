@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  // Three.js ships untranspiled ESM that Next can't resolve through
+  // the pnpm symlink layout without an explicit transpile pass —
+  // same workaround the dashboard uses for `globe.gl`.
+  transpilePackages: ['three'],
 };
 
 export default nextConfig;
