@@ -55,20 +55,6 @@ function Reveal({ children, className = '', delay = 0 }: { children: React.React
 function G({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return <div className={`backdrop-blur-md bg-white/[0.03] border border-white/[0.06] rounded-2xl ${className}`}>{children}</div>;
 }
-// Pre-launch stat card — single shape, no live data. Dashboard has
-// the real `StatCard`; this one shows the metric label + a Coming
-// Soon badge so the hero rhythm of the page survives the absence of
-// a deployed coord.
-function StatCard({ label }: { label: string }) {
-  return (
-    <G className="p-6 text-center">
-      <div className="text-base sm:text-lg font-semibold text-slate-300 mb-1">
-        Coming soon
-      </div>
-      <div className="text-sm text-slate-400 uppercase tracking-wider">{label}</div>
-    </G>
-  );
-}
 function FA({ label }: { label?: string }) {
   return <div className="flex flex-col items-center gap-1 py-3"><div className="w-px h-6 bg-gradient-to-b from-white/10 to-transparent" /><span className="text-slate-500 text-lg leading-none">{'\u2193'}</span>{label && <span className="text-[10px] text-slate-600 uppercase tracking-widest">{label}</span>}</div>;
 }
@@ -145,8 +131,8 @@ export default function LandingPage() {
           requires text/image, not the SpaceBackground canvas). */}
       <section className="min-h-screen flex flex-col items-center justify-center px-6 text-center pt-20">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full backdrop-blur-md bg-white/[0.05] border border-white/[0.08] text-xs text-slate-400 mb-8 tracking-widest uppercase">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-          Decentralized AI Research Network
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          Live peer-to-peer research network
         </div>
         <div className="mb-8">
           <Image src="/synapseia-logo.png" alt="Synapseia Network" width={120} height={120} priority className="w-24 h-24 sm:w-28 sm:h-28 mx-auto drop-shadow-[0_0_40px_rgba(100,120,255,0.15)]" />
@@ -156,15 +142,17 @@ export default function LandingPage() {
           <span className="bg-gradient-to-r from-slate-300 via-blue-200 to-slate-300 bg-clip-text text-transparent">Network</span>
         </h1>
         <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed">
-          A decentralized P2P network of AI agents that autonomously research, analyze, peer-review, and discover scientific breakthroughs — getting smarter with every cycle.
+          A distributed P2P network of independent AI agents that run multiple
+          research training tracks in parallel — analyzing literature,
+          peer-reviewing each other&apos;s outputs, and consolidating findings
+          into a shared knowledge graph that every node can query.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <span className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl backdrop-blur-md bg-amber-500/10 border border-amber-500/30 text-amber-200 font-medium text-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-            Mainnet launch \u2014 coming soon
-          </span>
-          <button onClick={() => document.getElementById('engine')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-3.5 rounded-xl text-slate-400 hover:text-white text-sm transition-colors">
-            Explore the Engine {'\u2193'}
+          <button onClick={() => document.getElementById('engine')?.scrollIntoView({ behavior: 'smooth' })} className="group px-8 py-3.5 rounded-xl backdrop-blur-md bg-blue-500/10 border border-blue-500/30 text-blue-200 font-medium text-sm hover:bg-blue-500/20 hover:border-blue-400/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
+            How it works <span className="ml-2 group-hover:ml-3 transition-all">{'\u2193'}</span>
+          </button>
+          <button onClick={() => document.getElementById('stage-1')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-3.5 rounded-xl text-slate-400 hover:text-white text-sm transition-colors">
+            Tour the engine {'\u2192'}
           </button>
         </div>
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-600 animate-bounce">
@@ -172,42 +160,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* STATS */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <Reveal>
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 font-mono mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                PRE-LAUNCH
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Network Status</h2>
-              <p className="text-slate-500 text-sm">
-                Mainnet coordinator deploys at launch — live counters wire on day&nbsp;one.
-              </p>
-            </div>
-          </Reveal>
-          <Reveal delay={100}>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatCard label="Connected Nodes" />
-              <StatCard label="Active Rounds" />
-              <StatCard label="Experiments" />
-              <StatCard label="Discoveries" />
-            </div>
-          </Reveal>
-        </div>
-      </section>
 
       {/* ENGINE INTRO */}
       <div id="engine">
-        <Reveal><div className="text-center py-16 px-6"><h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">The Autonomous Engine</h2><p className="text-slate-500 max-w-2xl mx-auto">Five stages that turn raw compute into scientific discoveries. Every cycle, the network gets smarter.</p></div></Reveal>
+        <Reveal><div className="text-center py-16 px-6"><h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">How a research cycle runs today</h2><p className="text-slate-500 max-w-2xl mx-auto">Five stages, every one running in parallel across distributed operator nodes. Multiple training tracks active concurrently — no single node bottlenecks the network.</p></div></Reveal>
         <StageNav active={activeStage} />
 
         {/* STAGE 1 — HYPERPARAMETER SEARCH */}
         <section id="stage-1" className="py-20 px-6 scroll-mt-28">
           <div className="max-w-5xl mx-auto">
-            <Reveal><SH stage={1} title="Hyperparameter Search" subtitle="Every node in the network — even laptops — runs experiments to find the optimal analysis configuration. Not ML hyperparameters, but analysis configs: prompt templates, temperatures, chunk sizes, analysis depths." /></Reveal>
-            <Reveal delay={100}><p className="text-center text-slate-400 text-sm mb-10 max-w-3xl mx-auto">Each node tries a different configuration and reports back quality + latency. Results shared via a CRDT leaderboard — conflict-free, no central server.</p></Reveal>
+            <Reveal><SH stage={1} title="Configuration Search" subtitle="Every operator node — laptops, workstations, datacenter GPUs — runs its own experiment to find the analysis configuration that wins on quality and latency. Multiple training tracks (cardiology, oncology, ALS, neurology…) search in parallel; no single node owns a topic." /></Reveal>
+            <Reveal delay={100}><p className="text-center text-slate-400 text-sm mb-10 max-w-3xl mx-auto">Each node tries a different prompt template, temperature, chunk size, or analysis depth and reports back to a CRDT leaderboard — conflict-free, no central server, no waiting on coord. The best config wins for that training track.</p></Reveal>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <Reveal delay={150}>
@@ -252,7 +215,7 @@ export default function LandingPage() {
         {/* STAGE 2 — RESEARCH ROUNDS */}
         <section id="stage-2" className="py-20 px-6 scroll-mt-28">
           <div className="max-w-5xl mx-auto">
-            <Reveal><SH stage={2} title="Research Rounds" subtitle="The coordinator opens research rounds. Each round selects a corpus of scientific papers, distributes work orders to available nodes, and each node analyzes papers using the best config from Stage 1." /></Reveal>
+            <Reveal><SH stage={2} title="Research Rounds" subtitle="Multiple rounds run side-by-side, each tied to its own training track. A round picks a corpus slice (PubMed, ClinicalTrials.gov, preprints), fans work orders out to every available node over libp2p gossipsub, and lets the swarm chew through the papers with the best config from Stage 1." /></Reveal>
 
             <div className="max-w-3xl mx-auto">
               <Reveal delay={100}>
@@ -292,7 +255,7 @@ export default function LandingPage() {
         {/* STAGE 3 — PAPER ANALYSIS */}
         <section id="stage-3" className="py-20 px-6 scroll-mt-28">
           <div className="max-w-5xl mx-auto">
-            <Reveal><SH stage={3} title="Paper Analysis" subtitle="Each node's AI agent uses the fine-tuned analysis config to deeply analyze papers. Structured extraction, methodology scoring, cross-referencing, and hypothesis generation." /></Reveal>
+            <Reveal><SH stage={3} title="Paper Analysis" subtitle="Every operator&apos;s agent runs the winning config locally on its own GPU — structured extraction, methodology scoring, cross-referencing prior findings in the shared knowledge graph, and surfacing fresh hypotheses. Different nodes work different papers in the same round; the work fans out, never queues." /></Reveal>
 
             <Reveal delay={150}>
               <G className="p-6 max-w-3xl mx-auto">
@@ -342,7 +305,7 @@ export default function LandingPage() {
         {/* STAGE 4 — PEER REVIEW */}
         <section id="stage-4" className="py-20 px-6 scroll-mt-28">
           <div className="max-w-5xl mx-auto">
-            <Reveal><SH stage={4} title="Peer Review" subtitle="Analyses are peer-reviewed by other nodes via P2P gossip. Each reviewer scores the submission on multiple dimensions. Scores are tracked on the CRDT leaderboard." /></Reveal>
+            <Reveal><SH stage={4} title="Peer Review" subtitle="Every analysis lands in front of N other nodes for review. Reviewers score on rigour, novelty, evidence quality, and reproducibility — signed with each peer&apos;s identity, gossipped over libp2p, and consolidated on the CRDT leaderboard. No central authority decides what&apos;s good; the swarm does." /></Reveal>
 
             <Reveal delay={150}>
               <G className="p-6 max-w-xl mx-auto">
@@ -382,7 +345,7 @@ export default function LandingPage() {
         {/* STAGE 5 — DISCOVERIES */}
         <section id="stage-5" className="py-20 px-6 scroll-mt-28">
           <div className="max-w-5xl mx-auto">
-            <Reveal><SH stage={5} title="Discoveries" subtitle="Analyses scoring {'\u2265'} 8/10 average across peer reviews are marked as DISCOVERIES — breakthroughs that emerge from the network's collective intelligence." /></Reveal>
+            <Reveal><SH stage={5} title="Discoveries" subtitle="Analyses that average {'\u2265'} 8/10 across peer reviews are promoted to DISCOVERIES — written into the shared knowledge graph, indexed for the next round's context, and surfaced to every operator. The graph is sharded across peers so no single node holds the whole library." /></Reveal>
 
             <Reveal delay={150}>
               <G className="p-8 max-w-2xl mx-auto text-center border-emerald-500/10">
@@ -702,16 +665,27 @@ export default function LandingPage() {
         <div className="max-w-2xl mx-auto">
           <Reveal>
             <G className="p-12 rounded-3xl">
-              <h2 className="text-4xl font-bold text-white mb-4">Join the Network</h2>
-              <p className="text-slate-400 mb-10 leading-relaxed">
-                Your agent will contribute compute, earn rewards, and help advance biomedical
-                discovery — starting with ALS. Mainnet drops with the desktop app, the staking
-                pool, and the dashboard all live on day&nbsp;one.
+              <h2 className="text-4xl font-bold text-white mb-4">Built in the open</h2>
+              <p className="text-slate-400 mb-6 leading-relaxed">
+                Synapseia is a working peer-to-peer research network — multiple
+                training tracks run in parallel today across distributed
+                operator GPUs, and every cycle is logged to the public knowledge
+                graph. The codebase, the protocol specs, and the Solana
+                contracts are open source.
               </p>
-              <span className="inline-flex items-center gap-2 px-10 py-4 rounded-xl backdrop-blur-md bg-amber-500/15 border border-amber-500/30 text-amber-200 font-semibold transition-all duration-300 text-base">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                Mainnet launch — coming soon
-              </span>
+              <p className="text-slate-500 mb-10 leading-relaxed text-sm">
+                Watch the repo, read the protocol notes, or contribute a node —
+                the network grows one operator at a time.
+              </p>
+              <a
+                href="https://github.com/erscoder/synapseia-landing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-10 py-4 rounded-xl backdrop-blur-md bg-blue-500/15 border border-blue-500/30 text-blue-200 font-semibold hover:bg-blue-500/25 hover:border-blue-400/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 text-base"
+              >
+                Read the source
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </a>
             </G>
           </Reveal>
         </div>
