@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import Image from 'next/image';
 // Pre-launch landing — no coord, no wallet, no live stats. The 6
 // dashboard endpoints aren't deployed yet; every "live" surface is
@@ -113,13 +114,21 @@ export default function LandingPage() {
           <Image src="/synapseia-logo.png" alt="Synapseia" width={36} height={36} className="w-9 h-9" />
           <span className="font-bold text-white tracking-wide">Synapseia</span>
         </div>
-        <div className="flex items-center gap-4">
-          {/* Pre-launch — dashboard is not deployed. Replace with a
-              "Coming soon" pill instead of a dead link. */}
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg backdrop-blur-md bg-amber-500/10 border border-amber-500/30 text-amber-200 font-medium text-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-            Coming soon
-          </span>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/docs"
+            className="px-4 py-2 rounded-lg text-slate-300 hover:text-white text-sm font-medium transition-colors"
+          >
+            Docs
+          </Link>
+          <a
+            href="https://github.com/erscoder/synapseia-landing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 rounded-lg backdrop-blur-md bg-white/[0.04] border border-white/[0.08] text-slate-300 hover:text-white hover:border-white/20 text-sm font-medium transition-colors"
+          >
+            GitHub
+          </a>
         </div>
       </nav>
 
@@ -151,9 +160,9 @@ export default function LandingPage() {
           <button onClick={() => document.getElementById('engine')?.scrollIntoView({ behavior: 'smooth' })} className="group px-8 py-3.5 rounded-xl backdrop-blur-md bg-blue-500/10 border border-blue-500/30 text-blue-200 font-medium text-sm hover:bg-blue-500/20 hover:border-blue-400/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
             How it works <span className="ml-2 group-hover:ml-3 transition-all">{'\u2193'}</span>
           </button>
-          <button onClick={() => document.getElementById('stage-1')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-3.5 rounded-xl text-slate-400 hover:text-white text-sm transition-colors">
-            Tour the engine {'\u2192'}
-          </button>
+          <Link href="/docs" className="px-8 py-3.5 rounded-xl backdrop-blur-md bg-white/[0.04] border border-white/[0.08] text-slate-200 font-medium text-sm hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300">
+            Read the docs {'\u2192'}
+          </Link>
         </div>
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-600 animate-bounce">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" /></svg>
@@ -401,49 +410,110 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* REWARD FORMULA */}
-        <section className="py-20 px-6">
-          <div className="max-w-4xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-10">
-                <h2 className="text-3xl font-bold text-white mb-3">Reward Formula</h2>
-                <p className="text-slate-500">How your node earns SYN tokens every round</p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={100}>
-              <G className="p-8">
-                <div className="text-center mb-10 py-6 px-4 rounded-xl bg-white/[0.03] border border-white/[0.04]">
-                  <p className="font-mono text-2xl sm:text-3xl text-slate-100 tracking-wide">
-                    {'Points = \u03BB \u00D7 (\u0394t/T\u2080) \u00D7 U(t) \u00D7 LM \u00D7 TM \u00D7 C'}
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[
-                    { sym: 'λ', name: 'Base Rate', desc: 'Base reward rate set per round by the coordinator' },
-                    { sym: '\u0394t/T\u2080', name: 'Time Fraction', desc: 'Fraction of the round your node was active (0\u20131)' },
-                    { sym: 'U(t)', name: 'Uptime Factor', desc: 'Real-time uptime measurement clamped to 0\u20131' },
-                    { sym: 'LM', name: 'Liveness Multiplier', desc: 'Ranges 1.0\u20132.0 based on consecutive days active' },
-                    { sym: 'TM', name: 'Tier Multiplier', desc: 'Stake tier bonus: T0=1.0×, T1=1.2×, T2=1.5×, T3=2.0×, T4=2.5×, T5=3.0× — stake more SYN to earn more' },
-                    { sym: 'C', name: 'Quality Score', desc: 'Peer-reviewed quality of your submission, scored 0\u201310' },
-                  ].map(({ sym, name, desc }) => (
-                    <div key={sym} className="flex gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                      <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
-                        <span className="font-mono text-sm text-blue-300">{sym}</span>
-                      </div>
-                      <div>
-                        <div className="text-sm font-semibold text-white mb-0.5">{name}</div>
-                        <div className="text-xs text-slate-500 leading-relaxed">{desc}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </G>
-            </Reveal>
-          </div>
-        </section>
-
       </div>{/* end engine wrapper */}
+
+      {/* TRAINING TRACKS */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 font-mono mb-4">TRAINING TRACKS</div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">Multiple research domains in flight</h2>
+              <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                Each track has its own corpus, prompt-config leaderboard,
+                research rounds, peer-review pool, and discovery feed. Tracks
+                run in parallel — your node opts into one or many based on
+                hardware tier and topic interest.
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {([
+                { tag: 'ALS',          title: 'Amyotrophic Lateral Sclerosis', body: 'Mechanism mapping, biomarker discovery, drug repurposing across the ALS literature. The flagship track.' },
+                { tag: 'Cardiology',   title: 'Cardiovascular Medicine',       body: 'Heart-failure phenotyping, lipid-pathway analysis, post-MI care protocols sourced from PubMed + ClinicalTrials.gov.' },
+                { tag: 'Oncology',     title: 'Cancer Research',                body: 'Tumour-microenvironment signalling, immunotherapy response markers, repurposing screens across oncogenic pathways.' },
+                { tag: 'Neurology',    title: 'CNS Disorders',                  body: 'Beyond ALS — Alzheimer&apos;s, Parkinson&apos;s, MS. Cross-track findings get auto-linked in the shared knowledge graph.' },
+                { tag: 'Rare disease', title: 'Orphan Indications',             body: 'Long-tail conditions where corpus is small but methodology rigour matters most. Smaller rounds, deeper analysis.' },
+                { tag: 'Open',         title: 'Operator-proposed tracks',       body: 'Operators stake to propose new tracks; ratified rounds get their own corpus + leaderboard. The network grows by community demand.' },
+              ] as const).map(({ tag, title, body }) => (
+                <G key={tag} className="p-5 hover:bg-white/[0.05] transition-colors">
+                  <div className="text-[10px] uppercase tracking-widest text-blue-300/80 font-mono mb-2">{tag}</div>
+                  <div className="text-sm font-semibold text-white mb-2">{title}</div>
+                  <p className="text-xs text-slate-400 leading-relaxed">{body}</p>
+                </G>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={200}>
+            <p className="text-center text-slate-500 text-xs mt-8 max-w-2xl mx-auto leading-relaxed">
+              Track membership is a per-round opt-in — your node picks which
+              corpus to chew through next. No global ordering, no central
+              scheduler.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* DISTRIBUTED KNOWLEDGE GRAPH */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 font-mono mb-4">DISTRIBUTED LIBRARY</div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">The knowledge graph is sharded across the swarm</h2>
+              <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                Every discovery, every embedding, every cross-reference lives
+                in a shared semantic graph. Coord doesn&apos;t hold it — the
+                peer mesh does.
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <G className="p-6">
+                <div className="text-[10px] uppercase tracking-widest text-emerald-300/80 font-mono mb-2">SHARDING</div>
+                <div className="text-sm font-semibold text-white mb-2">32 shards · 3 replicas</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Embeddings are deterministically hashed into 32 shards;
+                  each shard lives on 3 different operator nodes. Coord
+                  signs the grants but never serves the data path.
+                </p>
+              </G>
+              <G className="p-6">
+                <div className="text-[10px] uppercase tracking-widest text-emerald-300/80 font-mono mb-2">CHAINED SYNC</div>
+                <div className="text-sm font-semibold text-white mb-2">Peer-to-peer bootstrap</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  New nodes pull shard snapshots from other peers first,
+                  not coord. Coord uplink stays ≈ zero in steady state —
+                  the library scales sideways with operator count.
+                </p>
+              </G>
+              <G className="p-6">
+                <div className="text-[10px] uppercase tracking-widest text-emerald-300/80 font-mono mb-2">HNSW LOOKUPS</div>
+                <div className="text-sm font-semibold text-white mb-2">~0.3 ms ANN per node</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Each peer indexes its shards with HNSW (usearch) — top-K
+                  semantic search returns in under a millisecond, locally,
+                  before the next research round even ships work orders.
+                </p>
+              </G>
+            </div>
+          </Reveal>
+
+          <Reveal delay={200}>
+            <p className="text-center text-slate-500 text-xs mt-8 max-w-2xl mx-auto leading-relaxed">
+              Every shard envelope is signed twice — once by coord at grant
+              time (proves authority), once on the gossipsub frame (proves
+              transport). Hostile peers can&apos;t inject fake ownership or
+              steal a shard route.
+            </p>
+          </Reveal>
+        </div>
+      </section>
 
       {/* NODE GRAPH */}
       <section className="py-20 px-6">
@@ -451,7 +521,7 @@ export default function LandingPage() {
           <Reveal>
             <div className="text-center mb-10">
               <h2 className="text-3xl font-bold text-white mb-3">Network Topology</h2>
-              <p className="text-slate-500">Live view of active nodes and their connections</p>
+              <p className="text-slate-500">Snapshot of active nodes and their connections</p>
             </div>
           </Reveal>
           <Reveal delay={100}><NodeGraph /></Reveal>
@@ -520,7 +590,7 @@ export default function LandingPage() {
           <Reveal delay={150}>
             <G className="p-6 mb-8">
               <div className="text-sm font-semibold text-white mb-1">Stake more SYN &rarr; Higher Tier &rarr; Bigger multiplier</div>
-              <p className="text-xs text-slate-500 mb-5">Tier multiplier scales your share of every round pool (Research, Training, GPU, Inference) and your presence-points ranking.</p>
+              <p className="text-xs text-slate-500 mb-5">Tier multiplier scales your share of every round pool (Research, Training, GPU, Inference). Presence points are a secondary signal that breaks ties at the bottom of the leaderboard — quality and stake do the heavy lifting.</p>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -677,15 +747,23 @@ export default function LandingPage() {
                 Watch the repo, read the protocol notes, or contribute a node —
                 the network grows one operator at a time.
               </p>
-              <a
-                href="https://github.com/erscoder/synapseia-landing"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-10 py-4 rounded-xl backdrop-blur-md bg-blue-500/15 border border-blue-500/30 text-blue-200 font-semibold hover:bg-blue-500/25 hover:border-blue-400/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 text-base"
-              >
-                Read the source
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </a>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link
+                  href="/docs"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl backdrop-blur-md bg-blue-500/15 border border-blue-500/30 text-blue-200 font-semibold hover:bg-blue-500/25 hover:border-blue-400/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 text-base"
+                >
+                  Read the docs
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                </Link>
+                <a
+                  href="https://github.com/erscoder/synapseia-landing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl backdrop-blur-md bg-white/[0.04] border border-white/[0.08] text-slate-200 font-semibold hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 text-base"
+                >
+                  GitHub
+                </a>
+              </div>
             </G>
           </Reveal>
         </div>
