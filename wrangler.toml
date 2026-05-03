@@ -1,0 +1,15 @@
+name = "synapseia-landing"
+compatibility_date = "2026-05-03"
+pages_build_output_dir = "./out"
+
+# Cloudflare Pages bindings — none today. Add KV / D1 / R2 here as
+# the landing grows. Routes are configured in the CF dashboard
+# under "Custom domains" → bind synapseia.network apex.
+
+[vars]
+# Build-time public env. Override per environment via
+# `wrangler pages deploy out --branch=production --var KEY:VALUE`
+# OR set in the CF dashboard under Settings → Environment variables.
+# Browser fetches resolve this URL directly — no Next.js proxy
+# exists in the static export.
+NEXT_PUBLIC_COORDINATOR_URL = "https://coord.synapseia.network/api"
