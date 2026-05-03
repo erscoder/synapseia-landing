@@ -245,9 +245,11 @@ export default function DocsPage() {
                 replayable.
               </li>
               <li>
-                <strong>Open.</strong> Codebase, protocol specs, and Solana
-                contracts are public. Any operator can audit, extend, or
-                fork.
+                <strong>Open.</strong> Node agent, desktop UI, protocol
+                specs, and Solana contracts are public. Any operator
+                can audit, extend, or fork. The coordinator service
+                stays closed source — its role is signing grants and
+                opening rounds, not holding user data.
               </li>
             </UL>
 

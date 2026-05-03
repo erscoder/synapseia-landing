@@ -532,8 +532,8 @@ export default function LandingPage() {
                 <div className="text-2xl mb-3">🔓</div>
                 <div className="text-sm font-semibold text-white mb-1">Open source</div>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Coordinator, node agent, desktop UI, Solana programs —
-                  all public. Audit it, fork it, run your own.
+                  Node agent, desktop UI, and Solana programs are public.
+                  Audit them, fork them, run your own node.
                 </p>
               </G>
               <G className="p-5">
