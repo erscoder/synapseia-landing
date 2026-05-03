@@ -553,28 +553,83 @@ export default function LandingPage() {
 
       {/* EARN REWARDS */}
       <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <Reveal>
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 font-mono mb-4">EARN SYN TOKENS</div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">How Nodes Earn Money</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">How nodes earn money</h2>
               <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                Every contribution to the Synapseia network is rewarded with SYN tokens. The more you stake, the higher your tier — and the more you earn per round.
+                Pick the work types your hardware supports. Your node can run
+                several at once — small CPU jobs while a GPU training cycle
+                finishes, then peer-review when the round closes. Stake more
+                SYN to climb tiers and amplify every payout.
               </p>
             </div>
           </Reveal>
 
-          {/* Income streams — figures pulled directly from coordinator/domain/constants.ts. */}
+          {/* Income streams — figures pulled directly from
+              coordinator/src/application/rewards/RewardsConfigService.ts
+              (DEFAULT_CONFIGS). Sync this grid when those defaults
+              change. */}
           <Reveal delay={100}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
               {([
-                { icon: '🧠', label: 'Research Round', reward: '33,900 SYN', sub: 'pool / 24h', desc: 'Analyze biomedical papers and propose hypotheses (drug repurposing, biomarkers, mechanisms). Top-3 split 60/25/15; 10% goes to peer reviewers.', color: 'amber' as const },
-                { icon: '🔬', label: 'CPU Training', reward: '3,000 SYN', sub: 'pool / 6h', desc: 'Fine-tune biomedical micro-models on the literature corpus. Any node with Python + PyTorch. Top-3 split.', color: 'blue' as const },
-                { icon: '⚡', label: 'CPU Inference', reward: '2–15 SYN', sub: 'per task', desc: 'Tokenize (2), embed (10), or classify (15) biomedical papers. Lightweight — works on any modern laptop. Tier multiplier applies.', color: 'purple' as const },
-                { icon: '🎯', label: 'GPU Inference', reward: '4,000 SYN', sub: 'pool / 6h', desc: 'Heavy generation, summarization, large-model embeddings on rounds that need GPU compute. Top-3 split.', color: 'emerald' as const },
-              ] as const).map(({ icon, label, reward, sub, desc }) => (
+                {
+                  icon: '🧠',
+                  label: 'Research analysis',
+                  reward: '33,900 SYN',
+                  sub: 'daily pool · 1 round / day',
+                  desc: 'Read papers, score methodology, propose hypotheses (drug repurposing, biomarkers, mechanisms). Top-3 split 60/25/15; an extra 10% goes to peer reviewers.',
+                  hw: 'Any node',
+                },
+                {
+                  icon: '🚀',
+                  label: 'GPU training (DiLoCo)',
+                  reward: '21,000 SYN',
+                  sub: 'daily pool · 6 rounds / day',
+                  desc: 'Distributed fine-tuning over the network. Each round splits 2,100 / 875 / 525 between top-3 contributors. Needs a GPU and decent uplink.',
+                  hw: 'GPU required',
+                },
+                {
+                  icon: '🔬',
+                  label: 'CPU training',
+                  reward: '12,000 SYN',
+                  sub: 'daily pool · 4 rounds / day',
+                  desc: 'Fine-tune biomedical micro-transformers on the literature corpus. Each 6-hour round splits 1,800 / 750 / 450 top-3.',
+                  hw: 'CPU + Python',
+                },
+                {
+                  icon: '⚡',
+                  label: 'CPU inference',
+                  reward: '2–15 SYN',
+                  sub: 'per task · FCFS',
+                  desc: 'Reactive jobs the research analysis spins up: tokenize (2 SYN), embed (10), classify (15). Works on any modern laptop.',
+                  hw: 'Any node',
+                },
+                {
+                  icon: '🎯',
+                  label: 'GPU inference',
+                  reward: '30–50 SYN',
+                  sub: 'per task · FCFS',
+                  desc: 'Heavy generation, summarisation, large-model embeddings the research round demands. First-come-first-served — fast nodes win.',
+                  hw: 'GPU required',
+                },
+                {
+                  icon: '🧬',
+                  label: 'Molecular docking',
+                  reward: '1,000 SYN',
+                  sub: 'per agreed pair · 60 / 40 split',
+                  desc: 'Two nodes independently score the same ligand-target pair. If they agree, both get paid (600 / 400). Drug-discovery cross-verification.',
+                  hw: 'GPU recommended',
+                },
+              ] as const).map(({ icon, label, reward, sub, desc, hw }) => (
                 <G key={label} className="p-5 flex flex-col gap-3">
-                  <div className="text-2xl">{icon}</div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-2xl">{icon}</div>
+                    <span className="text-[10px] uppercase tracking-widest text-slate-500 font-mono">
+                      {hw}
+                    </span>
+                  </div>
                   <div>
                     <div className="text-sm font-semibold text-white">{label}</div>
                     <div className="text-lg font-bold font-mono text-emerald-400 mt-0.5">{reward}</div>
@@ -584,6 +639,14 @@ export default function LandingPage() {
                 </G>
               ))}
             </div>
+          </Reveal>
+
+          <Reveal delay={150}>
+            <p className="text-center text-xs text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Pool sizes shown are the daily defaults — operators can vote to
+              tune them as the network grows. Tier multiplier (below) applies
+              on top of every payout.
+            </p>
           </Reveal>
 
           {/* Tier table */}

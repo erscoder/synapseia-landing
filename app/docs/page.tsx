@@ -24,7 +24,8 @@ interface DocSection {
 const SECTIONS: DocSection[] = [
   { group: 'Overview',     id: 'what-is-synapseia',     title: 'What is Synapseia?' },
   { group: 'Overview',     id: 'core-principles',       title: 'Core principles' },
-  { group: 'Research',     id: 'training-tracks',       title: 'Training tracks' },
+  { group: 'Research',     id: 'research-tracks',       title: 'Research tracks' },
+  { group: 'Research',     id: 'work-types',            title: 'Work types' },
   { group: 'Research',     id: 'config-search',         title: 'Configuration search' },
   { group: 'Research',     id: 'research-rounds',       title: 'Research rounds' },
   { group: 'Research',     id: 'paper-analysis',        title: 'Paper analysis' },
@@ -187,10 +188,6 @@ export default function DocsPage() {
           {/* CONTENT */}
           <main className="max-w-3xl">
             <div className="mb-12">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 font-mono mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Living document
-              </div>
               <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight">
                 Synapseia Documentation
               </h1>
@@ -255,10 +252,10 @@ export default function DocsPage() {
             </UL>
 
             {/* RESEARCH */}
-            <H id="training-tracks">Training tracks</H>
+            <H id="research-tracks">Research tracks</H>
             <P>
-              A training track is a self-contained research domain. Each
-              one carries:
+              A research track is a self-contained scientific domain.
+              Each one carries:
             </P>
             <UL>
               <li>Its own corpus slice (e.g. ALS sub-corpus from PubMed + ClinicalTrials.gov).</li>
@@ -278,6 +275,78 @@ export default function DocsPage() {
               of them — there is no global ordering or central scheduler.
               Multiple rounds (one per track) run side-by-side at any
               moment.
+            </Note>
+
+            <H id="work-types">Work types</H>
+            <P>
+              Within every track, the coordinator opens six different
+              kinds of work order. A node picks which ones it accepts
+              based on hardware capability — a laptop can chew on
+              research analysis and CPU inference; a workstation with
+              a GPU can additionally run DiLoCo training and GPU
+              inference. Pool sizes below are coord defaults and can
+              be tuned by operator vote.
+            </P>
+            <H level={3}>Research analysis</H>
+            <P>
+              The flagship work type. <Code>33,900 SYN</Code> daily pool, one round
+              per day. Nodes read papers, score methodology, propose
+              hypotheses, and link findings into the shared knowledge
+              graph. Top-3 analyses split <Code>60 / 25 / 15</Code>; an extra
+              10 % goes to peer reviewers. Hardware: any node.
+            </P>
+            <H level={3}>GPU training (DiLoCo)</H>
+            <P>
+              <Code>21,000 SYN</Code> daily pool spread over 6 rounds / day
+              (each <Code>3,500 SYN</Code>). DiLoCo (Distributed Low-Communication
+              training) lets operator GPUs collaboratively fine-tune
+              large models with infrequent gradient sync — works over
+              regular consumer uplinks, not datacenter fabric. Top-3
+              split <Code>2,100 / 875 / 525</Code> per round. Hardware: GPU
+              required.
+            </P>
+            <H level={3}>CPU training</H>
+            <P>
+              <Code>12,000 SYN</Code> daily pool, 4 rounds / day (each <Code>3,000 SYN</Code>).
+              Fine-tunes biomedical micro-transformers on the corpus
+              for tasks where a small specialised model beats the
+              giant generalist (entity extraction, BIO tagging, citation
+              parsing). Any node with Python + PyTorch can run a round.
+              Top-3 split <Code>1,800 / 750 / 450</Code>.
+            </P>
+            <H level={3}>CPU inference</H>
+            <P>
+              Reactive jobs the research analysis spins up mid-round.
+              First-come-first-served — fast nodes win. Per-task
+              payouts: <Code>2 SYN</Code> tokenize, <Code>10 SYN</Code> embed,{' '}
+              <Code>15 SYN</Code> classify. Daily volume floats with
+              research demand; expect dozens of tasks per day per
+              active node. Hardware: any modern laptop.
+            </P>
+            <H level={3}>GPU inference</H>
+            <P>
+              Same FCFS reactive pattern, but for jobs the CPU
+              variant cannot serve in time: large-model embeddings,
+              long-context summarisation, generation. Per-task payouts
+              by complexity: <Code>30 / 40 / 50 SYN</Code>. Hardware: GPU
+              required.
+            </P>
+            <H level={3}>Molecular docking</H>
+            <P>
+              Drug-discovery cross-verification. Two operator nodes
+              independently score the same ligand-target pair. If
+              their scores agree (within tolerance), both get paid:
+              <Code>1,000 SYN</Code> per agreed pair, split <Code>600 / 400</Code> between
+              the two agreeing nodes. Disagreements escalate to a
+              third tie-breaker. Hardware: GPU recommended; CPU works
+              but slower.
+            </P>
+            <Note>
+              Peer review is not a separate work type — it&apos;s baked
+              into the research-analysis economy via the 10 % reviewer
+              pool. Reviewer payouts scale with the <em>quality</em> of
+              the review, not just the count, so rubber-stamping
+              earns nothing.
             </Note>
 
             <H id="config-search">Configuration search (Stage 1)</H>
@@ -462,31 +531,54 @@ export default function DocsPage() {
 
             <H id="rewards">Rewards</H>
             <P>
-              Every contribution to the network is rewarded with SYN.
-              Pool sizes depend on the work type:
+              Every contribution to the network earns SYN. Daily pools
+              and per-task payouts come straight from{' '}
+              <Code>RewardsConfigService</Code> on the coordinator —
+              operators can tune them via on-chain vote, but the
+              defaults are:
             </P>
             <UL>
               <li>
-                <strong>Research Round</strong> — pool per round, top-3
-                analyses split 60 / 25 / 15. 10% of the pool goes to
-                peer reviewers proportional to review quality.
+                <strong>Research analysis</strong> — <Code>33,900 SYN</Code> daily pool, 1
+                round / day. Top-3 analyses split 60 / 25 / 15
+                (<Code>20,340 / 8,475 / 5,085</Code>); an additional 10 %
+                of the pool routes to peer reviewers proportional to
+                review quality.
               </li>
               <li>
-                <strong>CPU Training</strong> — fine-tuning biomedical
-                micro-models on the corpus. Lightweight; any node with
-                Python + PyTorch.
+                <strong>GPU training (DiLoCo)</strong> — <Code>21,000 SYN</Code> daily pool,
+                6 rounds / day. Each round splits <Code>2,100 / 875 / 525</Code> top-3.
+                Distributed fine-tuning of large models across the
+                operator GPU set.
               </li>
               <li>
-                <strong>CPU Inference</strong> — tokenize, embed, or
-                classify biomedical papers per task. Works on modern
-                laptops.
+                <strong>CPU training</strong> — <Code>12,000 SYN</Code> daily pool, 4
+                rounds / day. Each round splits <Code>1,800 / 750 / 450</Code> top-3.
+                Fine-tunes biomedical micro-transformers on the corpus.
               </li>
               <li>
-                <strong>GPU Inference</strong> — heavy generation,
-                summarisation, large-model embeddings on GPU-required
-                rounds. Top-3 split.
+                <strong>CPU inference</strong> — <Code>2 / 10 / 15 SYN</Code> per task
+                (tokenize / embed / classify). Reactive jobs the
+                research analysis spins up; first-come-first-served.
+              </li>
+              <li>
+                <strong>GPU inference</strong> — <Code>30 / 40 / 50 SYN</Code> per task by
+                complexity. Same FCFS pattern as CPU inference but for
+                heavy generation, summarisation, and large-model
+                embeddings.
+              </li>
+              <li>
+                <strong>Molecular docking</strong> — <Code>1,000 SYN</Code> per agreed
+                ligand-target pair, split <Code>600 / 400</Code> between the two
+                independently-scoring nodes. No daily pool — payment
+                fires the moment two agents agree.
               </li>
             </UL>
+            <Note>
+              Tier multiplier (<Code>T0 = 1.0×</Code> through{' '}
+              <Code>T5 = 3.0×</Code>) applies on top of every payout above.
+              Stake more SYN, climb tiers, amplify earnings.
+            </Note>
             <Note>
               Presence points (legacy uptime metric) are a secondary
               signal — they break ties at the bottom of the leaderboard
