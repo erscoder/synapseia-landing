@@ -13,19 +13,25 @@ import Image from 'next/image';
 const DASHBOARD_URL =
   process.env.NEXT_PUBLIC_DASHBOARD_URL || 'https://dashboard.synapseia.network';
 
-// node-ui release version surfaced on the download band. Bump on each
-// new release tag; CI publishes assets named
-// `Synapseia.Node_<VERSION>_<arch>.<ext>` to
-// github.com/erscoder/synapseia-node-ui/releases/latest. The
-// `releases/latest/download/` redirect serves the latest tag — the
-// filename must match the version exactly to avoid 404s.
+// node-ui release version reflected on the download band. Bump
+// alongside the matching constant in
+// `functions/download/[platform].js` (the Cloudflare Pages Function
+// that proxy-streams the binary from synapseia.network). The function
+// hits github.com/erscoder/synapseia-node-ui/releases/latest/download
+// upstream — keep filenames in sync with the latest published tag.
 const NODE_UI_VERSION = '0.8.3';
-const RELEASE_BASE =
-  'https://github.com/erscoder/synapseia-node-ui/releases/latest/download';
-const RELEASE_DMG_ARM64 = `${RELEASE_BASE}/Synapseia.Node_${NODE_UI_VERSION}_aarch64.dmg`;
-const RELEASE_DMG_X64 = `${RELEASE_BASE}/Synapseia.Node_${NODE_UI_VERSION}_x64.dmg`;
-const RELEASE_MSI = `${RELEASE_BASE}/Synapseia.Node_${NODE_UI_VERSION}_x64_en-US.msi`;
-const RELEASE_APPIMAGE = `${RELEASE_BASE}/Synapseia.Node_${NODE_UI_VERSION}_amd64.AppImage`;
+
+// Same-origin proxy routes (Cloudflare Pages Function). The browser
+// stays on synapseia.network during download; the binary streams
+// through the worker, no GitHub UI flash, no jump in the URL bar.
+const RELEASE_DMG_ARM64 = '/download/mac-arm64';
+const RELEASE_DMG_X64 = '/download/mac-x64';
+const RELEASE_MSI = '/download/windows';
+const RELEASE_APPIMAGE = '/download/linux';
+
+// Fallback link to the GitHub release page (manual download, all
+// platforms, release notes). Kept in the footer for power users.
+const RELEASES_PAGE = 'https://github.com/erscoder/synapseia-node-ui/releases/latest';
 
 // Code-split the landing NodeGraph (Three.js, requires `window`) so the
 // initial landing payload doesn't ship the three.js chunk for users that
@@ -898,7 +904,7 @@ export default function LandingPage() {
           <Reveal delay={200}>
             <p className="text-center text-slate-600 text-xs mt-6">
               Also available: <a href={RELEASE_DMG_X64} download className="text-slate-500 hover:text-white transition-colors underline underline-offset-2">macOS Intel (.dmg)</a>
-              {' '}· <a href="https://github.com/erscoder/synapseia-node-ui/releases/latest" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-white transition-colors underline underline-offset-2">all releases</a>
+              {' '}· <a href={RELEASES_PAGE} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-white transition-colors underline underline-offset-2">release notes</a>
             </p>
           </Reveal>
         </div>
