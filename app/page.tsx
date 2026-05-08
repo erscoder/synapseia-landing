@@ -3,9 +3,29 @@ import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
-// Pre-launch landing — no coord, no wallet, no live stats. The 6
-// dashboard endpoints aren't deployed yet; every "live" surface is
-// stubbed to "Coming soon" until the network ships.
+// Beta launch landing — coord deployed (Fly.io), dashboard live on its
+// own subdomain, node-ui binaries published per release. Earlier this
+// file held "Coming soon" placeholders; the download band and the
+// dashboard CTAs now point at real artefacts.
+
+// Dashboard subdomain (override via NEXT_PUBLIC_DASHBOARD_URL for
+// staging or branch previews).
+const DASHBOARD_URL =
+  process.env.NEXT_PUBLIC_DASHBOARD_URL || 'https://dashboard.synapseia.network';
+
+// node-ui release version surfaced on the download band. Bump on each
+// new release tag; CI publishes assets named
+// `Synapseia.Node_<VERSION>_<arch>.<ext>` to
+// github.com/erscoder/synapseia-node-ui/releases/latest. The
+// `releases/latest/download/` redirect serves the latest tag — the
+// filename must match the version exactly to avoid 404s.
+const NODE_UI_VERSION = '0.8.3';
+const RELEASE_BASE =
+  'https://github.com/erscoder/synapseia-node-ui/releases/latest/download';
+const RELEASE_DMG_ARM64 = `${RELEASE_BASE}/Synapseia.Node_${NODE_UI_VERSION}_aarch64.dmg`;
+const RELEASE_DMG_X64 = `${RELEASE_BASE}/Synapseia.Node_${NODE_UI_VERSION}_x64.dmg`;
+const RELEASE_MSI = `${RELEASE_BASE}/Synapseia.Node_${NODE_UI_VERSION}_x64_en-US.msi`;
+const RELEASE_APPIMAGE = `${RELEASE_BASE}/Synapseia.Node_${NODE_UI_VERSION}_amd64.AppImage`;
 
 // Code-split the landing NodeGraph (Three.js, requires `window`) so the
 // initial landing payload doesn't ship the three.js chunk for users that
@@ -129,6 +149,12 @@ export default function LandingPage() {
           >
             GitHub
           </a>
+          <a
+            href={DASHBOARD_URL}
+            className="px-4 py-2 rounded-lg backdrop-blur-md bg-blue-500/10 border border-blue-500/30 text-blue-200 font-medium text-sm hover:bg-blue-500/20 hover:border-blue-400/50 transition-all"
+          >
+            Dashboard
+          </a>
         </div>
       </nav>
 
@@ -153,11 +179,17 @@ export default function LandingPage() {
           into a shared knowledge graph that every node can query.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <button onClick={() => document.getElementById('engine')?.scrollIntoView({ behavior: 'smooth' })} className="group px-8 py-3.5 rounded-xl backdrop-blur-md bg-blue-500/10 border border-blue-500/30 text-blue-200 font-medium text-sm hover:bg-blue-500/20 hover:border-blue-400/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
-            How it works <span className="ml-2 group-hover:ml-3 transition-all">{'\u2193'}</span>
+          <a
+            href={DASHBOARD_URL}
+            className="group px-8 py-3.5 rounded-xl backdrop-blur-md bg-blue-500/15 border border-blue-500/30 text-blue-200 font-semibold text-sm hover:bg-blue-500/25 hover:border-blue-400/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300"
+          >
+            Open Dashboard <span className="ml-2 group-hover:ml-3 transition-all">{'\u2192'}</span>
+          </a>
+          <button onClick={() => document.getElementById('engine')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-3.5 rounded-xl backdrop-blur-md bg-white/[0.04] border border-white/[0.08] text-slate-200 font-medium text-sm hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300">
+            How it works {'\u2193'}
           </button>
-          <Link href="/docs" className="px-8 py-3.5 rounded-xl backdrop-blur-md bg-white/[0.04] border border-white/[0.08] text-slate-200 font-medium text-sm hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300">
-            Read the docs {'\u2192'}
+          <Link href="/docs" className="px-8 py-3.5 rounded-xl text-slate-400 hover:text-white font-medium text-sm transition-colors">
+            Docs {'\u2192'}
           </Link>
         </div>
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-600 animate-bounce">
@@ -806,37 +838,30 @@ export default function LandingPage() {
           </Reveal>
         </div>
       </section>
-      {/* DOWNLOAD — pre-launch placeholder. The desktop app
-          binaries (DMG / MSI / AppImage) are not signed and
-          published yet; we render disabled-looking platform tiles
-          that announce the launch instead of dead download links
-          that 404 on github releases. The original `<a download>`
-          structure is preserved in git history (commit b147a01d-
-          area) and re-lands when builds ship. */}
+      {/* DOWNLOAD — beta binaries live. node-ui release CI publishes
+          DMG / MSI / AppImage on every `node-ui-v*` tag. Tiles below
+          link to GitHub `releases/latest/download/<file>` so the
+          newest tag always serves; bump NODE_UI_VERSION at top of
+          file when filenames change. */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 font-mono mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                COMING SOON
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 font-mono mb-4">
+                DOWNLOAD
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">Run a Node</h2>
               <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                Desktop app for macOS, Windows, and Linux drops at mainnet launch — one-click install,
-                automatic updates, wallet baked in. Drop your email below to get pinged the day binaries ship.
+                Desktop app for macOS, Windows, and Linux. One-click install, wallet baked in,
+                automatic updates. Pick your platform below.
               </p>
             </div>
           </Reveal>
 
           <Reveal delay={100}>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto opacity-60">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
               {/* macOS */}
-              <div
-                
-
-                className="group"
-              >
+              <a href={RELEASE_DMG_ARM64} download className="group">
                 <G className="p-6 text-center hover:border-white/10 hover:bg-white/[0.05] transition-all cursor-pointer">
                   <svg className="w-10 h-10 mx-auto mb-3 text-slate-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
@@ -844,14 +869,10 @@ export default function LandingPage() {
                   <div className="text-sm font-semibold text-white mb-1">macOS</div>
                   <div className="text-xs text-slate-500">Apple Silicon (.dmg)</div>
                 </G>
-              </div>
+              </a>
 
               {/* Windows */}
-              <div
-                
-
-                className="group"
-              >
+              <a href={RELEASE_MSI} download className="group">
                 <G className="p-6 text-center hover:border-white/10 hover:bg-white/[0.05] transition-all cursor-pointer">
                   <svg className="w-10 h-10 mx-auto mb-3 text-slate-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
@@ -859,14 +880,10 @@ export default function LandingPage() {
                   <div className="text-sm font-semibold text-white mb-1">Windows</div>
                   <div className="text-xs text-slate-500">x64 Installer (.msi)</div>
                 </G>
-              </div>
+              </a>
 
               {/* Linux */}
-              <div
-                
-
-                className="group"
-              >
+              <a href={RELEASE_APPIMAGE} download className="group">
                 <G className="p-6 text-center hover:border-white/10 hover:bg-white/[0.05] transition-all cursor-pointer">
                   <svg className="w-10 h-10 mx-auto mb-3 text-slate-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.368 1.884 1.43.199.025.398.003.596-.07.646-.27 1.108-.675 1.108-1.346 0-.034-.003-.069-.01-.1.655-.015 1.348-.265 1.594-.87.7-1.635-.174-3.596-.294-4.62-.06-.51-.083-1.009.017-1.24.058-.155.154-.241.297-.338.552-.333.835-.591.953-.984.023-.09.04-.183.04-.273 0-.016 0-.032-.002-.045H21.8a.42.42 0 00.045-.207c-.038-.375-.247-.685-.494-.934-.169-.17-.375-.31-.595-.43-.173-.102-.22-.189-.233-.337-.016-.165-.016-.451.037-.744.052-.293.111-.63.111-.982 0-.147-.014-.298-.043-.453a4.096 4.096 0 00-.666-1.584 5.166 5.166 0 00-.745-.822c-.03-.027-.052-.046-.085-.065-.128-.09-.261-.186-.39-.241a.94.94 0 00-.392-.082c-.032 0-.065.003-.097.007a3.234 3.234 0 00-.283-.394c-.437-.528-1.161-.807-2.119-.807-.437 0-.92.075-1.454.228a.42.42 0 00-.095-.002c-.054-.22-.241-.46-.656-.553-.362-.084-.633-.141-.927-.176a1.5 1.5 0 01-.085-.01c-.123-.015-.25-.03-.378-.03-.138 0-.277.015-.392.06-.333.136-.479.372-.55.653-.152-.008-.304-.012-.455-.012-.17 0-.34.01-.506.033-.437-.14-.925-.21-1.418-.21-.507 0-1.026.087-1.49.306-.37.165-.693.414-.853.724-.082.164-.122.337-.122.512 0 .083.009.167.027.249a.42.42 0 00-.156.139c-.328.497-.363.98-.293 1.42.065.402.236.743.404.99-.012.021-.024.044-.032.065-.183.486.07.95.309 1.3.157.224.293.39.293.39s-.149.069-.293.194c-.209.174-.403.51-.403 1.123 0 .33.055.606.13.831a7.223 7.223 0 01-.172.263 4.404 4.404 0 01-.16.187L6.06 13.8c-.367.39-.612 1.008-.625 1.754-.007.37.057.735.194 1.07.137.333.35.63.647.853.248.198.544.35.877.44.28.077.583.116.906.116h.002a5.45 5.45 0 001.033-.112z"/>
@@ -874,14 +891,14 @@ export default function LandingPage() {
                   <div className="text-sm font-semibold text-white mb-1">Linux</div>
                   <div className="text-xs text-slate-500">x64 AppImage</div>
                 </G>
-              </div>
+              </a>
             </div>
           </Reveal>
 
           <Reveal delay={200}>
             <p className="text-center text-slate-600 text-xs mt-6">
-              macOS Intel + every other platform ship the same day. Watch
-              the GitHub repo or follow the project on X for the launch ping.
+              Also available: <a href={RELEASE_DMG_X64} download className="text-slate-500 hover:text-white transition-colors underline underline-offset-2">macOS Intel (.dmg)</a>
+              {' '}· <a href="https://github.com/erscoder/synapseia-node-ui/releases/latest" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-white transition-colors underline underline-offset-2">all releases</a>
             </p>
           </Reveal>
         </div>
