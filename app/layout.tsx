@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { SpaceBackground } from '@/components/landing/SpaceBackground';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -16,9 +15,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * Root layout. Mounts the WebGL `SpaceBackground` (init deferred to
- * `requestIdleCallback`) — same component the dashboard uses, so the
- * landing visual matches the live app.
+ * Root layout. Cosmic backdrop now comes from `globals.css`
+ * (radial gradients + sparse starfield) — pure CSS, no WebGL.
+ * Three.js was removed in slice S1.5 of the landing redesign.
  */
 export default function RootLayout({
   children,
@@ -28,7 +27,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <SpaceBackground />
         <div className="relative z-10">{children}</div>
       </body>
     </html>
