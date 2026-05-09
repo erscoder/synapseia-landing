@@ -1,5 +1,85 @@
 # Changelog — @synapseia/landing
 
+## [2026-05-10] feat(landing): native KG peer-mesh visual + WhyNow band + drop pptx imagery (e970506)
+
+Replaces the remaining bolted-on PowerPoint screenshots with native
+SVG/JSX components built from the actual Synapseia architecture as
+described in the project corpus (NotebookLM-sourced specs against
+WHITEPAPER, How-It-Works, architecture-diagram).
+
+**KnowledgeGraph (`components/landing/KnowledgeGraph.client.tsx`)**
+
+Rebuilt around the "sharded across the swarm" thesis: six operator
+peer hexagons (T0–T5) with per-peer kg_node slices (DISEASE,
+PROTEIN, GENE, COMPOUND, PATHWAY, DISCOVERY), eight curved
+GossipSub mesh edges, three travelling gossip orbs on sampled
+edges, and one faded dotted bootstrap node in the corner to
+communicate Phase-6 deprecation. Each peer carries a Tier label
+plus an Ed25519 prefix; T4/T5 host DISCOVERY nodes with an emerald
+glow. Heartbeat halo pulses on every peer (offscreen-paused via
+`onScroll`). Mini legend in the top-right keys colour to kg_node
+type. Replaces the prior icosahedron-projection visual which read
+as decorative noise rather than communicating sharding.
+
+**HowItWorks Compounding Loop (`components/landing/HowItWorks.client.tsx`)**
+
+Removed the `<CompoundingLemniscate />` SVG that wasn't reading
+correctly in production. The Compounding Loop subsection now uses
+the chip-stack flow and pull-quote only.
+
+**WhyNow band (`components/landing/WhyNow.client.tsx`, new)**
+
+3-stat row (10–15 yrs / $2.6 B / 90%) with anime.js count-ups +
+ALS callout. Replaces the previous `problem-stats.png` pasted slide.
+Pure native SVG/text, integrates with the section's `prefers-
+reduced-motion` scope.
+
+**HardwareTiers (`components/landing/HardwareTiers.client.tsx`)**
+
+Added a 6-column Tier 0–5 spectrum table with graduated cyan/
+emerald/fuchsia accents and per-tier multiplier count-ups. The
+three simplified summary cards remain below.
+
+**TrainingTracks (`components/landing/TrainingTracks.client.tsx`)**
+
+SVG connector serpentine 1→2→3→6→5→4 with a soft pulse on each
+card and three particles flowing along the connector path.
+
+**OpenVerifiable (`components/landing/OpenVerifiable.client.tsx`)**
+
+Replaced emoji glyphs with monoline SVG icons (open-padlock /
+chain / shield-key / globe-mesh) that line-draw on view. Card
+titles decode via `scrambleText`. Copy switched from "Open source"
+to "Source-available" with explicit FSL-1.1 mention; the network
+is public but not OSI-OSS, this is now correctly stated.
+
+**Hero (`components/landing/Hero.client.tsx`)**
+
+Dropped the `splitText` per-character word-deploy gimmick that was
+fighting `bg-clip-text` gradients (chars inherit `color:transparent`
+but not the `background-image`, so the title disappeared). Now a
+soft fade-up on the whole `<h1>` with the tagline trailing 200 ms
+behind and the CTAs cascading at 400 ms.
+
+**WorldMap (`components/landing/WorldMap.client.tsx`)**
+
+Migrated from a hand-rolled topojson slice (now-deleted
+`lib/world-atlas.ts`) to the upstream `world-atlas` npm package,
+keeping the d3-geo equirectangular pipeline. Pulses, particles,
+and node entrance loops now scope to `onScroll` so they pause when
+the section is offscreen instead of ticking forever.
+
+**Cta (`components/landing/Cta.client.tsx`)**
+
+Copy: "Built in the open" → "Built in public" with FSL-1.1
+attribution underneath, matching the OpenVerifiable correction.
+
+**Misc**
+
+- `app/page.tsx` mounts the new `WhyNow` band between Hero and HowItWorks.
+- `RunNode.client.tsx` keeps the magnetic hover + click ripple from S5;
+  no behavioural change in this slice.
+
 ## [2026-05-09] feat(landing): anime.js v4 motion across all leaves (S3-S13) + a11y pass (d3e77fa)
 
 Slices S3-S13 of the redesign in a single commit. Every leaf now
