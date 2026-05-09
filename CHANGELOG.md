@@ -1,5 +1,11 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] fix(landing): remove 'Intelligence compounds.' pull-quote (67fd1c9)
+
+The big bold pull-quote at the end of HowItWorks was AI-pitch
+filler. The supporting line right below already carries the idea
+without the marketing flourish.
+
 ## [2026-05-10] fix(landing): remove Network Topology section + WorldMap (8473490)
 
 The Network Topology band rendered a static world map with sample
