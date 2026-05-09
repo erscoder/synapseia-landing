@@ -14,7 +14,6 @@ import { TrainingTracks } from '@/components/landing/TrainingTracks.client';
 import { KnowledgeGraph } from '@/components/landing/KnowledgeGraph.client';
 import { OpenVerifiable } from '@/components/landing/OpenVerifiable.client';
 import { HardwareTiers } from '@/components/landing/HardwareTiers.client';
-import { NetworkTopology } from '@/components/landing/NetworkTopology.client';
 import { EarnBand } from '@/components/landing/EarnBand.client';
 import { RunNode } from '@/components/landing/RunNode.client';
 import { Cta } from '@/components/landing/Cta.client';
@@ -36,7 +35,6 @@ export default function LandingPage() {
         <KnowledgeGraph />
         <OpenVerifiable />
         <HardwareTiers />
-        <NetworkTopology />
         <EarnBand />
         <RunNode />
         <Cta />
