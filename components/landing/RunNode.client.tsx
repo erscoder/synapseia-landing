@@ -192,6 +192,15 @@ export function RunNode() {
             Also available: <a href={RELEASE_DMG_X64} download className="text-slate-500 hover:text-white transition-colors underline underline-offset-2 inline-block" data-platform-btn>macOS Intel (.dmg)</a>
             {' '}· <a href={RELEASES_PAGE} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-white transition-colors underline underline-offset-2">release notes</a>
           </p>
+          <div className="max-w-2xl mx-auto mt-6 p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
+            <p className="text-xs text-amber-300/80 font-semibold mb-1">macOS users</p>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              The app is not yet code-signed. If macOS says {'"'}damaged and can&apos;t be opened{'"'}, run this in Terminal after installing:
+            </p>
+            <code className="block mt-2 text-xs text-slate-400 bg-black/30 rounded px-3 py-2 font-mono select-all">
+              sudo xattr -cr &quot;/Applications/Synapseia Node.app&quot;
+            </code>
+          </div>
         </Reveal>
       </div>
     </section>
