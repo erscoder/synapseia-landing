@@ -17,6 +17,12 @@ export function Nav() {
         >
           Docs
         </Link>
+        <Link
+          href="/downloads"
+          className="px-4 py-2 rounded-lg text-slate-300 hover:text-white text-sm font-medium transition-colors"
+        >
+          Download
+        </Link>
         <a
           href="https://github.com/erscoder/synapseia-landing"
           target="_blank"
