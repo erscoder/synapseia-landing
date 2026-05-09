@@ -3,21 +3,14 @@ import { useEffect, useRef } from 'react';
 import { Reveal, G } from './Reveal.client';
 import {
   animate,
-  scrambleText,
   stagger,
-  svg,
   utils,
   useAnime,
   DURATION,
   EASE,
 } from '@/lib/anime';
 
-const TIER_LABELS = ['TIER 0–1', 'TIER 2–3', 'TIER 4–5'] as const;
-
-// Full 6-tier spectrum. Replaces the previous pasted-pptx slide
-// (`/synapseia/hardware-tiers.png`). The simplified Laptop /
-// Workstation / Datacenter cards remain below as the at-a-glance
-// summary — their scanline + scrambleText motion is untouched.
+// Full 6-tier spectrum.
 const TIERS: Array<{
   tier: number;
   name: string;
@@ -223,66 +216,9 @@ function TierSpectrum() {
   );
 }
 
-// Existing simplified 3-card row + scanline kept as the
-// at-a-glance summary. Animation untouched per orchestrator brief.
 export function HardwareTiers() {
-  const rootRef = useRef<HTMLElement>(null);
-
-  useAnime<HTMLElement>(rootRef, (self) => {
-    const root = rootRef.current;
-    if (!root) return;
-    const { reduceMotion } = self.matches;
-    if (reduceMotion) return;
-
-    const drawables = svg.createDrawable('[data-tier-scanline] line');
-    const scanAnim = animate(drawables, {
-      draw: ['0 0', '0 1'],
-      duration: 700,
-      ease: 'inOutQuart',
-      autoplay: false,
-    });
-
-    // Card scale-pop sequenced to scanline progress (~33% per card).
-    const popAnim = animate('[data-tier-card]', {
-      scale: [0.97, 1],
-      duration: 320,
-      ease: EASE.authoritative,
-      delay: (_el: unknown, i?: number) => 200 + (i ?? 0) * 220,
-      autoplay: false,
-    });
-
-    // Scramble label per card, fired in sync with the pop.
-    const scrambleAnims = TIER_LABELS.map((_label, i) => animate(
-      `[data-tier-label="${i}"]`,
-      {
-        innerHTML: scrambleText({ chars: 'uppercase' }),
-        duration: 420,
-        delay: 240 + i * 220,
-        ease: 'linear',
-        autoplay: false,
-      },
-    ));
-
-    let played = false;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !played) {
-        played = true;
-        scanAnim.play();
-        popAnim.play();
-        scrambleAnims.forEach((a) => a.play());
-        io.disconnect();
-      }
-    }, { threshold: 0.25 });
-    io.observe(root);
-
-    return () => {
-      io.disconnect();
-      utils.remove('[data-tier-scanline] line');
-    };
-  });
-
   return (
-    <section ref={rootRef} className="py-20 px-6">
+    <section className="py-20 px-6">
       <div className="max-w-5xl mx-auto">
         <Reveal>
           <div className="text-center mb-12">
@@ -303,40 +239,6 @@ export function HardwareTiers() {
             The full multiplier table — staked SYN raises tier on top of
             hardware capability.
           </p>
-        </Reveal>
-
-        <Reveal delay={100}>
-          <div className="relative">
-            {/* Scanline overlay: 1px stroke sweeping the row. Hidden on
-                mobile (single column wouldn't communicate the sweep). */}
-            <svg
-              data-tier-scanline
-              aria-hidden="true"
-              viewBox="0 0 600 4"
-              preserveAspectRatio="none"
-              className="hidden sm:block absolute -top-2 left-0 w-full h-1 pointer-events-none"
-            >
-              <line x1="0" y1="2" x2="600" y2="2" stroke="rgb(96 165 250 / 0.7)" strokeWidth={2} />
-            </svg>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                { idx: 0, name: 'Laptop',                       items: ['Research analysis', 'CPU inference (tokenize / embed / classify)', 'Peer review', 'Knowledge-graph hosting (small shards)'] },
-                { idx: 1, name: 'Workstation + consumer GPU',   items: ['Everything in Tier 0-1', 'CPU training (4 rounds / day)', 'GPU inference (FCFS 30-50 SYN per task)', 'Molecular docking pairs'] },
-                { idx: 2, name: 'Datacenter / multi-GPU',       items: ['Everything in Tier 2-3', 'GPU training (DiLoCo, 6 rounds / day)', 'Heaviest peer-review workloads', 'Top-3 placement on the highest pools'] },
-              ].map(({ idx, name, items }) => (
-                <G key={idx} className="p-6">
-                  <div data-tier-card>
-                    <div data-tier-label={idx} className="text-[10px] uppercase tracking-widest text-slate-500 font-mono mb-2">{TIER_LABELS[idx]}</div>
-                    <div className="text-base font-semibold text-white mb-2">{name}</div>
-                    <ul className="text-xs text-slate-400 leading-relaxed space-y-1.5 list-disc pl-4 marker:text-slate-600">
-                      {items.map((it) => <li key={it}>{it}</li>)}
-                    </ul>
-                  </div>
-                </G>
-              ))}
-            </div>
-          </div>
         </Reveal>
 
         <Reveal delay={200}>
