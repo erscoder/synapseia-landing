@@ -1,5 +1,59 @@
 # Changelog — @synapseia/landing
 
+## [2026-05-09] feat(landing): add /downloads page + Download nav link (fc00cc1)
+
+Mirrors the existing `/docs` route pattern. Visitors can now
+deep-link to `synapseia.network/downloads` for a dedicated download
+page composing `Nav` + `RunNode` + `Footer`. The in-flow `RunNode`
+band on the landing stays put — this is a UX add, not a content
+reshuffle. The nav gains a `Download` entry between `Docs` and
+`GitHub`, reusing the ghost-link styling. Page is a server
+component with SEO metadata (`title`, `description`).
+
+## [2026-05-09] refactor(landing): drop Three.js, replace 3D NodeGraph with flat SVG world map (d160da4)
+
+Three.js, `three-globe`, and the `NodeGraph` + `SpaceBackground`
+3D components are gone. The network topology section renders a
+deterministic, SSR-friendly SVG instead: hand-curated low-poly
+continents path (`lib/world-atlas.ts`, ~3.6 KB raw), 25 sample
+nodes plotted via a 12-line equirectangular projection helper, and
+30 lines drawn between connected pairs. No motion yet — anime.js
+arrives in slice S2 and the WorldMap will gain pulses, edge draw,
+and data-flow particles in S4.
+
+**Removed**:
+
+- `components/landing/NodeGraph.tsx` (Three.js globe, ~280 LOC).
+- `components/landing/SpaceBackground.tsx` (Three.js starfield,
+  ~200 LOC).
+- `lib/scheduleIdle.ts` — was only used by `SpaceBackground`,
+  reviewer flagged as dead code.
+- `three` + `@types/three` from `package.json`.
+- `transpilePackages: ['three']` block + comment from
+  `next.config.ts`.
+
+**Added**:
+
+- `lib/landing-nodes-sample.ts` — 25 nodes covering NA/EU/APAC/SA
+  plus 30 edges. `SampleNode` / `SampleEdge` TS interfaces. Tier
+  → Tailwind colour map documented inline
+  (`cpu → fill-cyan-400`, `gpu → fill-fuchsia-500`,
+  `inference → fill-emerald-400`).
+- `lib/world-atlas.ts` — hand-trimmed continents SVG path for
+  `viewBox 1000×500`.
+- `components/landing/WorldMap.client.tsx` — pure render, no
+  `useEffect`, decorative `aria-hidden`. `NetworkTopology.client.tsx`
+  renders it in place of the dynamic NodeGraph import.
+
+The CSS-only cosmic backdrop in `app/globals.css` (radial
+gradients + 6-layer starfield) was already shipped and is now the
+sole owner of the night-sky look.
+
+**Bundle**: total static JS dropped from 1.3+ MB to ~735 KB
+(Three.js alone was ~600 KB). `pnpm why three` returns empty for
+the landing package. Dev compile clean, all 5 static pages
+prerender, no warnings vs baseline.
+
 ## [2026-05-09] refactor(landing): split monolithic page.tsx into server shell + 12 client leaves (afdf0cc)
 
 Pure structural split, regression-free. `app/page.tsx` was a 958-line
