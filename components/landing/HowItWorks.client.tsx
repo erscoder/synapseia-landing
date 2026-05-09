@@ -1,6 +1,16 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, forwardRef } from 'react';
 import { Reveal, G, FA, SH } from './Reveal.client';
+import {
+  animate,
+  stagger,
+  utils,
+  onScroll,
+  useAnime,
+  DURATION,
+  EASE,
+  REDUCED_MOTION_QUERY,
+} from '@/lib/anime';
 
 const STAGES = [
   { id: 'stage-1', num: 1, label: 'Config Search' },
@@ -10,25 +20,37 @@ const STAGES = [
   { id: 'stage-5', num: 5, label: 'Discoveries' },
 ];
 
-function StageNav({ active }: { active: string }) {
-  return (
-    <div className="sticky top-[52px] z-40 backdrop-blur-lg bg-black/50 border-b border-white/[0.04] py-3">
-      <div className="max-w-6xl mx-auto px-4 flex items-center justify-center gap-1 sm:gap-2 overflow-x-auto">
-        {STAGES.map(s => (
-          <button key={s.id} onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-            className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${active === s.id ? 'bg-blue-500/15 border border-blue-500/30 text-blue-200' : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.03]'}`}>
-            <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${active === s.id ? 'bg-blue-500/20 text-blue-300' : 'bg-white/[0.05] text-slate-600'}`}>{s.num}</span>
-            <span className="hidden sm:inline">{s.label}</span>
-          </button>
-        ))}
+const StageNav = forwardRef<HTMLDivElement, { active: string; indicatorRef: React.RefObject<HTMLSpanElement | null> }>(
+  function StageNav({ active, indicatorRef }, ref) {
+    return (
+      <div className="sticky top-[52px] z-40 backdrop-blur-lg bg-black/50 border-b border-white/[0.04] py-3">
+        <div ref={ref} className="relative max-w-6xl mx-auto px-4 flex items-center justify-center gap-1 sm:gap-2 overflow-x-auto">
+          {STAGES.map(s => (
+            <button key={s.id} data-stage-nav={s.id} onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${active === s.id ? 'bg-blue-500/15 border border-blue-500/30 text-blue-200' : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.03]'}`}>
+              <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${active === s.id ? 'bg-blue-500/20 text-blue-300' : 'bg-white/[0.05] text-slate-600'}`}>{s.num}</span>
+              <span className="hidden sm:inline">{s.label}</span>
+            </button>
+          ))}
+          <span
+            ref={indicatorRef}
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 h-[2px] rounded-full bg-gradient-to-r from-blue-400/60 via-blue-300 to-blue-400/60"
+            style={{ left: 0, width: 0, opacity: 0 }}
+          />
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  },
+);
 
 export function HowItWorks() {
   const [activeStage, setActiveStage] = useState('stage-1');
+  const rootRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
 
+  // Existing intersection observer — DO NOT TOUCH. Drives `activeStage`.
   useEffect(() => {
     const obs: IntersectionObserver[] = [];
     STAGES.forEach(s => {
@@ -40,13 +62,57 @@ export function HowItWorks() {
     return () => obs.forEach(o => o.disconnect());
   }, []);
 
+  // Per-stage scroll-linked slide-up. We animate ONLY the y transform —
+  // opacity is owned by the surrounding <Reveal> wrappers so the two
+  // systems don't fight for the same property (Reveal SSRs at
+  // opacity-100 for FCP, then drops below-fold sections to 0 and
+  // fades them back in on scroll). Slide-up + Reveal fade compose
+  // naturally without flicker.
+  useAnime(rootRef, (self) => {
+    const { reduceMotion } = self.matches;
+    if (reduceMotion) return;
+    const stages = utils.$('[data-stage]') as unknown as HTMLElement[];
+    stages.forEach((stage) => {
+      const heading = stage.querySelector('h2, h3');
+      const body = stage.querySelector('[data-stage-body], p');
+      const targets = [heading, body].filter(Boolean) as HTMLElement[];
+      if (targets.length === 0) return;
+      animate(targets, {
+        y: [40, 0],
+        delay: stagger(80),
+        duration: DURATION.medium,
+        ease: EASE.snap,
+        autoplay: onScroll({ target: stage, enter: 'bottom-=100 top', sync: false }),
+      });
+    });
+  });
+
+  // StageNav active indicator: slides between buttons whenever activeStage changes.
+  // Lives outside the scope because it's driven by React state, not mount lifecycle.
+  // anime.js auto-cancels per-target on re-call, so no scope cleanup needed.
+  useEffect(() => {
+    const nav = navRef.current;
+    const indicator = indicatorRef.current;
+    if (!nav || !indicator) return;
+    const btn = nav.querySelector(`[data-stage-nav="${activeStage}"]`) as HTMLElement | null;
+    if (!btn) return;
+    const reduceMotion = typeof window !== 'undefined' && window.matchMedia(REDUCED_MOTION_QUERY).matches;
+    animate(indicator, {
+      left: btn.offsetLeft,
+      width: btn.offsetWidth,
+      opacity: 1,
+      duration: reduceMotion ? 0 : DURATION.short,
+      ease: EASE.snap,
+    });
+  }, [activeStage]);
+
   return (
-    <div id="engine">
+    <div id="engine" ref={rootRef}>
       <Reveal><div className="text-center py-16 px-6"><h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">How a research cycle runs today</h2><p className="text-slate-500 max-w-2xl mx-auto">Five stages, every one running in parallel across distributed operator nodes. Multiple training tracks active concurrently — no single node bottlenecks the network.</p></div></Reveal>
-      <StageNav active={activeStage} />
+      <StageNav ref={navRef} active={activeStage} indicatorRef={indicatorRef} />
 
       {/* STAGE 1 — HYPERPARAMETER SEARCH */}
-      <section id="stage-1" className="py-20 px-6 scroll-mt-28">
+      <section id="stage-1" data-stage="1" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
           <Reveal><SH stage={1} title="Configuration Search" subtitle="Every operator node — laptops, workstations, datacenter GPUs — runs its own experiment to find the analysis configuration that wins on quality and latency. Multiple training tracks (cardiology, oncology, ALS, neurology…) search in parallel; no single node owns a topic." /></Reveal>
           <Reveal delay={100}><p className="text-center text-slate-400 text-sm mb-10 max-w-3xl mx-auto">Each node tries a different prompt template, temperature, chunk size, or analysis depth and reports back to a CRDT leaderboard — conflict-free, no central server, no waiting on coord. The best config wins for that training track.</p></Reveal>
@@ -54,21 +120,21 @@ export function HowItWorks() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <Reveal delay={150}>
               <G className="p-5">
-                <div className="flex items-center gap-2 mb-3"><div className="w-2 h-2 rounded-full bg-slate-500 animate-pulse" /><span className="text-xs text-slate-400 font-mono">Node A</span></div>
+                <div className="flex items-center gap-2 mb-3"><div className="w-2 h-2 rounded-full bg-slate-500 motion-safe:animate-pulse" /><span className="text-xs text-slate-400 font-mono">Node A</span></div>
                 <p className="font-mono text-sm text-slate-300 mb-3"><span className="text-slate-500">Try </span><span className="text-blue-300">clinical_extract_v1</span><span className="text-slate-600">, temp=0.5, chunks=1024</span></p>
                 <div className="flex gap-4 text-xs"><span className="text-slate-500">quality: <span className="text-amber-400 font-bold font-mono">7.4/10</span></span><span className="text-slate-500">latency: <span className="text-slate-300 font-mono">1.2s</span></span></div>
               </G>
             </Reveal>
             <Reveal delay={250}>
               <G className="p-5">
-                <div className="flex items-center gap-2 mb-3"><div className="w-2 h-2 rounded-full bg-slate-500 animate-pulse" /><span className="text-xs text-slate-400 font-mono">Node B</span></div>
+                <div className="flex items-center gap-2 mb-3"><div className="w-2 h-2 rounded-full bg-slate-500 motion-safe:animate-pulse" /><span className="text-xs text-slate-400 font-mono">Node B</span></div>
                 <p className="font-mono text-sm text-slate-300 mb-3"><span className="text-slate-500">Try </span><span className="text-blue-300">biomedical_summary</span><span className="text-slate-600">, temp=0.3, chunks=512</span></p>
                 <div className="flex gap-4 text-xs"><span className="text-slate-500">quality: <span className="text-red-400 font-bold font-mono">5.8/10</span></span><span className="text-slate-500">latency: <span className="text-slate-300 font-mono">0.4s</span></span></div>
               </G>
             </Reveal>
             <Reveal delay={350}>
               <G className="p-5 border-blue-500/20 bg-blue-500/[0.04]">
-                <div className="flex items-center gap-2 mb-3"><div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" /><span className="text-xs text-blue-300 font-mono">Node C {'★'}</span></div>
+                <div className="flex items-center gap-2 mb-3"><div className="w-2 h-2 rounded-full bg-blue-400 motion-safe:animate-pulse" /><span className="text-xs text-blue-300 font-mono">Node C {'★'}</span></div>
                 <p className="font-mono text-sm text-slate-300 mb-3"><span className="text-slate-500">Try </span><span className="text-blue-300">hypothesis_medical</span><span className="text-slate-600">, temp=0.8, chunks=4096</span></p>
                 <div className="flex gap-4 text-xs"><span className="text-slate-500">quality: <span className="text-emerald-400 font-bold font-mono">9.2/10</span></span><span className="text-slate-500">latency: <span className="text-slate-300 font-mono">3.8s</span></span></div>
               </G>
@@ -92,7 +158,7 @@ export function HowItWorks() {
       </section>
 
       {/* STAGE 2 — RESEARCH ROUNDS */}
-      <section id="stage-2" className="py-20 px-6 scroll-mt-28">
+      <section id="stage-2" data-stage="2" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
           <Reveal><SH stage={2} title="Research Rounds" subtitle="Multiple rounds run side-by-side, each tied to its own training track. A round picks a corpus slice (PubMed, ClinicalTrials.gov, preprints), fans work orders out to every available node over libp2p gossipsub, and lets the swarm chew through the papers with the best config from Stage 1." /></Reveal>
 
@@ -132,7 +198,7 @@ export function HowItWorks() {
       </section>
 
       {/* STAGE 3 — PAPER ANALYSIS */}
-      <section id="stage-3" className="py-20 px-6 scroll-mt-28">
+      <section id="stage-3" data-stage="3" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
           <Reveal><SH stage={3} title="Paper Analysis" subtitle="Every operator&apos;s agent runs the winning config locally on its own GPU — structured extraction, methodology scoring, cross-referencing prior findings in the shared knowledge graph, and surfacing fresh hypotheses. Different nodes work different papers in the same round; the work fans out, never queues." /></Reveal>
 
@@ -182,7 +248,7 @@ export function HowItWorks() {
       </section>
 
       {/* STAGE 4 — PEER REVIEW */}
-      <section id="stage-4" className="py-20 px-6 scroll-mt-28">
+      <section id="stage-4" data-stage="4" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
           <Reveal><SH stage={4} title="Peer Review" subtitle="Every analysis lands in front of N other nodes for review. Reviewers score on rigour, novelty, evidence quality, and reproducibility — signed with each peer&apos;s identity, gossipped over libp2p, and consolidated on the CRDT leaderboard. No central authority decides what&apos;s good; the swarm does." /></Reveal>
 
@@ -222,7 +288,7 @@ export function HowItWorks() {
       </section>
 
       {/* STAGE 5 — DISCOVERIES */}
-      <section id="stage-5" className="py-20 px-6 scroll-mt-28">
+      <section id="stage-5" data-stage="5" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
           <Reveal><SH stage={5} title="Discoveries" subtitle="Analyses that average {'\u2265'} 8/10 across peer reviews are promoted to DISCOVERIES — written into the shared knowledge graph, indexed for the next round's context, and surfaced to every operator. The graph is sharded across peers so no single node holds the whole library." /></Reveal>
 

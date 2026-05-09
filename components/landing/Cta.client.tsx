@@ -1,28 +1,86 @@
 'use client';
+import { useRef } from 'react';
 import Link from 'next/link';
 import { Reveal, G } from './Reveal.client';
+import {
+  animate,
+  utils,
+  onScroll,
+  useAnime,
+  stagger,
+  DURATION,
+  EASE,
+  STAGGER,
+} from '@/lib/anime';
 
 export function Cta() {
+  // Scope root for anime.js. Drives the on-view fade-up of heading +
+  // CTAs and a spring-scale on hover of the primary CTA.
+  const root = useRef<HTMLDivElement>(null);
+
+  useAnime<HTMLDivElement>(root, (self) => {
+    const { reduceMotion } = self.matches;
+
+    // On-view reveal of heading + paragraphs + CTA buttons. Outer
+    // <Reveal> already CSS-fades the wrapping card, this layer adds
+    // a subtle staggered slide for the children inside.
+    const targets = utils.$('[data-cta-reveal]') as unknown as HTMLElement[];
+    animate(targets, {
+      y: reduceMotion ? 0 : [12, 0],
+      opacity: [0, 1],
+      delay: reduceMotion ? 0 : stagger(STAGGER.base),
+      duration: reduceMotion ? 0 : DURATION.short,
+      ease: EASE.snap,
+      autoplay: onScroll({ target: root.current!, enter: 'bottom-=80 top' }),
+    });
+
+    if (reduceMotion) return;
+
+    // Spring scale on hover of the primary CTA.
+    const primary = utils.$('[data-cta-primary]') as unknown as HTMLElement[];
+    const cleanups: Array<() => void> = [];
+
+    primary.forEach((btn) => {
+      const onEnter = () => {
+        animate(btn, { scale: 1.04, duration: 250, ease: EASE.spring });
+      };
+      const onLeave = () => {
+        animate(btn, { scale: 1, duration: 250, ease: EASE.spring });
+      };
+      btn.addEventListener('pointerenter', onEnter);
+      btn.addEventListener('pointerleave', onLeave);
+      cleanups.push(() => {
+        btn.removeEventListener('pointerenter', onEnter);
+        btn.removeEventListener('pointerleave', onLeave);
+      });
+    });
+
+    return () => {
+      cleanups.forEach((fn) => fn());
+    };
+  });
+
   return (
-    <section className="py-28 px-6 text-center">
+    <section ref={root} className="py-28 px-6 text-center">
       <div className="max-w-2xl mx-auto">
         <Reveal>
           <G className="p-12 rounded-3xl">
-            <h2 className="text-4xl font-bold text-white mb-4">Built in the open</h2>
-            <p className="text-slate-400 mb-6 leading-relaxed">
+            <h2 data-cta-reveal className="text-4xl font-bold text-white mb-4">Built in the open</h2>
+            <p data-cta-reveal className="text-slate-400 mb-6 leading-relaxed">
               Synapseia is a working peer-to-peer research network — multiple
               training tracks run in parallel today across distributed
               operator GPUs, and every cycle is logged to the public knowledge
               graph. The codebase, the protocol specs, and the Solana
               contracts are open source.
             </p>
-            <p className="text-slate-500 mb-10 leading-relaxed text-sm">
+            <p data-cta-reveal className="text-slate-500 mb-10 leading-relaxed text-sm">
               Watch the repo, read the protocol notes, or contribute a node —
               the network grows one operator at a time.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div data-cta-reveal className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/docs"
+                data-cta-primary
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl backdrop-blur-md bg-blue-500/15 border border-blue-500/30 text-blue-200 font-semibold hover:bg-blue-500/25 hover:border-blue-400/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 text-base"
               >
                 Read the docs

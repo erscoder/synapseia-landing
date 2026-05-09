@@ -23,16 +23,22 @@ export default function LandingPage() {
   return (
     <div className="relative min-h-screen text-white">
       <Nav />
-      <Hero />
-      <HowItWorks />
-      <TrainingTracks />
-      <KnowledgeGraph />
-      <OpenVerifiable />
-      <HardwareTiers />
-      <NetworkTopology />
-      <EarnBand />
-      <RunNode />
-      <Cta />
+      {/* `id="main"` is the target of the skip-to-content link in
+          `app/layout.tsx`; `tabIndex={-1}` makes the wrapper
+          programmatically focusable so the skip link actually moves
+          focus. */}
+      <main id="main" tabIndex={-1} className="focus:outline-none">
+        <Hero />
+        <HowItWorks />
+        <TrainingTracks />
+        <KnowledgeGraph />
+        <OpenVerifiable />
+        <HardwareTiers />
+        <NetworkTopology />
+        <EarnBand />
+        <RunNode />
+        <Cta />
+      </main>
       <Footer />
     </div>
   );

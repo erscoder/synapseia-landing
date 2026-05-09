@@ -21,15 +21,31 @@
 
 import { useEffect, type RefObject, type DependencyList } from 'react';
 import { createScope } from 'animejs';
-import type { ScopeConstructorCallback } from 'animejs';
+import type { Scope } from 'animejs';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
 
-export function useAnime<T extends HTMLElement>(
+// Public callback shape: anime.js v4 internally types this as
+// `(scope?: Scope) => void` (optional), but at runtime the engine
+// always invokes the callback with a non-null scope after `add()`.
+// We re-type to non-optional here so consumers can destructure
+// `self.matches` without a strict-null footgun. The internal wrapper
+// in the effect re-bridges the shape.
+export type UseAnimeCallback = (self: Scope) => void | (() => void);
+
+// `T extends Element` (not `HTMLElement`) so SVGSVGElement / SVGGElement
+// refs bind without an `as` cast. anime.js's Scope.root accepts any
+// Element.
+export function useAnime<T extends Element>(
   root: RefObject<T | null>,
-  cb: ScopeConstructorCallback,
+  cb: UseAnimeCallback,
   deps: DependencyList = [],
 ): void {
-  // The cb is intentionally NOT in the deps array by default — leafs
+  // StrictMode dev double-invokes effects: mount → cleanup → mount.
+  // `scope.revert()` is idempotent and tears down all animations/
+  // timers/scroll-observers the scope created, so the dev double-run
+  // is safe and a re-mount is intentional behaviour, not a leak.
+  //
+  // The `cb` is deliberately NOT in the deps array by default — leafs
   // pass an arrow function inline and we don't want a new identity
   // per render to re-trigger the entrance. Pass an explicit `deps`
   // array if you need to re-run on prop change.
@@ -37,11 +53,16 @@ export function useAnime<T extends HTMLElement>(
   useEffect(() => {
     if (!root.current) return;
     const scope = createScope({
-      root: root.current,
+      root: root.current as unknown as HTMLElement,
       mediaQueries: {
         reduceMotion: REDUCED_MOTION_QUERY,
       },
-    }).add(cb);
+    }).add((self) => {
+      // anime.js's typing makes `self` optional; at runtime it's
+      // always defined post-`.add()`. Narrow it for consumers.
+      if (!self) return undefined;
+      return cb(self);
+    });
     return () => {
       scope.revert();
     };

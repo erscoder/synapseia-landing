@@ -1,9 +1,83 @@
 'use client';
+import { useRef } from 'react';
 import { Reveal, G } from './Reveal.client';
+import {
+  animate,
+  onScroll,
+  useAnime,
+  DURATION,
+  EASE,
+} from '@/lib/anime';
+
+// Static target for the count-up: matches the literal `71,918 SYN/day`
+// shown in the staking callout. Kept here so the count-up target stays
+// in sync with the rendered formatted string. If the daily staking pool
+// changes, update both this constant and the `71,918` in the JSX.
+const STAKING_POOL_TARGET = 71918;
+
+// Spanish-EN locale-agnostic thousands formatter ("71,918"). Matches
+// the existing static copy so the final frame reads identically to the
+// SSR HTML.
+const formatThousands = (n: number) => Math.round(n).toLocaleString('en-US');
 
 export function EarnBand() {
+  const rootRef = useRef<HTMLElement>(null);
+
+  // S10 — anime.js v4 motion for the earn / rewards section.
+  // Inventory:
+  //   - heading + supporting copy + 6 income-stream cards + tier table
+  //     + staking callout (already wrapped in <Reveal> for on-view
+  //     opacity+translate; we leave that intact)
+  //   - one numeric estimate: the staking pool size (71,918 SYN/day)
+  //   - NO interactive control (slider/toggle/dropdown), so the spring
+  //     on-input branch from the spec is not wired — only the
+  //     on-view count-up runs here.
+  // Reduced motion: textContent is set to the final formatted target
+  // immediately and the count animation is skipped.
+  useAnime<HTMLElement>(rootRef, (self) => {
+    const { reduceMotion } = self.matches;
+    const target = rootRef.current?.querySelector<HTMLElement>(
+      '[data-earn-value]',
+    );
+    if (!target) return;
+
+    if (reduceMotion) {
+      target.textContent = formatThousands(STAKING_POOL_TARGET);
+      return;
+    }
+
+    // If the EarnBand is ALREADY in view at mount (user deep-linked
+    // here, or the section sits above the fold on a tall window),
+    // skip the count-up entirely and keep the SSR'd "71,918"
+    // visible. Otherwise, an `animate()` with `autoplay: onScroll`
+    // would fire immediately on mount, snap the textContent to "0",
+    // then count back up — visible as a flicker. For users above
+    // the section, reset textContent to "0" so the count-up has a
+    // clean baseline; the count-up triggers only when they scroll
+    // to it.
+    const rect = target.getBoundingClientRect();
+    const inViewAtMount =
+      rect.top < window.innerHeight && rect.bottom > 0;
+    if (inViewAtMount) {
+      target.textContent = formatThousands(STAKING_POOL_TARGET);
+      return;
+    }
+
+    target.textContent = formatThousands(0);
+    const counter = { v: 0 };
+    animate(counter, {
+      v: STAKING_POOL_TARGET,
+      duration: DURATION.long,
+      ease: EASE.snap,
+      onUpdate: () => {
+        target.textContent = formatThousands(counter.v);
+      },
+      autoplay: onScroll({ target, enter: 'bottom-=80 top' }),
+    });
+  });
+
   return (
-    <section className="py-20 px-6">
+    <section ref={rootRef} className="py-20 px-6">
       <div className="max-w-6xl mx-auto">
         <Reveal>
           <div className="text-center mb-12">
@@ -150,13 +224,15 @@ export function EarnBand() {
               <div className="text-base font-semibold text-white mb-1">Staking also earns passive APY</div>
               <p className="text-sm text-slate-400 leading-relaxed">
                 Beyond the work multiplier, staked SYN earns from the{' '}
-                <span className="text-emerald-400 font-mono font-semibold">71,918 SYN/day</span>{' '}
+                <span className="text-emerald-400 font-mono font-semibold">
+                  <span data-earn-value>71,918</span> SYN/day
+                </span>{' '}
                 reward pool distributed proportionally to all stakers.
                 The more SYN locked, the more you earn — even when your node is offline.
               </p>
             </div>
             <span className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 motion-safe:animate-pulse" />
               Coming soon
             </span>
           </G>
