@@ -1,5 +1,21 @@
 # Changelog — @synapseia/landing
 
+## [2026-05-09] feat(landing): install anime.js v4 + motion tokens + useAnime scope hook (f878040)
+
+Slice S2 — foundation for the motion redesign. No visible
+animation yet; this slice only adds plumbing so the upcoming
+S3-S12 motion slices stay short.
+
+- `animejs@^4.4.1` runtime dep (zero transitive deps, built-in
+  TS types).
+- `lib/motion.ts` — `DURATION`, `EASE`, `STAGGER`,
+  `REDUCED_MOTION_QUERY` tokens.
+- `hooks/useAnime.ts` — generic hook wrapping `createScope` with
+  `useEffect` + `revert` cleanup and the `reduceMotion` media
+  query already wired.
+- `lib/anime.ts` — convenience barrel re-exporting the v4 named
+  API plus the motion tokens and the hook.
+
 ## [2026-05-09] feat(landing): add /downloads page + Download nav link (fc00cc1)
 
 Mirrors the existing `/docs` route pattern. Visitors can now
