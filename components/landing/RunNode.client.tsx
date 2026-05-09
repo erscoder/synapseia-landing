@@ -1,0 +1,92 @@
+'use client';
+import { Reveal, G } from './Reveal.client';
+
+// node-ui release version reflected on the download band. Bump
+// alongside the matching constant in
+// `functions/download/[platform].js` (the Cloudflare Pages Function
+// that proxy-streams the binary from synapseia.network). The function
+// hits github.com/erscoder/synapseia-node-ui/releases/latest/download
+// upstream — keep filenames in sync with the latest published tag.
+const NODE_UI_VERSION = '0.8.3';
+
+// Same-origin proxy routes (Cloudflare Pages Function). The browser
+// stays on synapseia.network during download; the binary streams
+// through the worker, no GitHub UI flash, no jump in the URL bar.
+const RELEASE_DMG_ARM64 = '/download/mac-arm64';
+const RELEASE_DMG_X64 = '/download/mac-x64';
+const RELEASE_MSI = '/download/windows';
+const RELEASE_APPIMAGE = '/download/linux';
+
+// Fallback link to the GitHub release page (manual download, all
+// platforms, release notes). Kept in the footer for power users.
+const RELEASES_PAGE = 'https://github.com/erscoder/synapseia-node-ui/releases/latest';
+
+export function RunNode() {
+  return (
+    // DOWNLOAD — beta binaries live. node-ui release CI publishes
+    // DMG / MSI / AppImage on every `node-ui-v*` tag. Tiles below
+    // link to GitHub `releases/latest/download/<file>` so the
+    // newest tag always serves; bump NODE_UI_VERSION at top of
+    // file when filenames change.
+    <section className="py-20 px-6">
+      <div className="max-w-4xl mx-auto">
+        <Reveal>
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 font-mono mb-4">
+              DOWNLOAD
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">Run a Node</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
+              Desktop app for macOS, Windows, and Linux. One-click install, wallet baked in,
+              automatic updates. Pick your platform below.
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+            {/* macOS */}
+            <a href={RELEASE_DMG_ARM64} download className="group">
+              <G className="p-6 text-center hover:border-white/10 hover:bg-white/[0.05] transition-all cursor-pointer">
+                <svg className="w-10 h-10 mx-auto mb-3 text-slate-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                <div className="text-sm font-semibold text-white mb-1">macOS</div>
+                <div className="text-xs text-slate-500">Apple Silicon (.dmg)</div>
+              </G>
+            </a>
+
+            {/* Windows */}
+            <a href={RELEASE_MSI} download className="group">
+              <G className="p-6 text-center hover:border-white/10 hover:bg-white/[0.05] transition-all cursor-pointer">
+                <svg className="w-10 h-10 mx-auto mb-3 text-slate-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+                </svg>
+                <div className="text-sm font-semibold text-white mb-1">Windows</div>
+                <div className="text-xs text-slate-500">x64 Installer (.msi)</div>
+              </G>
+            </a>
+
+            {/* Linux */}
+            <a href={RELEASE_APPIMAGE} download className="group">
+              <G className="p-6 text-center hover:border-white/10 hover:bg-white/[0.05] transition-all cursor-pointer">
+                <svg className="w-10 h-10 mx-auto mb-3 text-slate-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.368 1.884 1.43.199.025.398.003.596-.07.646-.27 1.108-.675 1.108-1.346 0-.034-.003-.069-.01-.1.655-.015 1.348-.265 1.594-.87.7-1.635-.174-3.596-.294-4.62-.06-.51-.083-1.009.017-1.24.058-.155.154-.241.297-.338.552-.333.835-.591.953-.984.023-.09.04-.183.04-.273 0-.016 0-.032-.002-.045H21.8a.42.42 0 00.045-.207c-.038-.375-.247-.685-.494-.934-.169-.17-.375-.31-.595-.43-.173-.102-.22-.189-.233-.337-.016-.165-.016-.451.037-.744.052-.293.111-.63.111-.982 0-.147-.014-.298-.043-.453a4.096 4.096 0 00-.666-1.584 5.166 5.166 0 00-.745-.822c-.03-.027-.052-.046-.085-.065-.128-.09-.261-.186-.39-.241a.94.94 0 00-.392-.082c-.032 0-.065.003-.097.007a3.234 3.234 0 00-.283-.394c-.437-.528-1.161-.807-2.119-.807-.437 0-.92.075-1.454.228a.42.42 0 00-.095-.002c-.054-.22-.241-.46-.656-.553-.362-.084-.633-.141-.927-.176a1.5 1.5 0 01-.085-.01c-.123-.015-.25-.03-.378-.03-.138 0-.277.015-.392.06-.333.136-.479.372-.55.653-.152-.008-.304-.012-.455-.012-.17 0-.34.01-.506.033-.437-.14-.925-.21-1.418-.21-.507 0-1.026.087-1.49.306-.37.165-.693.414-.853.724-.082.164-.122.337-.122.512 0 .083.009.167.027.249a.42.42 0 00-.156.139c-.328.497-.363.98-.293 1.42.065.402.236.743.404.99-.012.021-.024.044-.032.065-.183.486.07.95.309 1.3.157.224.293.39.293.39s-.149.069-.293.194c-.209.174-.403.51-.403 1.123 0 .33.055.606.13.831a7.223 7.223 0 01-.172.263 4.404 4.404 0 01-.16.187L6.06 13.8c-.367.39-.612 1.008-.625 1.754-.007.37.057.735.194 1.07.137.333.35.63.647.853.248.198.544.35.877.44.28.077.583.116.906.116h.002a5.45 5.45 0 001.033-.112z"/>
+                </svg>
+                <div className="text-sm font-semibold text-white mb-1">Linux</div>
+                <div className="text-xs text-slate-500">x64 AppImage</div>
+              </G>
+            </a>
+          </div>
+        </Reveal>
+
+        <Reveal delay={200}>
+          <p className="text-center text-slate-600 text-xs mt-6">
+            Also available: <a href={RELEASE_DMG_X64} download className="text-slate-500 hover:text-white transition-colors underline underline-offset-2">macOS Intel (.dmg)</a>
+            {' '}· <a href={RELEASES_PAGE} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-white transition-colors underline underline-offset-2">release notes</a>
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
