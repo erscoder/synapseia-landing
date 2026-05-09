@@ -18,7 +18,7 @@ import {
 type Stat = {
   // numeric target the count-up animation drives
   target: number;
-  // formatter that paints `${current}-style string` — passed the
+  // formatter that paints `${current}-style string` - passed the
   // rounded interpolated value at every frame.
   format: (v: number) => string;
   // resting-state final string shown when reduced-motion is on,
@@ -26,7 +26,7 @@ type Stat = {
   finalText: string;
   label: string;
   detail: string;
-  // Tailwind gradient classes painted on the big number — graduated
+  // Tailwind gradient classes painted on the big number - graduated
   // alarm palette so the user feels the row tighten as they read.
   gradientClass: string;
 };
@@ -85,7 +85,7 @@ export function WhyNow() {
       return;
     }
 
-    // Drive count-up by mutating a plain JS object's `.v` field —
+    // Drive count-up by mutating a plain JS object's `.v` field -
     // canonical anime.js v4 idiom. autoplay:false so we play manually
     // when the section enters the viewport (no from-state pitfall).
     const counters = STATS.map((s, i) => {
@@ -110,7 +110,7 @@ export function WhyNow() {
       return { obj, anim };
     });
 
-    // Reset to 0 just before the entrance plays — utils.set is
+    // Reset to 0 just before the entrance plays - utils.set is
     // synchronous, so the user never sees the counters land at the
     // final value before counting up.
     let played = false;

@@ -110,7 +110,7 @@ function TierSpectrum() {
     const { reduceMotion } = self.matches;
     if (reduceMotion) return;
 
-    // Column sweep — left → right.
+    // Column sweep - left → right.
     const colAnim = animate('[data-tier-col]', {
       y: [16, 0],
       opacity: [0, 1],
@@ -120,7 +120,7 @@ function TierSpectrum() {
       autoplay: false,
     });
 
-    // Multiplier count-up per tier — graduated 100 → 300.
+    // Multiplier count-up per tier - graduated 100 → 300.
     const counterAnims = TIERS.map((t, i) => {
       const obj = { v: 100 };
       return {
@@ -226,7 +226,7 @@ export function HardwareTiers() {
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">Run a node on what you have</h2>
             <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
               The desktop app picks the work types your machine can
-              handle. Start with a laptop, add a GPU later — your
+              handle. Start with a laptop, add a GPU later. Your
               operator identity stays the same and your stake
               follows you up the tiers.
             </p>
@@ -236,7 +236,7 @@ export function HardwareTiers() {
         <Reveal delay={50}>
           <TierSpectrum />
           <p className="text-center text-xs text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-            The full multiplier table — staked SYN raises tier on top of
+            The full multiplier table. Staked SYN raises tier on top of
             hardware capability.
           </p>
         </Reveal>
@@ -244,7 +244,7 @@ export function HardwareTiers() {
         <Reveal delay={200}>
           <p className="text-center text-slate-500 text-xs mt-8 max-w-2xl mx-auto leading-relaxed">
             Tier is determined by hardware capability AND staked SYN
-            — see{' '}
+            . See{' '}
             <a href="/docs#staking" className="text-blue-300 underline underline-offset-2 hover:text-blue-200">
               Staking and tiers
             </a>{' '}

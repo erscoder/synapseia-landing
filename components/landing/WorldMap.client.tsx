@@ -24,7 +24,7 @@ import {
 const VIEW_W = 1000;
 const VIEW_H = 500;
 
-// Cap data-flow particles at 10 — keeps the network feeling alive
+// Cap data-flow particles at 10 - keeps the network feeling alive
 // without pushing the active animator count past what mid-tier
 // hardware comfortably renders at 60fps. Pulses + particles are
 // gated by `prefers-reduced-motion` and pause when the section
@@ -82,7 +82,7 @@ const countryPaths: { id: string; d: string }[] = countriesGeo.features
   })
   .filter((p) => p.d.length > 0);
 
-// Only render nodes that participate in at least one edge — explicit
+// Only render nodes that participate in at least one edge - explicit
 // user request: paint only nodes that are actually connected.
 const connectedIds = new Set<string>();
 for (const e of SAMPLE_EDGES) {
@@ -102,7 +102,7 @@ function projectLatLon(lat: number, lon: number): [number, number] {
  * Animated SVG world map for the landing's "Network Topology" band.
  *
  * Renders the real Natural Earth 1:110m country geometries from
- * `world-atlas` projected through `d3-geo`'s equirectangular —
+ * `world-atlas` projected through `d3-geo`'s equirectangular -
  * replaces the prior hand-trimmed cartoon-island path. Animation
  * layers (anime.js v4):
  *   1. Country borders → line-draw on view (svg.createDrawable)
@@ -156,7 +156,7 @@ export function WorldMap() {
     if (!root) return;
     const { reduceMotion } = self.matches;
 
-    // 1. Country borders — line-draw on view.
+    // 1. Country borders - line-draw on view.
     const continents = svg.createDrawable('.continent-path');
     animate(continents, {
       draw: ['0 0', '0 1'],
@@ -165,7 +165,7 @@ export function WorldMap() {
       autoplay: onScroll({ target: root, sync: false }),
     });
 
-    // 2. Nodes — spring scale-in pop on view, stagger from center.
+    // 2. Nodes - spring scale-in pop on view, stagger from center.
     animate('.node-circle', {
       scale: reduceMotion ? 1 : [0, 1],
       opacity: [0, 1],
@@ -175,7 +175,7 @@ export function WorldMap() {
       autoplay: onScroll({ target: root, sync: false }),
     });
 
-    // 3. Edges — line-draw 40ms stagger on view.
+    // 3. Edges - line-draw 40ms stagger on view.
     const edges = svg.createDrawable('.edge-line');
     animate(edges, {
       draw: ['0 0', '0 1'],
@@ -185,7 +185,7 @@ export function WorldMap() {
       autoplay: onScroll({ target: root, sync: false }),
     });
 
-    // 4. Pulse rings — continuous ambient loop. Skipped entirely
+    // 4. Pulse rings - continuous ambient loop. Skipped entirely
     // under reduce-motion. `autoplay: onScroll(...)` pauses the
     // loop when the section scrolls offscreen so the engine isn't
     // ticking active animators while the user is at the footer.
@@ -201,7 +201,7 @@ export function WorldMap() {
       });
     }
 
-    // 5. Flow particles — travel along the first 10 edges via
+    // 5. Flow particles - travel along the first 10 edges via
     // svg.createMotionPath. Skipped under reduce-motion. Same
     // offscreen-pause discipline as the pulses.
     if (!reduceMotion) {
@@ -229,7 +229,7 @@ export function WorldMap() {
         className="w-full h-auto"
         aria-hidden="true"
       >
-        {/* Basemap — one path per country from Natural Earth 1:110m. */}
+        {/* Basemap - one path per country from Natural Earth 1:110m. */}
         <g>
           {countryPaths.map((p) => (
             <path
@@ -255,7 +255,7 @@ export function WorldMap() {
           />
         ))}
 
-        {/* Flow-particle donor paths — invisible <path> elements
+        {/* Flow-particle donor paths - invisible <path> elements
             referenced by svg.createMotionPath. Drawn as straight
             segments matching their edge so particles glide between
             the same node coordinates. */}
@@ -291,7 +291,7 @@ export function WorldMap() {
           </g>
         ))}
 
-        {/* Flow particles — small cyan dots that travel along the
+        {/* Flow particles - small cyan dots that travel along the
             donor paths. One <circle> per flow edge so each can be
             animated with its own motion path. */}
         {flowEdges.map((_e, i) => (

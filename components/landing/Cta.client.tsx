@@ -68,11 +68,11 @@ export function Cta() {
           <G className="p-12 rounded-3xl">
             <h2 data-cta-reveal className="text-4xl font-bold text-white mb-4">Built in public</h2>
             <p data-cta-reveal className="text-slate-400 mb-6 leading-relaxed">
-              Synapseia is a working peer-to-peer research network — multiple
+              Synapseia is a working peer-to-peer research network. Multiple
               training tracks run in parallel today across distributed
               operator GPUs, and every cycle is logged to the public knowledge
               graph. The node code, the protocol specs, and the Solana
-              contracts are public — readable, auditable, runnable.
+              contracts are public: readable, auditable, runnable.
             </p>
             <p data-cta-reveal className="text-slate-500 mb-10 leading-relaxed text-sm">
               Source-available under the Functional Source License (FSL-1.1)

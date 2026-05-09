@@ -3,7 +3,7 @@
 import { useMemo, useRef } from 'react';
 import { animate, onScroll, stagger, useAnime } from '@/lib/anime';
 
-// Deterministic seed based on index — keeps SSR and CSR markup identical
+// Deterministic seed based on index - keeps SSR and CSR markup identical
 // (no `Math.random()` flash / hydration mismatch). The modulo arithmetic
 // produces a pseudo-spread across the SVG viewBox without needing a real
 // PRNG. Stars sit at opacity 0.2 by default so the page renders something
@@ -23,7 +23,7 @@ export function Footer() {
   const stars = useMemo<Star[]>(
     () =>
       Array.from({ length: STAR_COUNT }, (_, i) => ({
-        // viewBox is 1000 x 150 — spread x across full width, y across height.
+        // viewBox is 1000 x 150 - spread x across full width, y across height.
         cx: ((i * 37) % 100) * 10,
         cy: ((i * 53) % 100) * 1.5,
         r: 0.6 + (i % 3) * 0.2,
@@ -43,7 +43,7 @@ export function Footer() {
       duration: 3000,
       delay: stagger(80, { from: 'random' }),
       ease: 'inOutSine',
-      // Pause the loop while the footer is offscreen — spares 30
+      // Pause the loop while the footer is offscreen - spares 30
       // animators from ticking continuously while the user is on
       // the hero / engine / network bands.
       autoplay: onScroll({ target: rootRef.current, sync: false }),
@@ -74,7 +74,7 @@ export function Footer() {
         ))}
       </svg>
       <p className="relative text-slate-600 text-sm">
-        Synapseia Network {'©'} 2026 — Decentralized AI Research
+        Synapseia Network {'©'} 2026 · Decentralized AI Research
       </p>
     </footer>
   );

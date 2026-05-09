@@ -16,7 +16,7 @@ const TRACKS = [
   { tag: 'ALS',          title: 'Amyotrophic Lateral Sclerosis', body: 'Mechanism mapping, biomarker discovery, drug repurposing across the ALS literature. The flagship track.' },
   { tag: 'Cardiology',   title: 'Cardiovascular Medicine',       body: 'Heart-failure phenotyping, lipid-pathway analysis, post-MI care protocols sourced from PubMed + ClinicalTrials.gov.' },
   { tag: 'Oncology',     title: 'Cancer Research',                body: 'Tumour-microenvironment signalling, immunotherapy response markers, repurposing screens across oncogenic pathways.' },
-  { tag: 'Neurology',    title: 'CNS Disorders',                  body: "Beyond ALS — Alzheimer's, Parkinson's, MS. Cross-track findings get auto-linked in the shared knowledge graph." },
+  { tag: 'Neurology',    title: 'CNS Disorders',                  body: "Beyond ALS: Alzheimer's, Parkinson's, MS. Cross-track findings get auto-linked in the shared knowledge graph." },
   { tag: 'Rare disease', title: 'Orphan Indications',             body: 'Long-tail conditions where corpus is small but methodology rigour matters most. Smaller rounds, deeper analysis.' },
   { tag: 'Open',         title: 'Operator-proposed tracks',       body: 'Operators stake to propose new tracks; ratified rounds get their own corpus + leaderboard. The network grows by community demand.' },
 ] as const;
@@ -36,7 +36,7 @@ const CONNECTORS = [
 // Signature gesture: SVG connectors line-draw between cards in
 // sequence (network discovering domains), each card pulses as the
 // trace reaches it, then 3 particles flow continuously along the
-// path — paused offscreen via onScroll's IntersectionObserver.
+// path - paused offscreen via onScroll's IntersectionObserver.
 export function TrainingTracks() {
   const rootRef = useRef<HTMLElement>(null);
 
@@ -46,7 +46,7 @@ export function TrainingTracks() {
     const { reduceMotion } = self.matches;
     if (reduceMotion) return;
 
-    // Manual play via IntersectionObserver — `[from, to]` pulses must
+    // Manual play via IntersectionObserver - `[from, to]` pulses must
     // not strand cards mid-transform if the trigger never fires.
     const drawables = svg.createDrawable('[data-track-connector] path');
     const drawAnim = animate(drawables, {
@@ -65,7 +65,7 @@ export function TrainingTracks() {
     });
 
     // Ambient flow: 3 small particles travel the first connector arc
-    // continuously. `autoplay: onScroll` pauses them offscreen — and
+    // continuously. `autoplay: onScroll` pauses them offscreen - and
     // because particles ship invisible (opacity-0 in markup) AND
     // their entrance is opacity-only at scroll-enter, the from-state
     // pitfall doesn't strand them.
@@ -107,7 +107,7 @@ export function TrainingTracks() {
             <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
               Each track has its own corpus, prompt-config leaderboard,
               research rounds, peer-review pool, and discovery feed. Tracks
-              run in parallel — your node opts into one or many based on
+              run in parallel; your node opts into one or many based on
               hardware tier and topic interest.
             </p>
           </div>
@@ -115,7 +115,7 @@ export function TrainingTracks() {
 
         <Reveal delay={100}>
           <div className="relative">
-            {/* SVG overlay sits behind the grid — pointer-events-none so
+            {/* SVG overlay sits behind the grid - pointer-events-none so
                 hovers on the cards still land. Hidden on mobile (1-col
                 stack would route the connectors awkwardly). */}
             <svg
@@ -170,7 +170,7 @@ export function TrainingTracks() {
 
         <Reveal delay={200}>
           <p className="text-center text-slate-500 text-xs mt-8 max-w-2xl mx-auto leading-relaxed">
-            Track membership is a per-round opt-in — your node picks which
+            Track membership is a per-round opt-in; your node picks which
             corpus to chew through next. No global ordering, no central
             scheduler.
           </p>

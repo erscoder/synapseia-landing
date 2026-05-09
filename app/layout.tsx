@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Synapseia Network — Decentralized AI compute',
+  title: 'Synapseia Network - Decentralized AI compute',
   description:
     'A peer-to-peer network of GPUs running LLM inference, evaluation, and knowledge-graph hosting. Secured by Solana, owned by its operators.',
   icons: { icon: '/favicon.ico' },
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 /**
  * Root layout. Cosmic backdrop now comes from `globals.css`
- * (radial gradients + sparse starfield) — pure CSS, no WebGL.
+ * (radial gradients + sparse starfield) - pure CSS, no WebGL.
  * Three.js was removed in slice S1.5 of the landing redesign.
  */
 export default function RootLayout({
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        {/* Skip-to-content link — first focusable element so keyboard
+        {/* Skip-to-content link - first focusable element so keyboard
             users can bypass the fixed nav and the decorative hero
             motion. Visually hidden until focused. */}
         <a

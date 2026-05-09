@@ -11,7 +11,7 @@ import {
   useAnime,
 } from '@/lib/anime';
 
-// "Knowledge graph sharded across the swarm" — visual spec sourced
+// "Knowledge graph sharded across the swarm" - visual spec sourced
 // from the Synapseia NotebookLM corpus (WHITEPAPER, How-It-Works,
 // Brain Dashboard notes). The graph is NOT centralised: each
 // operator peer holds its own slice of kg_nodes/kg_edges, and peers
@@ -37,7 +37,7 @@ import {
 //     (paused offscreen via onScroll).
 //   - Manual IntersectionObserver `.play()` on entrance to dodge
 //     the autoplay:onScroll(...) from-state pitfall (drawables
-//     would land at `0 0` — invisible — until the trigger fires).
+//     would land at `0 0` - invisible - until the trigger fires).
 
 type Tier = 'T0' | 'T1' | 'T2' | 'T3' | 'T4' | 'T5';
 
@@ -54,7 +54,7 @@ type Peer = {
 
 const VB = { w: 800, h: 360 };
 
-// Six peers arranged organically — no central node. Coords hand-
+// Six peers arranged organically - no central node. Coords hand-
 // tuned so the inter-peer mesh reads as a swarm, not a wheel.
 const PEERS: ReadonlyArray<Peer> = [
   { i: 0, x: 130, y: 110, tier: 'T0', id: 'ed25519:8f3a', accent: 'cyan' },
@@ -110,12 +110,12 @@ const KG_FILL: Record<KGType, string> = {
 // arranged in a tight triangle (so they fit inside the hex) plus
 // the two edges that wire them.
 const KG_SLICES: ReadonlyArray<{ types: [KGType, KGType, KGType] }> = [
-  { types: ['DISEASE', 'GENE', 'PROTEIN'] },         // P0 — T0 generic
-  { types: ['COMPOUND', 'PATHWAY', 'GENE'] },        // P1 — T2 generic
-  { types: ['DISCOVERY', 'PROTEIN', 'GENE'] },       // P2 — T5 hosts a DISCOVERY
-  { types: ['PROTEIN', 'COMPOUND', 'GENE'] },        // P3 — T3 generic
-  { types: ['DISCOVERY', 'DISEASE', 'PATHWAY'] },    // P4 — T4 hosts a DISCOVERY
-  { types: ['GENE', 'COMPOUND', 'PROTEIN'] },        // P5 — T1 generic
+  { types: ['DISEASE', 'GENE', 'PROTEIN'] },         // P0 - T0 generic
+  { types: ['COMPOUND', 'PATHWAY', 'GENE'] },        // P1 - T2 generic
+  { types: ['DISCOVERY', 'PROTEIN', 'GENE'] },       // P2 - T5 hosts a DISCOVERY
+  { types: ['PROTEIN', 'COMPOUND', 'GENE'] },        // P3 - T3 generic
+  { types: ['DISCOVERY', 'DISEASE', 'PATHWAY'] },    // P4 - T4 hosts a DISCOVERY
+  { types: ['GENE', 'COMPOUND', 'PROTEIN'] },        // P5 - T1 generic
 ];
 
 // Triangle of kg_nodes inside a peer hex. Coords relative to peer
@@ -134,7 +134,7 @@ const KG_EDGES_LOCAL: ReadonlyArray<[number, number]> = [
 ];
 
 function hexPath(cx: number, cy: number, r: number): string {
-  // Flat-top hexagon — six points starting at angle 0°.
+  // Flat-top hexagon - six points starting at angle 0°.
   const pts: string[] = [];
   for (let i = 0; i < 6; i++) {
     const a = (Math.PI / 3) * i;
@@ -147,7 +147,7 @@ function hexPath(cx: number, cy: number, r: number): string {
 
 function curvedMeshPath(a: Peer, b: Peer): string {
   // Quadratic curve with control point biased towards midpoint
-  // shifted slightly upward — gives the mesh an airy organic feel.
+  // shifted slightly upward - gives the mesh an airy organic feel.
   const mx = (a.x + b.x) / 2;
   const my = (a.y + b.y) / 2 - 18;
   return `M ${a.x} ${a.y} Q ${mx} ${my}, ${b.x} ${b.y}`;
@@ -187,7 +187,7 @@ export function KnowledgeGraph() {
       return;
     }
 
-    // 1. Peer hexes — line-draw + halo wakeup.
+    // 1. Peer hexes - line-draw + halo wakeup.
     const hexDrawables = svg.createDrawable('[data-kg-peer-hex]');
     const hexAnim = animate(hexDrawables, {
       draw: ['0 0', '0 1'],
@@ -218,7 +218,7 @@ export function KnowledgeGraph() {
       autoplay: false,
     });
 
-    // 4. Bootstrap node (deprecated Phase 6 piece) fades in last —
+    // 4. Bootstrap node (deprecated Phase 6 piece) fades in last -
     //    visually subordinate to the swarm.
     const bootAnim = animate('[data-kg-bootstrap]', {
       opacity: [0, 0.45],
@@ -303,7 +303,7 @@ export function KnowledgeGraph() {
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">The knowledge graph is sharded across the swarm</h2>
             <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
               Every discovery, every embedding, every cross-reference lives
-              in a shared semantic graph. Coord doesn&apos;t hold it — the
+              in a shared semantic graph. Coord doesn&apos;t hold it; the
               peer mesh does.
             </p>
           </div>
@@ -324,7 +324,7 @@ export function KnowledgeGraph() {
                 </radialGradient>
               </defs>
 
-              {/* GossipSub mesh — drawn first so peer hexes layer on top. */}
+              {/* GossipSub mesh - drawn first so peer hexes layer on top. */}
               {MESH.map(([a, b], idx) => {
                 const A = PEERS[a]!;
                 const B = PEERS[b]!;
@@ -341,7 +341,7 @@ export function KnowledgeGraph() {
                 );
               })}
 
-              {/* Hidden orbit paths — one per gossip orb. */}
+              {/* Hidden orbit paths - one per gossip orb. */}
               {ORBIT_EDGES.map(([a, b], idx) => (
                 <path
                   key={`orbit-${idx}`}
@@ -373,7 +373,7 @@ export function KnowledgeGraph() {
                       opacity={0}
                     />
 
-                    {/* Peer hex — entrance line-draws this stroke. */}
+                    {/* Peer hex - entrance line-draws this stroke. */}
                     <path
                       data-kg-peer-hex
                       d={hexPath(p.x, p.y, PEER_RADIUS)}
@@ -427,7 +427,7 @@ export function KnowledgeGraph() {
                       );
                     })}
 
-                    {/* Identity strip below the hex — Tier + Ed25519 prefix. */}
+                    {/* Identity strip below the hex - Tier + Ed25519 prefix. */}
                     <text
                       x={p.x}
                       y={p.y + PEER_RADIUS + 14}
@@ -452,7 +452,7 @@ export function KnowledgeGraph() {
                 );
               })}
 
-              {/* Gossip orbs — three travelling pulses on the mesh. */}
+              {/* Gossip orbs - three travelling pulses on the mesh. */}
               {ORBIT_EDGES.map((_, idx) => (
                 <circle
                   key={`orb-${idx}`}
@@ -464,7 +464,7 @@ export function KnowledgeGraph() {
                 />
               ))}
 
-              {/* Bootstrap node — deprecated by Phase 6, drawn faded
+              {/* Bootstrap node - deprecated by Phase 6, drawn faded
                   and dotted to communicate "scaffolding only". */}
               <g data-kg-bootstrap opacity={0}>
                 <circle
@@ -527,7 +527,7 @@ export function KnowledgeGraph() {
               <p className="text-xs text-slate-400 leading-relaxed">
                 Peers gossip discoveries, peer-review scores, and shard
                 envelopes over GossipSub. KadDHT routes peers to the slice
-                they need — no central directory in the data path.
+                they need. No central directory in the data path.
               </p>
             </G>
             <G className="p-6">
@@ -536,7 +536,7 @@ export function KnowledgeGraph() {
               <p className="text-xs text-slate-400 leading-relaxed">
                 Six bootstrap nodes help newcomers find their first peers.
                 Once a node is in the mesh, the bootstrap layer is bypassed
-                — and Phase 6 retires it entirely.
+                . Phase 6 retires it entirely.
               </p>
             </G>
           </div>

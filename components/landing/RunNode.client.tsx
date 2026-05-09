@@ -17,7 +17,7 @@ import {
 // `functions/download/[platform].js` (the Cloudflare Pages Function
 // that proxy-streams the binary from synapseia.network). The function
 // hits github.com/erscoder/synapseia-node-ui/releases/latest/download
-// upstream — keep filenames in sync with the latest published tag.
+// upstream - keep filenames in sync with the latest published tag.
 const NODE_UI_VERSION = '0.8.3';
 
 // Same-origin proxy routes (Cloudflare Pages Function). The browser
@@ -131,7 +131,7 @@ export function RunNode() {
   });
 
   return (
-    // DOWNLOAD — beta binaries live. node-ui release CI publishes
+    // DOWNLOAD - beta binaries live. node-ui release CI publishes
     // DMG / MSI / AppImage on every `node-ui-v*` tag. Tiles below
     // link to GitHub `releases/latest/download/<file>` so the
     // newest tag always serves; bump NODE_UI_VERSION at top of

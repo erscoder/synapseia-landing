@@ -1,4 +1,4 @@
-// Beta launch landing — coord deployed (Fly.io), dashboard live on its
+// Beta launch landing - coord deployed (Fly.io), dashboard live on its
 // own subdomain, node-ui binaries published per release. Earlier this
 // file held "Coming soon" placeholders; the download band and the
 // dashboard CTAs now point at real artefacts.

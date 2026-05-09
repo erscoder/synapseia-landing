@@ -50,7 +50,7 @@ export function HowItWorks() {
   const navRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLSpanElement>(null);
 
-  // Existing intersection observer — DO NOT TOUCH. Drives `activeStage`.
+  // Existing intersection observer - DO NOT TOUCH. Drives `activeStage`.
   useEffect(() => {
     const obs: IntersectionObserver[] = [];
     STAGES.forEach(s => {
@@ -62,7 +62,7 @@ export function HowItWorks() {
     return () => obs.forEach(o => o.disconnect());
   }, []);
 
-  // Per-stage scroll-linked slide-up. We animate ONLY the y transform —
+  // Per-stage scroll-linked slide-up. We animate ONLY the y transform -
   // opacity is owned by the surrounding <Reveal> wrappers so the two
   // systems don't fight for the same property (Reveal SSRs at
   // opacity-100 for FCP, then drops below-fold sections to 0 and
@@ -108,14 +108,14 @@ export function HowItWorks() {
 
   return (
     <div id="engine" ref={rootRef}>
-      <Reveal><div className="text-center py-16 px-6"><h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">How a research cycle runs today</h2><p className="text-slate-500 max-w-2xl mx-auto">Five stages, every one running in parallel across distributed operator nodes. Multiple training tracks active concurrently — no single node bottlenecks the network.</p></div></Reveal>
+      <Reveal><div className="text-center py-16 px-6"><h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">How a research cycle runs today</h2><p className="text-slate-500 max-w-2xl mx-auto">Five stages, every one running in parallel across distributed operator nodes. Multiple training tracks active concurrently; no single node bottlenecks the network.</p></div></Reveal>
       <StageNav ref={navRef} active={activeStage} indicatorRef={indicatorRef} />
 
-      {/* STAGE 1 — HYPERPARAMETER SEARCH */}
+      {/* STAGE 1 - HYPERPARAMETER SEARCH */}
       <section id="stage-1" data-stage="1" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
-          <Reveal><SH stage={1} title="Configuration Search" subtitle="Every operator node — laptops, workstations, datacenter GPUs — runs its own experiment to find the analysis configuration that wins on quality and latency. Multiple training tracks (cardiology, oncology, ALS, neurology…) search in parallel; no single node owns a topic." /></Reveal>
-          <Reveal delay={100}><p className="text-center text-slate-400 text-sm mb-10 max-w-3xl mx-auto">Each node tries a different prompt template, temperature, chunk size, or analysis depth and reports back to a CRDT leaderboard — conflict-free, no central server, no waiting on coord. The best config wins for that training track.</p></Reveal>
+          <Reveal><SH stage={1} title="Configuration Search" subtitle="Every operator node (laptops, workstations, datacenter GPUs) runs its own experiment to find the analysis configuration that wins on quality and latency. Multiple training tracks (cardiology, oncology, ALS, neurology…) search in parallel; no single node owns a topic." /></Reveal>
+          <Reveal delay={100}><p className="text-center text-slate-400 text-sm mb-10 max-w-3xl mx-auto">Each node tries a different prompt template, temperature, chunk size, or analysis depth and reports back to a CRDT leaderboard: conflict-free, no central server, no waiting on coord. The best config wins for that training track.</p></Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <Reveal delay={150}>
@@ -157,7 +157,7 @@ export function HowItWorks() {
         </div>
       </section>
 
-      {/* STAGE 2 — RESEARCH ROUNDS */}
+      {/* STAGE 2 - RESEARCH ROUNDS */}
       <section id="stage-2" data-stage="2" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
           <Reveal><SH stage={2} title="Research Rounds" subtitle="Multiple rounds run side-by-side, each tied to its own training track. A round picks a corpus slice (PubMed, ClinicalTrials.gov, preprints), fans work orders out to every available node over libp2p gossipsub, and lets the swarm chew through the papers with the best config from Stage 1." /></Reveal>
@@ -197,10 +197,10 @@ export function HowItWorks() {
         </div>
       </section>
 
-      {/* STAGE 3 — PAPER ANALYSIS */}
+      {/* STAGE 3 - PAPER ANALYSIS */}
       <section id="stage-3" data-stage="3" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
-          <Reveal><SH stage={3} title="Paper Analysis" subtitle="Every operator&apos;s agent runs the winning config locally on its own GPU — structured extraction, methodology scoring, cross-referencing prior findings in the shared knowledge graph, and surfacing fresh hypotheses. Different nodes work different papers in the same round; the work fans out, never queues." /></Reveal>
+          <Reveal><SH stage={3} title="Paper Analysis" subtitle="Every operator&apos;s agent runs the winning config locally on its own GPU: structured extraction, methodology scoring, cross-referencing prior findings in the shared knowledge graph, and surfacing fresh hypotheses. Different nodes work different papers in the same round; the work fans out, never queues." /></Reveal>
 
           <Reveal delay={150}>
             <G className="p-6 max-w-3xl mx-auto">
@@ -235,7 +235,7 @@ export function HowItWorks() {
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="text-slate-600 font-mono text-xs mt-0.5">{'└──'}</span>
-                  <div><span className="text-xs text-slate-500">Hypothesis:</span><span className="text-sm text-purple-300 ml-2 italic">"BRCA1 p.Cys61Gly carriers show 4.2× elevated risk in premenopausal cohort — confirmed across 3 independent datasets"</span></div>
+                  <div><span className="text-xs text-slate-500">Hypothesis:</span><span className="text-sm text-purple-300 ml-2 italic">"BRCA1 p.Cys61Gly carriers show 4.2× elevated risk in premenopausal cohort, confirmed across 3 independent datasets"</span></div>
                 </div>
               </div>
 
@@ -247,10 +247,10 @@ export function HowItWorks() {
         </div>
       </section>
 
-      {/* STAGE 4 — PEER REVIEW */}
+      {/* STAGE 4 - PEER REVIEW */}
       <section id="stage-4" data-stage="4" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
-          <Reveal><SH stage={4} title="Peer Review" subtitle="Every analysis lands in front of N other nodes for review. Reviewers score on rigour, novelty, evidence quality, and reproducibility — signed with each peer&apos;s identity, gossipped over libp2p, and consolidated on the CRDT leaderboard. No central authority decides what&apos;s good; the swarm does." /></Reveal>
+          <Reveal><SH stage={4} title="Peer Review" subtitle="Every analysis lands in front of N other nodes for review. Reviewers score on rigour, novelty, evidence quality, and reproducibility, signed with each peer&apos;s identity, gossipped over libp2p, and consolidated on the CRDT leaderboard. No central authority decides what&apos;s good; the swarm does." /></Reveal>
 
           <Reveal delay={150}>
             <G className="p-6 max-w-xl mx-auto">
@@ -287,16 +287,16 @@ export function HowItWorks() {
         </div>
       </section>
 
-      {/* STAGE 5 — DISCOVERIES */}
+      {/* STAGE 5 - DISCOVERIES */}
       <section id="stage-5" data-stage="5" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
-          <Reveal><SH stage={5} title="Discoveries" subtitle="Analyses that average ≥ 8/10 across peer reviews are promoted to DISCOVERIES — written into the shared knowledge graph, indexed for the next round's context, and surfaced to every operator. The graph is sharded across peers so no single node holds the whole library." /></Reveal>
+          <Reveal><SH stage={5} title="Discoveries" subtitle="Analyses that average ≥ 8/10 across peer reviews are promoted to DISCOVERIES, written into the shared knowledge graph, indexed for the next round's context, and surfaced to every operator. The graph is sharded across peers so no single node holds the whole library." /></Reveal>
 
           <Reveal delay={150}>
             <G className="p-8 max-w-2xl mx-auto text-center border-emerald-500/10">
               <div className="text-emerald-400 text-3xl mb-4">{'◆'}</div>
               <div className="text-xs text-emerald-400/60 uppercase tracking-widest mb-2 font-mono">Discovery #1</div>
-              <p className="text-lg text-slate-200 font-medium mb-4 italic">"BRCA1 pathogenic variant p.Cys61Gly confers 4.2× elevated oncogenic risk — validated across 3 independent cohorts"</p>
+              <p className="text-lg text-slate-200 font-medium mb-4 italic">"BRCA1 pathogenic variant p.Cys61Gly confers 4.2× elevated oncogenic risk, validated across 3 independent cohorts"</p>
               <div className="flex items-center justify-center gap-6 text-sm">
                 <span className="text-slate-500">Score: <span className="text-emerald-400 font-mono font-bold">8.3/10</span></span>
                 <span className="text-slate-500">from <span className="text-slate-300 font-mono">4</span> peer reviewers</span>

@@ -89,12 +89,12 @@ export function Nav() {
           <span className="font-bold text-white tracking-wide">Synapseia</span>
         </Link>
 
-        {/* Desktop links — hidden on small viewports. */}
+        {/* Desktop links - hidden on small viewports. */}
         <div className="hidden md:flex items-center gap-3">
           {LINKS.map((l) => renderLink(l, 'desktop'))}
         </div>
 
-        {/* Mobile burger — visible <md. Animates between bars and X
+        {/* Mobile burger - visible <md. Animates between bars and X
             via plain CSS rotate; no JS rAF needed. */}
         <button
           type="button"
@@ -131,7 +131,7 @@ export function Nav() {
           // Prevents bg flash before anime.js takes over.
           style={{ opacity: 0 }}
           onClick={(e) => {
-            // Close on backdrop click — anything not a link.
+            // Close on backdrop click - anything not a link.
             if ((e.target as HTMLElement).closest('a, button')) return;
             setOpen(false);
           }}
@@ -139,7 +139,7 @@ export function Nav() {
           {/* Backdrop */}
           <div className="absolute inset-0 bg-black/85 backdrop-blur-xl" />
 
-          {/* Panel — full-screen on mobile, cleaner than a slide-in
+          {/* Panel - full-screen on mobile, cleaner than a slide-in
               drawer for a 4-link nav. */}
           <div className="relative h-full w-full pt-24 pb-10 px-6 flex flex-col gap-2">
             {LINKS.map((l) => renderLink(l, 'mobile', () => setOpen(false)))}

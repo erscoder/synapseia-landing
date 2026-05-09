@@ -23,14 +23,14 @@ const formatThousands = (n: number) => Math.round(n).toLocaleString('en-US');
 export function EarnBand() {
   const rootRef = useRef<HTMLElement>(null);
 
-  // S10 — anime.js v4 motion for the earn / rewards section.
+  // S10 - anime.js v4 motion for the earn / rewards section.
   // Inventory:
   //   - heading + supporting copy + 6 income-stream cards + tier table
   //     + staking callout (already wrapped in <Reveal> for on-view
   //     opacity+translate; we leave that intact)
   //   - one numeric estimate: the staking pool size (71,918 SYN/day)
   //   - NO interactive control (slider/toggle/dropdown), so the spring
-  //     on-input branch from the spec is not wired — only the
+  //     on-input branch from the spec is not wired - only the
   //     on-view count-up runs here.
   // Reduced motion: textContent is set to the final formatted target
   // immediately and the count animation is skipped.
@@ -51,7 +51,7 @@ export function EarnBand() {
     // skip the count-up entirely and keep the SSR'd "71,918"
     // visible. Otherwise, an `animate()` with `autoplay: onScroll`
     // would fire immediately on mount, snap the textContent to "0",
-    // then count back up — visible as a flicker. For users above
+    // then count back up - visible as a flicker. For users above
     // the section, reset textContent to "0" so the count-up has a
     // clean baseline; the count-up triggers only when they scroll
     // to it.
@@ -85,14 +85,14 @@ export function EarnBand() {
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">How nodes earn money</h2>
             <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
               Pick the work types your hardware supports. Your node can run
-              several at once — small CPU jobs while a GPU training cycle
+              several at once: small CPU jobs while a GPU training cycle
               finishes, then peer-review when the round closes. Stake more
               SYN to climb tiers and amplify every payout.
             </p>
           </div>
         </Reveal>
 
-        {/* Income streams — figures pulled directly from
+        {/* Income streams - figures pulled directly from
             coordinator/src/application/rewards/RewardsConfigService.ts
             (DEFAULT_CONFIGS). Sync this grid when those defaults
             change. */}
@@ -136,7 +136,7 @@ export function EarnBand() {
                 label: 'GPU inference',
                 reward: '30–50 SYN',
                 sub: 'per task · FCFS',
-                desc: 'Heavy generation, summarisation, large-model embeddings the research round demands. First-come-first-served — fast nodes win.',
+                desc: 'Heavy generation, summarisation, large-model embeddings the research round demands. First-come-first-served: fast nodes win.',
                 hw: 'GPU required',
               },
               {
@@ -168,7 +168,7 @@ export function EarnBand() {
 
         <Reveal delay={150}>
           <p className="text-center text-xs text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Pool sizes shown are the daily defaults — operators can vote to
+            Pool sizes shown are the daily defaults; operators can vote to
             tune them as the network grows. Tier multiplier (below) applies
             on top of every payout.
           </p>
@@ -178,7 +178,7 @@ export function EarnBand() {
         <Reveal delay={150}>
           <G className="p-6 mb-8">
             <div className="text-sm font-semibold text-white mb-1">Stake more SYN &rarr; Higher Tier &rarr; Bigger multiplier</div>
-            <p className="text-xs text-slate-500 mb-5">Tier multiplier scales your share of every round pool (Research, Training, GPU, Inference). Presence points are a secondary signal that breaks ties at the bottom of the leaderboard — quality and stake do the heavy lifting.</p>
+            <p className="text-xs text-slate-500 mb-5">Tier multiplier scales your share of every round pool (Research, Training, GPU, Inference). Presence points are a secondary signal that breaks ties at the bottom of the leaderboard. Quality and stake do the heavy lifting.</p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -228,7 +228,7 @@ export function EarnBand() {
                   <span data-earn-value>71,918</span> SYN/day
                 </span>{' '}
                 reward pool distributed proportionally to all stakers.
-                The more SYN locked, the more you earn — even when your node is offline.
+                The more SYN locked, the more you earn, even when your node is offline.
               </p>
             </div>
             <span className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-medium">

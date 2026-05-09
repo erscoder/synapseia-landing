@@ -13,7 +13,7 @@ html, body {
 }
 
 /*
- * Cosmic CSS background — radial gradients + a sparse starfield.
+ * Cosmic CSS background - radial gradients + a sparse starfield.
  * No Three.js, no JS, no 1.5 MB WebGL chunk. Survives static
  * export and renders on every browser at the first paint.
  */
