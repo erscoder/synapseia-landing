@@ -340,8 +340,7 @@ export function HowItWorks() {
           </Reveal>
 
           <Reveal delay={200}>
-            <p className="text-center text-3xl sm:text-4xl font-bold text-white mt-16 mb-4">"Intelligence compounds."</p>
-            <p className="text-center text-slate-500 text-sm">Each cycle builds on the last. The network never forgets what it learned.</p>
+            <p className="text-center text-slate-500 text-sm mt-16">Each cycle builds on the last. The network never forgets what it learned.</p>
           </Reveal>
         </div>
       </section>
