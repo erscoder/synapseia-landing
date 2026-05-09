@@ -1,5 +1,20 @@
 # Changelog — @synapseia/landing
 
+## [2026-05-10] feat(landing): mobile burger menu with animated drawer (7f3bfc6)
+
+`Nav.client.tsx` collapses to a burger button below the `md`
+breakpoint and expands to a full-screen drawer on tap. The burger
+morphs to an X via CSS rotate; the drawer fades in via anime.js
+with the link list staggered up at 60ms intervals.
+
+Closes on link click, on backdrop click, on ESC, and locks body
+scroll while open. ARIA wired: `aria-expanded`, `aria-controls`,
+`aria-modal=true`, `role="dialog"`, `sr-only` label on the toggle.
+Reduced-motion path collapses the entrance to instant via the
+`useAnime` scope `mediaQueries` branch. The drawer stays mounted
+during the exit animation so the close transition completes before
+unmounting.
+
 ## [2026-05-10] feat(landing): native KG peer-mesh visual + WhyNow band + drop pptx imagery (e970506)
 
 Replaces the remaining bolted-on PowerPoint screenshots with native
