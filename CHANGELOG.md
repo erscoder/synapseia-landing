@@ -1,5 +1,58 @@
 # Changelog — @synapseia/landing
 
+## [2026-05-09] feat(landing): anime.js v4 motion across all leaves (S3-S13) + a11y pass (d3e77fa)
+
+Slices S3-S13 of the redesign in a single commit. Every leaf now
+uses the `createScope`-based `useAnime` hook from S2, branches on
+`prefers-reduced-motion` via the scope mediaQueries, and ships an
+SSR-friendly initial state so there is no hydration flash.
+
+**Per-leaf motion**:
+
+- **Hero**: `splitText` chars + spring entrance, tagline fade-up
+  trailing 600ms.
+- **WorldMap**: continents line-draw, nodes scale-in spring,
+  edges line-draw stagger 40ms, ambient pulse loop on every
+  node, and 10 motion-path data-flow particles. Pulse +
+  particle loops are gated on `autoplay: onScroll(...)` so they
+  pause when the section is offscreen.
+- **HowItWorks**: per-stage scroll-linked slide-up (y only;
+  opacity owned by the surrounding `Reveal` wrappers — no
+  flicker), plus a sliding StageNav active indicator that
+  follows the `activeStage` state.
+- **TrainingTracks**: 3×2 grid sweep on view.
+- **KnowledgeGraph**: text + cards stagger reveal.
+- **OpenVerifiable**: text + 4 bullet cards reveal trailing
+  200ms.
+- **HardwareTiers**: 3 tier cards spring sweep on view.
+- **EarnBand**: count-up on `71,918 SYN/day` bound to `onScroll`;
+  skipped (and SSR value kept) if the section is already in view
+  at mount.
+- **RunNode + Cta**: magnetic hover + click ripple on the four
+  platform tiles, spring scale-on-hover on the primary CTA. All
+  listeners early-return under reduced-motion and clean up via
+  `cleanups[]` returned from the scope `add()` callback.
+- **Footer**: 30 deterministic SVG stars with a twinkle loop
+  bound to `onScroll` for offscreen pause.
+
+**`hooks/useAnime.ts` touch-up** (from the S2 reviewer pass):
+generic widened from `T extends HTMLElement` to `T extends
+Element` so SVG refs bind without a cast. The `cb` parameter is
+re-typed via a non-optional `UseAnimeCallback` so consumers
+destructure `self.matches` without a strict-null footgun.
+
+**A11y pass (S13)**: skip-to-content link in `app/layout.tsx`,
+`<main id="main" tabIndex={-1}>` landmark in `app/page.tsx`,
+`aria-hidden` on Hero's decorative scroll-cue, and five
+`animate-bounce` / `animate-pulse` usages across Hero, HowItWorks
+(3×), and EarnBand gated by `motion-safe:` so reduced-motion
+users see static decorations.
+
+Reviewer over the batch found 0 BLOCKER, 2 HIGH (loops without
+offscreen pause), 2 MEDIUM (SSR flicker on EarnBand and
+HowItWorks); all four applied before commit. `tsc --noEmit`
+clean, `pnpm run build` green, 4 static routes prerender.
+
 ## [2026-05-09] feat(landing): install anime.js v4 + motion tokens + useAnime scope hook (f878040)
 
 Slice S2 — foundation for the motion redesign. No visible
