@@ -1,5 +1,14 @@
 # Changelog — @synapseia/landing
 
+## [2026-05-10] fix(landing): drop duplicate Tier summary cards (b39c75b)
+
+The 3-card "Laptop / Workstation / Datacenter" row that sat below
+the 6-column Tier spectrum repeated the same capability bullets
+the spectrum already covered column-by-column. Removed the cards,
+the scanline overlay, and the unused `TIER_LABELS`, `scrambleText`,
+and `svg.createDrawable` animation paths. The section keeps the
+intro paragraph, the spectrum, and the staking footnote.
+
 ## [2026-05-10] fix(landing): declare d3-geo + topojson-client + world-atlas as direct deps (161b7ed)
 
 CF Pages build was failing with `Module not found` for d3-geo,
