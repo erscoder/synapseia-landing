@@ -1,4 +1,14 @@
-# Changelog — @synapseia/landing
+# Changelog - @synapseia/landing
+
+## [2026-05-10] fix(landing): drop AI-style em dashes + simplify Hero CTAs (f049471)
+
+`Hero.client.tsx` collapses the three CTAs (Open Dashboard, How it
+works, Docs) down to a single primary button: How it works. Drops
+the now-unused `next/link` and `DASHBOARD_URL` imports.
+
+Em dashes (U+2014) replaced with hyphens or proper punctuation
+across all landing components and the app pages. Em dashes are an
+AI-writing tell; the design now reads as plain editorial copy.
 
 ## [2026-05-10] fix(landing): drop duplicate Tier summary cards (b39c75b)
 
