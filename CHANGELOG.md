@@ -1,5 +1,14 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] fix(landing): remove Network Topology section + WorldMap (8473490)
+
+The Network Topology band rendered a static world map with sample
+nodes that implied a live mesh which doesn't yet exist. Removed the
+section, the `WorldMap.client.tsx` component, the
+`landing-nodes-sample.ts` fixture, and dropped the `d3-geo`,
+`topojson-client`, `world-atlas`, and matching type deps since
+nothing else in the landing consumed them.
+
 ## [2026-05-10] fix(landing): drop AI-style em dashes + simplify Hero CTAs (f049471)
 
 `Hero.client.tsx` collapses the three CTAs (Open Dashboard, How it
