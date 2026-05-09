@@ -1,5 +1,18 @@
 # Changelog — @synapseia/landing
 
+## [2026-05-10] fix(landing): declare d3-geo + topojson-client + world-atlas as direct deps (161b7ed)
+
+CF Pages build was failing with `Module not found` for d3-geo,
+topojson-client, and world-atlas. The WorldMap migration to the
+upstream `world-atlas` npm package landed without committing the
+matching `package.json` change. Local pnpm workspace install
+hoisted them transitively which masked the gap; CF runs
+`npm install` on the standalone sub-repo and only resolves direct
+deps, so the build crashed at the `WorldMap.client.tsx` imports.
+
+Same root cause as reviewer-lesson **P13** (`require()` runtime
+without the dep declared in `package.json`).
+
 ## [2026-05-10] feat(landing): mobile burger menu with animated drawer (7f3bfc6)
 
 `Nav.client.tsx` collapses to a burger button below the `md`
