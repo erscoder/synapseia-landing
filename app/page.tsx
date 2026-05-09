@@ -8,6 +8,7 @@
 // mirrors the original monolith verbatim.
 import { Nav } from '@/components/landing/Nav.client';
 import { Hero } from '@/components/landing/Hero.client';
+import { WhyNow } from '@/components/landing/WhyNow.client';
 import { HowItWorks } from '@/components/landing/HowItWorks.client';
 import { TrainingTracks } from '@/components/landing/TrainingTracks.client';
 import { KnowledgeGraph } from '@/components/landing/KnowledgeGraph.client';
@@ -29,6 +30,7 @@ export default function LandingPage() {
           focus. */}
       <main id="main" tabIndex={-1} className="focus:outline-none">
         <Hero />
+        <WhyNow />
         <HowItWorks />
         <TrainingTracks />
         <KnowledgeGraph />

@@ -46,10 +46,11 @@ export function RunNode() {
     // On-view reveal of the platform tiles. The outer <Reveal> already
     // CSS-fades the grid container; this stagger layers a subtle
     // per-button slide so the tiles don't all snap in at once. Skipped
-    // (instant) under reduced-motion.
+    // (instant) under reduced-motion. Opacity is owned by the parent
+    // <Reveal>; we animate only y to avoid stuck-invisible tiles when
+    // onScroll fails to fire.
     animate(buttons, {
       y: reduceMotion ? 0 : [16, 0],
-      opacity: [0, 1],
       delay: reduceMotion ? 0 : stagger(STAGGER.base),
       duration: reduceMotion ? 0 : DURATION.short,
       ease: EASE.snap,

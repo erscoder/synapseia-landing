@@ -23,11 +23,12 @@ export function Cta() {
 
     // On-view reveal of heading + paragraphs + CTA buttons. Outer
     // <Reveal> already CSS-fades the wrapping card, this layer adds
-    // a subtle staggered slide for the children inside.
+    // a subtle staggered slide for the children inside. Opacity is
+    // owned by the parent <Reveal>; we animate only the y transform
+    // so children never stick invisible if onScroll does not fire.
     const targets = utils.$('[data-cta-reveal]') as unknown as HTMLElement[];
     animate(targets, {
       y: reduceMotion ? 0 : [12, 0],
-      opacity: [0, 1],
       delay: reduceMotion ? 0 : stagger(STAGGER.base),
       duration: reduceMotion ? 0 : DURATION.short,
       ease: EASE.snap,
@@ -65,17 +66,20 @@ export function Cta() {
       <div className="max-w-2xl mx-auto">
         <Reveal>
           <G className="p-12 rounded-3xl">
-            <h2 data-cta-reveal className="text-4xl font-bold text-white mb-4">Built in the open</h2>
+            <h2 data-cta-reveal className="text-4xl font-bold text-white mb-4">Built in public</h2>
             <p data-cta-reveal className="text-slate-400 mb-6 leading-relaxed">
               Synapseia is a working peer-to-peer research network — multiple
               training tracks run in parallel today across distributed
               operator GPUs, and every cycle is logged to the public knowledge
-              graph. The codebase, the protocol specs, and the Solana
-              contracts are open source.
+              graph. The node code, the protocol specs, and the Solana
+              contracts are public — readable, auditable, runnable.
             </p>
             <p data-cta-reveal className="text-slate-500 mb-10 leading-relaxed text-sm">
-              Watch the repo, read the protocol notes, or contribute a node —
-              the network grows one operator at a time.
+              Source-available under the Functional Source License (FSL-1.1)
+              and auto-converts to Apache-2.0 in 2028. You can read the code,
+              run a node, and audit the protocol; commits to the official
+              repo are restricted to the Synapseia team so binary attestation
+              has a trustworthy origin.
             </p>
             <div data-cta-reveal className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link

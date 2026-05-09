@@ -1,8 +1,15 @@
 'use client';
 
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import { feature } from 'topojson-client';
+import { geoEquirectangular, geoPath } from 'd3-geo';
+import type { Feature, FeatureCollection, Geometry } from 'geojson';
+import type { Topology } from 'topojson-specification';
+// Bundled TopoJSON (~105 KB raw, ~25 KB gzipped). Imported as a JSON
+// module so the bundler tree-shakes it into the static export and
+// no runtime fetch is needed at first paint.
+import worldTopologyJson from 'world-atlas/countries-110m.json';
 import { SAMPLE_NODES, SAMPLE_EDGES, type SampleNode } from '@/lib/landing-nodes-sample';
-import { WORLD_PATH } from '@/lib/world-atlas';
 import {
   animate,
   stagger,
@@ -14,25 +21,14 @@ import {
   STAGGER,
 } from '@/lib/anime';
 
-// Equirectangular projection — direct math, no d3-geo. Maps
-// (lat, lon) to (x, y) in a `width × height` SVG viewport.
-function project(lat: number, lon: number, width: number, height: number) {
-  return {
-    x: ((lon + 180) / 360) * width,
-    y: ((90 - lat) / 180) * height,
-  };
-}
-
 const VIEW_W = 1000;
 const VIEW_H = 500;
 
 // Cap data-flow particles at 10 — keeps the network feeling alive
 // without pushing the active animator count past what mid-tier
-// hardware comfortably renders at 60fps. Total moving parts:
-// 25 nodes (entrance) + 30 edges (entrance) + 25 pulses (loop)
-// + 10 particles (loop) = ~90 anime objects. Pulses + particles
-// are gated by `prefers-reduced-motion` and pause when the
-// section scrolls offscreen via onScroll's IntersectionObserver.
+// hardware comfortably renders at 60fps. Pulses + particles are
+// gated by `prefers-reduced-motion` and pause when the section
+// scrolls offscreen via onScroll's IntersectionObserver.
 const PARTICLE_EDGE_COUNT = 10;
 
 function tierFill(tier: SampleNode['tier']): string {
@@ -62,48 +58,96 @@ interface ProjectedEdge {
   y2: number;
 }
 
+// Single shared projection: equirectangular (plate-carrée) fitted to
+// the whole world inside a 1000×500 viewport. Used for both the
+// country geometries (geoPath) and the node coords (proj([lon,lat]))
+// so dots sit on the right cities.
+const projection = geoEquirectangular()
+  .scale(VIEW_W / (2 * Math.PI))
+  .translate([VIEW_W / 2, VIEW_H / 2]);
+const pathGen = geoPath(projection);
+
+// Pre-compute the country paths once at module load. The static
+// export inlines this work into the JS bundle; at runtime there's
+// only DOM creation, no projection cost.
+const worldTopology = worldTopologyJson as unknown as Topology;
+const countriesGeo = feature(
+  worldTopology,
+  worldTopology.objects.countries,
+) as unknown as FeatureCollection<Geometry>;
+const countryPaths: { id: string; d: string }[] = countriesGeo.features
+  .map((f: Feature<Geometry>, i: number) => {
+    const d = pathGen(f);
+    return { id: String(f.id ?? i), d: d ?? '' };
+  })
+  .filter((p) => p.d.length > 0);
+
+// Only render nodes that participate in at least one edge — explicit
+// user request: paint only nodes that are actually connected.
+const connectedIds = new Set<string>();
+for (const e of SAMPLE_EDGES) {
+  connectedIds.add(e.from);
+  connectedIds.add(e.to);
+}
+const connectedNodes: SampleNode[] = SAMPLE_NODES.filter((n) =>
+  connectedIds.has(n.id),
+);
+
+function projectLatLon(lat: number, lon: number): [number, number] {
+  const out = projection([lon, lat]);
+  return out ?? [0, 0];
+}
+
 /**
  * Animated SVG world map for the landing's "Network Topology" band.
  *
- * Replaced the Three.js globe in slice S1.5 (flat plate-carrée
- * projection, deterministic JSX). Slice S4 wires anime.js v4 motion
- * on top:
- *   1. Continents path  → line-draw on view (svg.createDrawable)
- *   2. Node circles     → spring scale-in pop on view (stagger from center)
- *   3. Edges            → line-draw stagger 40ms on view
- *   4. Pulse rings      → continuous ambient scale + opacity loop
- *   5. Flow particles   → motion-path travel along the first 10 edges
+ * Renders the real Natural Earth 1:110m country geometries from
+ * `world-atlas` projected through `d3-geo`'s equirectangular —
+ * replaces the prior hand-trimmed cartoon-island path. Animation
+ * layers (anime.js v4):
+ *   1. Country borders → line-draw on view (svg.createDrawable)
+ *   2. Node circles    → spring scale-in pop on view (stagger from center)
+ *   3. Edges           → line-draw stagger 40ms on view
+ *   4. Pulse rings     → continuous ambient scale + opacity loop
+ *   5. Flow particles  → motion-path travel along the first 10 edges
  *
  * All motion is gated by `prefers-reduced-motion`. The pulse and
  * particle loops auto-pause when the section is offscreen because
- * onScroll-driven entrances and the IntersectionObserver that
- * createScope installs handle the visibility window.
+ * `onScroll` installs an IntersectionObserver under the hood.
  */
 export function WorldMap() {
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // Pre-project everything so the JSX and the motion code share one
-  // source of truth for coordinates. Particle motion paths are built
-  // from the same projected edges.
-  const projectedNodes: ProjectedNode[] = SAMPLE_NODES.map((n) => {
-    const { x, y } = project(n.lat, n.lon, VIEW_W, VIEW_H);
-    return { id: n.id, x, y, tier: n.tier };
-  });
+  // Pre-project node + edge coords so the JSX and the motion code
+  // share one source of truth. Particle motion paths reference the
+  // same projected edges by id.
+  const projectedNodes: ProjectedNode[] = useMemo(
+    () =>
+      connectedNodes.map((n) => {
+        const [x, y] = projectLatLon(n.lat, n.lon);
+        return { id: n.id, x, y, tier: n.tier };
+      }),
+    [],
+  );
 
-  const projectedEdges: ProjectedEdge[] = SAMPLE_EDGES.flatMap((e) => {
-    const a = projectedNodes.find((n) => n.id === e.from);
-    const b = projectedNodes.find((n) => n.id === e.to);
-    if (!a || !b) return [];
-    return [
-      {
-        key: `${e.from}-${e.to}`,
-        x1: a.x,
-        y1: a.y,
-        x2: b.x,
-        y2: b.y,
-      },
-    ];
-  });
+  const projectedEdges: ProjectedEdge[] = useMemo(
+    () =>
+      SAMPLE_EDGES.flatMap((e) => {
+        const a = projectedNodes.find((n) => n.id === e.from);
+        const b = projectedNodes.find((n) => n.id === e.to);
+        if (!a || !b) return [];
+        return [
+          {
+            key: `${e.from}-${e.to}`,
+            x1: a.x,
+            y1: a.y,
+            x2: b.x,
+            y2: b.y,
+          },
+        ];
+      }),
+    [projectedNodes],
+  );
 
   const flowEdges = projectedEdges.slice(0, PARTICLE_EDGE_COUNT);
 
@@ -112,7 +156,7 @@ export function WorldMap() {
     if (!root) return;
     const { reduceMotion } = self.matches;
 
-    // 1. Continents — line-draw on view.
+    // 1. Country borders — line-draw on view.
     const continents = svg.createDrawable('.continent-path');
     animate(continents, {
       draw: ['0 0', '0 1'],
@@ -144,7 +188,7 @@ export function WorldMap() {
     // 4. Pulse rings — continuous ambient loop. Skipped entirely
     // under reduce-motion. `autoplay: onScroll(...)` pauses the
     // loop when the section scrolls offscreen so the engine isn't
-    // ticking 25 animators while the user is at the footer.
+    // ticking active animators while the user is at the footer.
     if (!reduceMotion) {
       animate('.node-pulse', {
         scale: [1, 2.4],
@@ -185,12 +229,17 @@ export function WorldMap() {
         className="w-full h-auto"
         aria-hidden="true"
       >
-        {/* Basemap */}
-        <path
-          d={WORLD_PATH}
-          className="continent-path fill-slate-800/50 stroke-slate-700/60"
-          strokeWidth={0.5}
-        />
+        {/* Basemap — one path per country from Natural Earth 1:110m. */}
+        <g>
+          {countryPaths.map((p) => (
+            <path
+              key={p.id}
+              d={p.d}
+              className="continent-path fill-slate-800/50 stroke-slate-700/60"
+              strokeWidth={0.5}
+            />
+          ))}
+        </g>
 
         {/* Edges */}
         {projectedEdges.map((e) => (
@@ -223,7 +272,8 @@ export function WorldMap() {
         </g>
 
         {/* Nodes + pulse rings. Pulse circles sit underneath the
-            solid node so the loop scales outward visually. */}
+            solid node so the loop scales outward visually. Only the
+            connected nodes are rendered (per user request). */}
         {projectedNodes.map((n) => (
           <g key={n.id}>
             <circle

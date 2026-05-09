@@ -290,7 +290,7 @@ export function HowItWorks() {
       {/* STAGE 5 — DISCOVERIES */}
       <section id="stage-5" data-stage="5" className="py-20 px-6 scroll-mt-28">
         <div className="max-w-5xl mx-auto">
-          <Reveal><SH stage={5} title="Discoveries" subtitle="Analyses that average {'\u2265'} 8/10 across peer reviews are promoted to DISCOVERIES — written into the shared knowledge graph, indexed for the next round's context, and surfaced to every operator. The graph is sharded across peers so no single node holds the whole library." /></Reveal>
+          <Reveal><SH stage={5} title="Discoveries" subtitle="Analyses that average ≥ 8/10 across peer reviews are promoted to DISCOVERIES — written into the shared knowledge graph, indexed for the next round's context, and surfaced to every operator. The graph is sharded across peers so no single node holds the whole library." /></Reveal>
 
           <Reveal delay={150}>
             <G className="p-8 max-w-2xl mx-auto text-center border-emerald-500/10">
