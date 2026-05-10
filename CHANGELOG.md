@@ -1,5 +1,25 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] feat(landing): turn HowItWorks stages into a tabbed switcher (245a9e7)
+
+Stages 1-5 used to render as five stacked sections; the StageNav
+scrolled between them. The component is now a tab switcher: only
+the active stage renders, and clicking a tab swaps the panel with
+a soft crossfade (opacity + 12 px slide) via anime.js. The
+Compounding Loop subsection sits below the tabbed area and stays
+always-visible.
+
+Each stage was extracted into a `Stage1..Stage5` sub-component to
+keep the switcher render trivial. Hash deep-links still work on
+mount (`#stage-3` lands on Paper Analysis). Reduced-motion path
+collapses the crossfade to instant via the `useAnime` `mediaQueries`
+branch.
+
+Dropped: the per-stage IntersectionObserver that drove
+`activeStage`, the per-stage `onScroll` slide-up entrance, and the
+StageNav's `scrollIntoView` click handler - all moot now that only
+one panel is in the DOM at a time.
+
 ## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.3 → 0.8.5 (d3d869e)
 
 Aligns the download proxy filenames + the visible version chip on
