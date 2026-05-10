@@ -1,5 +1,13 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.6 → 0.8.7 (0f822d1)
+
+Sync with the node-ui 0.8.7 release that adds boot-time
+auto-install of the @synapseia-network/node CLI. Bumped the two
+constants that template the asset filename for the CF Pages
+Function redirect: `RunNode.client.tsx` and
+`functions/download/[platform].js`.
+
 ## [2026-05-10] fix(landing): drop Hero scroll chevron + simplify Cta docs CTA (8ac0d91)
 
 - Hero: removed the bouncing chevron-down at the bottom of the
