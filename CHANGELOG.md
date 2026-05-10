@@ -1,5 +1,13 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] fix(landing): shrink WhyNow stat numbers to fit on one line (63fc3c0)
+
+Stats in the "Drug discovery has collapsed" band were sized
+`text-5xl sm:text-6xl` which wrapped `$2.6 B` onto two lines on
+narrow viewports. Dropped to `text-3xl sm:text-4xl` and added
+`whitespace-nowrap` so the value + symbol always stay together
+on one line.
+
 ## [2026-05-10] fix(landing): drop Pool Share column + move GitHub to footer + drop date (f7da15e)
 
 EarnBand: removed the redundant `Effective Pool Share` column from
