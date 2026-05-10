@@ -11,89 +11,26 @@ import {
   useAnime,
 } from '@/lib/anime';
 
-// "Knowledge graph sharded across the swarm" - visual spec sourced
-// from the Synapseia NotebookLM corpus (WHITEPAPER, How-It-Works,
-// Brain Dashboard notes). The graph is NOT centralised: each
-// operator peer holds its own slice of kg_nodes/kg_edges, and peers
-// gossip discoveries to each other over libp2p (GossipSub) /
-// KadDHT. The 6 bootstrap nodes are a temporary scaffold (Phase 6
-// retires them).
+// "The knowledge graph is sharded across the swarm" - now drawn as
+// the actual semantic graph. Nodes are coloured by kg_node type
+// (DISEASE / PROTEIN / GENE / COMPOUND / PATHWAY / DISCOVERY) and
+// wired by edges typed per the SynapseIA-How-It-Works edge taxonomy
+// (TREATS, BINDS, UPREGULATES, DERIVED_FROM, VALIDATES, BUILDS_ON,
+// CONTRADICTS, ENCODES, BIOMARKER_OF, MECHANISM_VIA).
 //
-// Visual contract:
-//   - Six operator peer hexagons distributed organically (no centre).
-//   - Inside each peer: 3 small kg_nodes wired by 2 kg_edges; one
-//     peer hosts a DISCOVERY (emerald glow ring).
-//   - Inter-peer edges represent the GossipSub mesh (8 curves).
-//   - One faded dotted "BOOTSTRAP" node sits in the bottom-left as
-//     the only currently-centralised piece, drawn small to signal
-//     it's deprecated by Phase 6.
-//   - Peers carry a Tier label (T0–T5) and an Ed25519 prefix.
+// Logical structure:
+//   - Genes ENCODE proteins.
+//   - Proteins are BIOMARKER_OF diseases (and live in pathways).
+//   - Compounds TREAT diseases (and BIND proteins).
+//   - Pathways UPREGULATE proteins / contain proteins.
+//   - Discoveries VALIDATE / BUILD_ON other relations.
 //
-// Motion contract:
-//   - Entrance: peer hex line-draw stagger → inner kg pop-in →
-//     inter-peer gossip mesh edges line-draw.
-//   - Continuous: peer halo pulse (heartbeat every ~2.5s, staggered)
-//     + 3 gossip orbs travelling along sampled mesh paths
-//     (paused offscreen via onScroll).
-//   - Manual IntersectionObserver `.play()` on entrance to dodge
-//     the autoplay:onScroll(...) from-state pitfall (drawables
-//     would land at `0 0` - invisible - until the trigger fires).
-
-type Tier = 'T0' | 'T1' | 'T2' | 'T3' | 'T4' | 'T5';
-
-type Peer = {
-  i: number;
-  x: number;
-  y: number;
-  tier: Tier;
-  /** Ed25519 prefix used as the on-mesh identity hint. */
-  id: string;
-  /** Cyan = generic peer, emerald = peer hosting a DISCOVERY. */
-  accent: 'cyan' | 'emerald';
-};
+// The section copy + legend keys colour to type; the cards below
+// explain SHARDING / GOSSIPSUB / BOOTSTRAP in prose, so the visual
+// is free to focus on the graph itself.
 
 const VB = { w: 800, h: 360 };
 
-// Six peers arranged organically - no central node. Coords hand-
-// tuned so the inter-peer mesh reads as a swarm, not a wheel.
-const PEERS: ReadonlyArray<Peer> = [
-  { i: 0, x: 130, y: 110, tier: 'T0', id: 'ed25519:8f3a', accent: 'cyan' },
-  { i: 1, x: 305, y: 75,  tier: 'T2', id: 'ed25519:c19e', accent: 'cyan' },
-  { i: 2, x: 525, y: 105, tier: 'T5', id: 'ed25519:4b7d', accent: 'emerald' },
-  { i: 3, x: 685, y: 215, tier: 'T3', id: 'ed25519:9e02', accent: 'cyan' },
-  { i: 4, x: 425, y: 270, tier: 'T4', id: 'ed25519:2a51', accent: 'emerald' },
-  { i: 5, x: 175, y: 250, tier: 'T1', id: 'ed25519:6c8b', accent: 'cyan' },
-];
-
-// GossipSub mesh: sparse on purpose so it doesn't read as a complete
-// graph. Eight links is enough to convey "every peer reachable in
-// ~2 hops" without visual noise.
-const MESH: ReadonlyArray<[number, number]> = [
-  [0, 1],
-  [1, 2],
-  [2, 3],
-  [3, 4],
-  [4, 5],
-  [5, 0],
-  [1, 4],
-  [2, 5],
-];
-
-// Three sampled mesh edges carry travelling gossip orbs.
-const ORBIT_EDGES: ReadonlyArray<[number, number]> = [
-  [0, 1],
-  [2, 3],
-  [4, 5],
-];
-
-// Smaller peer markers - filled circles, no inner kg slice.
-// Halo size scales off this so the heartbeat pulse still reads.
-const PEER_RADIUS = 9;
-
-// kg_node types live inside the conceptual graph (not rendered per
-// peer anymore - peers are now solid dots). Kept here to drive the
-// legend so the section still tells the user what shapes the
-// shared semantic graph stores.
 type KGType = 'DISEASE' | 'PROTEIN' | 'GENE' | 'COMPOUND' | 'PATHWAY' | 'DISCOVERY';
 
 const KG_FILL: Record<KGType, string> = {
@@ -114,16 +51,104 @@ const KG_LEGEND_ORDER: ReadonlyArray<KGType> = [
   'DISEASE',
 ];
 
-function straightMeshPath(a: Peer, b: Peer): string {
-  // Straight line between peer centres - cleaner than the previous
-  // curved version, reads as direct gossip routes rather than orbits.
-  return `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
-}
-
-const ACCENT_BORDER: Record<Peer['accent'], string> = {
-  cyan: 'rgb(34 211 238)',
-  emerald: 'rgb(110 231 183)',
+type KGNode = {
+  id: string;
+  type: KGType;
+  label: string;
+  x: number;
+  y: number;
 };
+
+// 22 nodes laid out across the 800×360 canvas. Names are real
+// biomedical entities to match the ALS / cardiology / oncology
+// training tracks the project ships with - keeps the picture
+// honest rather than abstract.
+const NODES: ReadonlyArray<KGNode> = [
+  // ── Diseases (top band) ──────────────────────────────────────
+  { id: 'als',      type: 'DISEASE', label: 'ALS',       x: 130, y: 60 },
+  { id: 'alz',      type: 'DISEASE', label: "Alzheimer's", x: 320, y: 50 },
+  { id: 'park',     type: 'DISEASE', label: "Parkinson's", x: 510, y: 55 },
+  { id: 'brca',     type: 'DISEASE', label: 'BRCA1 ca.',   x: 690, y: 70 },
+
+  // ── Proteins (middle-upper) ──────────────────────────────────
+  { id: 'sod1p',    type: 'PROTEIN', label: 'SOD1',     x: 175, y: 145 },
+  { id: 'tdp43',    type: 'PROTEIN', label: 'TDP-43',   x: 90,  y: 175 },
+  { id: 'tau',      type: 'PROTEIN', label: 'Tau',      x: 290, y: 145 },
+  { id: 'abeta',    type: 'PROTEIN', label: 'Aβ',       x: 410, y: 130 },
+  { id: 'asyn',     type: 'PROTEIN', label: 'α-synuc.', x: 530, y: 150 },
+  { id: 'brca1p',   type: 'PROTEIN', label: 'BRCA1 p.', x: 680, y: 155 },
+
+  // ── Genes (middle-lower) ─────────────────────────────────────
+  { id: 'sod1g',    type: 'GENE',    label: 'SOD1',     x: 230, y: 230 },
+  { id: 'mapt',     type: 'GENE',    label: 'MAPT',     x: 350, y: 220 },
+  { id: 'app',      type: 'GENE',    label: 'APP',      x: 460, y: 220 },
+  { id: 'snca',     type: 'GENE',    label: 'SNCA',     x: 570, y: 235 },
+  { id: 'brca1g',   type: 'GENE',    label: 'BRCA1',    x: 720, y: 235 },
+
+  // ── Pathways (right side, mid) ───────────────────────────────
+  { id: 'mito',     type: 'PATHWAY', label: 'Mitoc.',   x: 130, y: 285 },
+  { id: 'glut',     type: 'PATHWAY', label: 'Glutam.',  x: 290, y: 295 },
+  { id: 'apop',     type: 'PATHWAY', label: 'Apopt.',   x: 470, y: 305 },
+
+  // ── Compounds (bottom) ───────────────────────────────────────
+  { id: 'rilu',     type: 'COMPOUND', label: 'Riluzole',  x: 60,  y: 245 },
+  { id: 'edar',     type: 'COMPOUND', label: 'Edaravone', x: 50,  y: 305 },
+  { id: 'lev',      type: 'COMPOUND', label: 'L-DOPA',    x: 620, y: 305 },
+
+  // ── Discoveries (top-right, glowing) ─────────────────────────
+  { id: 'd1',       type: 'DISCOVERY', label: 'D#47',    x: 380, y: 30 },
+  { id: 'd2',       type: 'DISCOVERY', label: 'D#52',    x: 760, y: 110 },
+];
+
+type KGEdge = {
+  from: string;
+  to: string;
+  /** Edge label drawn small + faded near the midpoint. */
+  rel: 'TREATS' | 'ENCODES' | 'BIOMARKER_OF' | 'BINDS' | 'UPREGULATES' | 'VALIDATES' | 'BUILDS_ON' | 'DERIVED_FROM';
+};
+
+// 22 edges chosen to read as a coherent neuroscience + oncology
+// slice of the corpus. Labels match the actual edge taxonomy so a
+// curious viewer can map edges back to real kg_edge rows.
+const EDGES: ReadonlyArray<KGEdge> = [
+  // Genes ENCODE proteins
+  { from: 'sod1g',  to: 'sod1p',   rel: 'ENCODES' },
+  { from: 'mapt',   to: 'tau',     rel: 'ENCODES' },
+  { from: 'app',    to: 'abeta',   rel: 'ENCODES' },
+  { from: 'snca',   to: 'asyn',    rel: 'ENCODES' },
+  { from: 'brca1g', to: 'brca1p',  rel: 'ENCODES' },
+
+  // Proteins are BIOMARKER_OF diseases
+  { from: 'sod1p',  to: 'als',     rel: 'BIOMARKER_OF' },
+  { from: 'tdp43',  to: 'als',     rel: 'BIOMARKER_OF' },
+  { from: 'tau',    to: 'alz',     rel: 'BIOMARKER_OF' },
+  { from: 'abeta',  to: 'alz',     rel: 'BIOMARKER_OF' },
+  { from: 'asyn',   to: 'park',    rel: 'BIOMARKER_OF' },
+  { from: 'brca1p', to: 'brca',    rel: 'BIOMARKER_OF' },
+
+  // Compounds TREAT diseases
+  { from: 'rilu',   to: 'als',     rel: 'TREATS' },
+  { from: 'edar',   to: 'als',     rel: 'TREATS' },
+  { from: 'lev',    to: 'park',    rel: 'TREATS' },
+
+  // Compounds BIND proteins
+  { from: 'rilu',   to: 'sod1p',   rel: 'BINDS' },
+  { from: 'lev',    to: 'asyn',    rel: 'BINDS' },
+
+  // Pathways UPREGULATE / are mechanism
+  { from: 'mito',   to: 'sod1p',   rel: 'UPREGULATES' },
+  { from: 'glut',   to: 'tau',     rel: 'UPREGULATES' },
+  { from: 'apop',   to: 'abeta',   rel: 'UPREGULATES' },
+
+  // Discoveries
+  { from: 'd1',     to: 'rilu',    rel: 'VALIDATES' },
+  { from: 'd1',     to: 'als',     rel: 'BUILDS_ON' },
+  { from: 'd2',     to: 'brca1p',  rel: 'DERIVED_FROM' },
+];
+
+const NODES_BY_ID = new Map(NODES.map((n) => [n.id, n]));
+
+const NODE_RADIUS = 6;
 
 export function KnowledgeGraph() {
   const rootRef = useRef<HTMLElement>(null);
@@ -145,79 +170,44 @@ export function KnowledgeGraph() {
 
     if (reduceMotion) {
       utils.set('[data-kg-card-title]', { opacity: 1 });
-      utils.set('[data-kg-peer]', { opacity: 1, scale: 1 });
-      utils.set('[data-kg-mesh]', { opacity: 1 });
-      utils.set('[data-kg-halo]', { opacity: 0 });
-      utils.set('[data-kg-orb]', { opacity: 0 });
-      utils.set('[data-kg-bootstrap]', { opacity: 0.45 });
+      utils.set('[data-kg-node]', { opacity: 1, scale: 1 });
+      utils.set('[data-kg-edge]', { opacity: 1 });
+      utils.set('[data-kg-pulse]', { opacity: 0 });
       return;
     }
 
-    // 1. Peer dots scale-in.
-    const peerAnim = animate('[data-kg-peer]', {
-      scale: [0, 1],
-      opacity: [0, 1],
-      delay: stagger(80),
-      duration: 480,
-      ease: 'outBack',
-      autoplay: false,
-    });
-
-    // 2. Inter-peer mesh edges line-draw after peers land.
-    const meshDrawables = svg.createDrawable('[data-kg-mesh]');
-    const meshAnim = animate(meshDrawables, {
+    // 1. Edges line-draw first so nodes pop in over a wired graph.
+    const edgeDrawables = svg.createDrawable('[data-kg-edge]');
+    const edgeAnim = animate(edgeDrawables, {
       draw: ['0 0', '0 1'],
-      delay: stagger(40, { start: 700 }),
-      duration: 480,
+      delay: stagger(20),
+      duration: 520,
       ease: 'inOutSine',
       autoplay: false,
     });
 
-    // 3. Bootstrap node (deprecated Phase 6 piece) fades in last -
-    //    visually subordinate to the swarm.
-    const bootAnim = animate('[data-kg-bootstrap]', {
-      opacity: [0, 0.45],
-      duration: 600,
-      delay: 1300,
-      ease: 'outSine',
+    // 2. Nodes scale-in stagger over the wired edges.
+    const nodeAnim = animate('[data-kg-node]', {
+      scale: [0, 1],
+      opacity: [0, 1],
+      delay: stagger(28, { start: 400 }),
+      duration: 420,
+      ease: 'outBack',
       autoplay: false,
     });
 
-    // 5. Continuous heartbeat halo on every peer (every ~2.5s,
-    //    staggered). Mirrors the Pulse Round cadence (90s in the
-    //    real network, but we compress for visual rhythm). Pauses
-    //    when offscreen.
+    // 3. Discovery halo - continuous gentle pulse, paused offscreen.
     const haloAnim = animate('[data-kg-halo]', {
-      r: [PEER_RADIUS, PEER_RADIUS + 18],
+      r: [NODE_RADIUS + 2, NODE_RADIUS + 12],
       opacity: [
-        { to: 0.35, duration: 200 },
-        { to: 0, duration: 1300 },
+        { to: 0.45, duration: 200 },
+        { to: 0, duration: 1500 },
       ],
-      duration: 2500,
+      duration: 2400,
       ease: 'outQuad',
       loop: true,
-      delay: stagger(420),
+      delay: stagger(800),
       autoplay: onScroll({ target: svgEl, sync: false }),
-    });
-
-    // 6. Three gossip orbs traverse selected mesh edges. Each orb
-    //    binds to its own hidden flow path so motion-path tracing
-    //    is unambiguous. Pauses offscreen.
-    const orbAnims = ORBIT_EDGES.map((_, i) => {
-      const motion = svg.createMotionPath(`[data-kg-orbit="${i}"]`);
-      return animate(`[data-kg-orb="${i}"]`, {
-        ...motion,
-        duration: 3200 + i * 500,
-        delay: i * 700,
-        loop: true,
-        ease: 'linear',
-        opacity: [
-          { to: 0.95, duration: 250 },
-          { to: 0.95, duration: 2700 + i * 500 },
-          { to: 0, duration: 250 },
-        ],
-        autoplay: onScroll({ target: svgEl, sync: false }),
-      });
     });
 
     let played = false;
@@ -225,9 +215,8 @@ export function KnowledgeGraph() {
       ([entry]) => {
         if (entry?.isIntersecting && !played) {
           played = true;
-          peerAnim.play();
-          meshAnim.play();
-          bootAnim.play();
+          edgeAnim.play();
+          nodeAnim.play();
           titleAnim.play();
           io.disconnect();
         }
@@ -238,14 +227,17 @@ export function KnowledgeGraph() {
 
     return () => {
       io.disconnect();
-      peerAnim.pause();
-      meshAnim.pause();
-      bootAnim.pause();
+      edgeAnim.pause();
+      nodeAnim.pause();
       haloAnim.pause();
       titleAnim.pause();
-      orbAnims.forEach((a) => a.pause());
     };
   });
+
+  // Helpers for label placement: drop the relation label near the
+  // midpoint, biased upward by ~6 px so it doesn't overlap the
+  // edge stroke.
+  const edgeMid = (a: KGNode, b: KGNode) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 
   return (
     <section ref={rootRef} className="py-20 px-6">
@@ -272,147 +264,88 @@ export function KnowledgeGraph() {
             >
               <defs>
                 <radialGradient id="kgDiscoveryGlow" cx="0.5" cy="0.5" r="0.5">
-                  <stop offset="0%" stopColor="rgb(110 231 183)" stopOpacity="0.5" />
+                  <stop offset="0%" stopColor="rgb(110 231 183)" stopOpacity="0.55" />
                   <stop offset="100%" stopColor="rgb(110 231 183)" stopOpacity="0" />
                 </radialGradient>
               </defs>
 
-              {/* GossipSub mesh - drawn first so peer hexes layer on top. */}
-              {MESH.map(([a, b], idx) => {
-                const A = PEERS[a]!;
-                const B = PEERS[b]!;
+              {/* Edges first so nodes layer above. */}
+              {EDGES.map((e, idx) => {
+                const a = NODES_BY_ID.get(e.from);
+                const b = NODES_BY_ID.get(e.to);
+                if (!a || !b) return null;
+                const mid = edgeMid(a, b);
                 return (
-                  <path
-                    key={`mesh-${idx}`}
-                    data-kg-mesh
-                    d={straightMeshPath(A, B)}
-                    fill="none"
-                    stroke="rgba(148, 163, 184, 0.30)"
-                    strokeWidth={1}
-                    strokeLinecap="round"
-                  />
-                );
-              })}
-
-              {/* Hidden orbit paths - one per gossip orb. */}
-              {ORBIT_EDGES.map(([a, b], idx) => (
-                <path
-                  key={`orbit-${idx}`}
-                  data-kg-orbit={idx}
-                  d={straightMeshPath(PEERS[a]!, PEERS[b]!)}
-                  fill="none"
-                  stroke="none"
-                />
-              ))}
-
-              {/* Peers. Each peer = halo (heartbeat) + filled circle +
-                  identity strip. Emerald peers also get a soft glow
-                  to mark a DISCOVERY host. */}
-              {PEERS.map((p) => {
-                const accent = ACCENT_BORDER[p.accent];
-                const isDiscovery = p.accent === 'emerald';
-                return (
-                  <g key={`peer-${p.i}`}>
-                    {/* Pulsing halo (continuous heartbeat). */}
-                    <circle
-                      data-kg-halo
-                      cx={p.x}
-                      cy={p.y}
-                      r={PEER_RADIUS}
-                      fill="none"
-                      stroke={accent}
-                      strokeOpacity={0.4}
-                      strokeWidth={1}
-                      opacity={0}
+                  <g key={`e-${idx}`}>
+                    <line
+                      data-kg-edge
+                      x1={a.x}
+                      y1={a.y}
+                      x2={b.x}
+                      y2={b.y}
+                      stroke="rgba(148, 163, 184, 0.30)"
+                      strokeWidth={0.9}
                     />
-
-                    {/* Discovery glow (emerald peers only). */}
-                    {isDiscovery && (
-                      <circle
-                        cx={p.x}
-                        cy={p.y}
-                        r={PEER_RADIUS + 8}
-                        fill="url(#kgDiscoveryGlow)"
-                        pointerEvents="none"
-                      />
-                    )}
-
-                    {/* Peer node - filled circle. */}
-                    <circle
-                      data-kg-peer
-                      cx={p.x}
-                      cy={p.y}
-                      r={PEER_RADIUS}
-                      fill={accent}
-                      fillOpacity={0.9}
-                      style={{ transformOrigin: `${p.x}px ${p.y}px`, transformBox: 'fill-box' }}
-                    />
-
-                    {/* Identity strip below the peer - Tier + Ed25519 prefix. */}
                     <text
-                      x={p.x}
-                      y={p.y + PEER_RADIUS + 12}
-                      textAnchor="middle"
-                      fill={accent}
-                      fillOpacity={0.85}
-                      style={{ font: '600 9px ui-monospace, SFMono-Regular, monospace', letterSpacing: '0.08em' }}
-                    >
-                      {p.tier}
-                    </text>
-                    <text
-                      x={p.x}
-                      y={p.y + PEER_RADIUS + 24}
+                      x={mid.x}
+                      y={mid.y - 4}
                       textAnchor="middle"
                       fill="rgb(148 163 184)"
-                      fillOpacity={0.6}
-                      style={{ font: '500 8px ui-monospace, SFMono-Regular, monospace' }}
+                      fillOpacity={0.45}
+                      style={{ font: '500 6.5px ui-monospace, SFMono-Regular, monospace', letterSpacing: '0.04em' }}
                     >
-                      {p.id}
+                      {e.rel}
                     </text>
                   </g>
                 );
               })}
 
-              {/* Gossip orbs - three travelling pulses on the mesh. */}
-              {ORBIT_EDGES.map((_, idx) => (
-                <circle
-                  key={`orb-${idx}`}
-                  data-kg-orb={idx}
-                  r={3.2}
-                  fill="rgb(110 231 183)"
-                  fillOpacity={0.95}
-                  opacity={0}
-                />
-              ))}
+              {/* Nodes. DISCOVERY nodes get a soft radial glow. */}
+              {NODES.map((n) => {
+                const fill = KG_FILL[n.type];
+                const isDiscovery = n.type === 'DISCOVERY';
+                return (
+                  <g
+                    key={n.id}
+                    data-kg-node
+                    transform={`translate(${n.x} ${n.y})`}
+                    style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
+                  >
+                    {isDiscovery && (
+                      <>
+                        <circle r={14} fill="url(#kgDiscoveryGlow)" pointerEvents="none" />
+                        <circle
+                          data-kg-halo
+                          r={NODE_RADIUS + 2}
+                          fill="none"
+                          stroke={fill}
+                          strokeOpacity={0.45}
+                          strokeWidth={1}
+                          opacity={0}
+                        />
+                      </>
+                    )}
+                    <circle
+                      r={isDiscovery ? NODE_RADIUS + 1 : NODE_RADIUS}
+                      fill={fill}
+                      fillOpacity={isDiscovery ? 1 : 0.92}
+                    />
+                    <text
+                      x={0}
+                      y={NODE_RADIUS + 11}
+                      textAnchor="middle"
+                      fill="rgb(226 232 240)"
+                      fillOpacity={0.85}
+                      style={{ font: '600 8px ui-sans-serif, system-ui, sans-serif' }}
+                    >
+                      {n.label}
+                    </text>
+                  </g>
+                );
+              })}
 
-              {/* Bootstrap node - deprecated by Phase 6, drawn faded
-                  and dotted to communicate "scaffolding only". */}
-              <g data-kg-bootstrap opacity={0}>
-                <circle
-                  cx={62}
-                  cy={335}
-                  r={9}
-                  fill="rgba(15, 23, 42, 0.7)"
-                  stroke="rgb(148 163 184)"
-                  strokeOpacity={0.55}
-                  strokeWidth={1}
-                  strokeDasharray="3 2"
-                />
-                <text
-                  x={62}
-                  y={358}
-                  textAnchor="middle"
-                  fill="rgb(148 163 184)"
-                  fillOpacity={0.7}
-                  style={{ font: '600 8px ui-monospace, SFMono-Regular, monospace', letterSpacing: '0.08em' }}
-                >
-                  BOOTSTRAP
-                </text>
-              </g>
-
-              {/* Legend (top-right) - the kg_node types each peer
-                  stores in its slice of the shared semantic graph. */}
-              <g transform="translate(580 18)" opacity={0.85}>
+              {/* Legend (top-right) - kg_node colour roles. */}
+              <g transform="translate(580 332)" opacity={0.85}>
                 {KG_LEGEND_ORDER.map((t, i) => (
                   <g key={`lg-${t}`} transform={`translate(${(i % 3) * 70} ${Math.floor(i / 3) * 14})`}>
                     <circle r={2.4} cx={0} cy={-3} fill={KG_FILL[t]} />
