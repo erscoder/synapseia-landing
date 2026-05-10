@@ -90,12 +90,34 @@ const ORBIT_EDGES: ReadonlyArray<[number, number]> = [
 // Halo size scales off this so the heartbeat pulse still reads.
 const PEER_RADIUS = 9;
 
-function curvedMeshPath(a: Peer, b: Peer): string {
-  // Quadratic curve with control point biased towards midpoint
-  // shifted slightly upward - gives the mesh an airy organic feel.
-  const mx = (a.x + b.x) / 2;
-  const my = (a.y + b.y) / 2 - 18;
-  return `M ${a.x} ${a.y} Q ${mx} ${my}, ${b.x} ${b.y}`;
+// kg_node types live inside the conceptual graph (not rendered per
+// peer anymore - peers are now solid dots). Kept here to drive the
+// legend so the section still tells the user what shapes the
+// shared semantic graph stores.
+type KGType = 'DISEASE' | 'PROTEIN' | 'GENE' | 'COMPOUND' | 'PATHWAY' | 'DISCOVERY';
+
+const KG_FILL: Record<KGType, string> = {
+  DISCOVERY: 'rgb(110 231 183)',
+  PROTEIN: 'rgb(34 211 238)',
+  GENE: 'rgb(96 165 250)',
+  COMPOUND: 'rgb(192 132 252)',
+  PATHWAY: 'rgb(251 191 36)',
+  DISEASE: 'rgb(244 114 182)',
+};
+
+const KG_LEGEND_ORDER: ReadonlyArray<KGType> = [
+  'DISCOVERY',
+  'PROTEIN',
+  'GENE',
+  'COMPOUND',
+  'PATHWAY',
+  'DISEASE',
+];
+
+function straightMeshPath(a: Peer, b: Peer): string {
+  // Straight line between peer centres - cleaner than the previous
+  // curved version, reads as direct gossip routes rather than orbits.
+  return `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
 }
 
 const ACCENT_BORDER: Record<Peer['accent'], string> = {
@@ -263,7 +285,7 @@ export function KnowledgeGraph() {
                   <path
                     key={`mesh-${idx}`}
                     data-kg-mesh
-                    d={curvedMeshPath(A, B)}
+                    d={straightMeshPath(A, B)}
                     fill="none"
                     stroke="rgba(148, 163, 184, 0.30)"
                     strokeWidth={1}
@@ -277,7 +299,7 @@ export function KnowledgeGraph() {
                 <path
                   key={`orbit-${idx}`}
                   data-kg-orbit={idx}
-                  d={curvedMeshPath(PEERS[a]!, PEERS[b]!)}
+                  d={straightMeshPath(PEERS[a]!, PEERS[b]!)}
                   fill="none"
                   stroke="none"
                 />
@@ -388,6 +410,23 @@ export function KnowledgeGraph() {
                 </text>
               </g>
 
+              {/* Legend (top-right) - the kg_node types each peer
+                  stores in its slice of the shared semantic graph. */}
+              <g transform="translate(580 18)" opacity={0.85}>
+                {KG_LEGEND_ORDER.map((t, i) => (
+                  <g key={`lg-${t}`} transform={`translate(${(i % 3) * 70} ${Math.floor(i / 3) * 14})`}>
+                    <circle r={2.4} cx={0} cy={-3} fill={KG_FILL[t]} />
+                    <text
+                      x={6}
+                      y={0}
+                      fill="rgb(148 163 184)"
+                      style={{ font: '500 7.5px ui-monospace, SFMono-Regular, monospace', letterSpacing: '0.05em' }}
+                    >
+                      {t}
+                    </text>
+                  </g>
+                ))}
+              </g>
             </svg>
           </G>
         </Reveal>
