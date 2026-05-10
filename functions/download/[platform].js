@@ -17,7 +17,7 @@
 // `releases/latest/download/<exact-filename>` only resolves when the
 // filename matches a real asset on the latest published tag.
 
-const NODE_UI_VERSION = '0.8.8';
+const NODE_UI_VERSION = '0.8.10';
 const REPO = 'erscoder/synapseia-node-ui';
 
 const FILES = {
