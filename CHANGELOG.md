@@ -1,5 +1,12 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.8 → 0.8.10 (944170a)
+
+Skips 0.8.9 (superseded same-day by the 0.8.10 security
+hardening on the auto-download Node v22 path: SHA256 verify,
+runtime mutex, macOS quarantine cleanup). CF Pages function
+asset filename now templates against 0.8.10.
+
 ## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.7 → 0.8.8 (c83fa35)
 
 Sync with the node-ui 0.8.8 release that fixes the
