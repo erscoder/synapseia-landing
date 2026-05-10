@@ -1,5 +1,6 @@
 'use client';
 import { useRef } from 'react';
+import { Brain, Rocket, Microscope, Zap, Target, Dna, type LucideIcon } from 'lucide-react';
 import { Reveal, G } from './Reveal.client';
 import {
   animate,
@@ -100,7 +101,8 @@ export function EarnBand() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
             {([
               {
-                icon: '🧠',
+                Icon: Brain,
+                tone: 'text-emerald-300',
                 label: 'Research analysis',
                 reward: '33,900 SYN',
                 sub: 'daily pool · 1 round / day',
@@ -108,7 +110,8 @@ export function EarnBand() {
                 hw: 'Any node',
               },
               {
-                icon: '🚀',
+                Icon: Rocket,
+                tone: 'text-fuchsia-300',
                 label: 'GPU training (DiLoCo)',
                 reward: '21,000 SYN',
                 sub: 'daily pool · 6 rounds / day',
@@ -116,7 +119,8 @@ export function EarnBand() {
                 hw: 'GPU required',
               },
               {
-                icon: '🔬',
+                Icon: Microscope,
+                tone: 'text-cyan-300',
                 label: 'CPU training',
                 reward: '12,000 SYN',
                 sub: 'daily pool · 4 rounds / day',
@@ -124,33 +128,36 @@ export function EarnBand() {
                 hw: 'CPU + Python',
               },
               {
-                icon: '⚡',
+                Icon: Zap,
+                tone: 'text-amber-300',
                 label: 'CPU inference',
-                reward: '2–15 SYN',
+                reward: '2-15 SYN',
                 sub: 'per task · FCFS',
                 desc: 'Reactive jobs the research analysis spins up: tokenize (2 SYN), embed (10), classify (15). Works on any modern laptop.',
                 hw: 'Any node',
               },
               {
-                icon: '🎯',
+                Icon: Target,
+                tone: 'text-blue-300',
                 label: 'GPU inference',
-                reward: '30–50 SYN',
+                reward: '30-50 SYN',
                 sub: 'per task · FCFS',
                 desc: 'Heavy generation, summarisation, large-model embeddings the research round demands. First-come-first-served: fast nodes win.',
                 hw: 'GPU required',
               },
               {
-                icon: '🧬',
+                Icon: Dna,
+                tone: 'text-purple-300',
                 label: 'Molecular docking',
                 reward: '1,000 SYN',
                 sub: 'per agreed pair · 60 / 40 split',
                 desc: 'Two nodes independently score the same ligand-target pair. If they agree, both get paid (600 / 400). Drug-discovery cross-verification.',
                 hw: 'GPU recommended',
               },
-            ] as const).map(({ icon, label, reward, sub, desc, hw }) => (
+            ] as const satisfies ReadonlyArray<{ Icon: LucideIcon; tone: string; label: string; reward: string; sub: string; desc: string; hw: string }>).map(({ Icon, tone, label, reward, sub, desc, hw }) => (
               <G key={label} className="p-5 flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <div className="text-2xl">{icon}</div>
+                  <Icon className={`w-6 h-6 ${tone}`} strokeWidth={1.5} aria-hidden="true" />
                   <span className="text-[10px] uppercase tracking-widest text-slate-500 font-mono">
                     {hw}
                   </span>
