@@ -1,5 +1,16 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] feat(landing): swap EarnBand emoji icons for lucide-react (90cea7a)
+
+Replaces the WhatsApp-style emoji glyphs (🧠 🚀 🔬 ⚡ 🎯 🧬) in the
+"How nodes earn money" grid with stroked Lucide icons (Brain,
+Rocket, Microscope, Zap, Target, Dna). Each card carries a
+type-specific tone class so the row reads as a graduated palette
+rather than a random emoji set.
+
+`lucide-react` added as a direct dep so CF Pages picks it up;
+tree-shakes per-icon for minimal bundle impact.
+
 ## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.5 → 0.8.6 (83ea951)
 
 Lockstep update with the node-ui 0.8.6 security release. CF Pages
