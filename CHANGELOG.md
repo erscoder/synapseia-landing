@@ -1,5 +1,12 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.5 → 0.8.6 (83ea951)
+
+Lockstep update with the node-ui 0.8.6 security release. CF Pages
+Function templates the asset filename for the GitHub
+`releases/latest/download/<filename>` redirect — bump must precede
+the landing remote push so the deploy matches the new release.
+
 ## [2026-05-10] feat(landing): KG redrawn as semantic graph with typed nodes + edges (67e55e3)
 
 Replaces the peer-mesh visual with the actual semantic graph.
