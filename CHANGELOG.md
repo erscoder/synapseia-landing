@@ -1,5 +1,22 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] fix(landing): KG peers as filled circles + legend + node GitHub link (b1cecad, 7ea0b48)
+
+- KnowledgeGraph peers redrawn as small (r=9) filled circles
+  instead of larger hexagons with an inner kg_node triangle.
+  Removed the intra-peer triangle, kg_edges, and the hexPath
+  helper. T4/T5 emerald peers keep the radial discovery glow;
+  halo heartbeat scaled down to match the smaller peer radius.
+  Entrance: peers scale-in -> mesh edges line-draw -> bootstrap
+  fades.
+- Mesh edges are now straight lines instead of quadratic curves
+  (reads as direct gossip routes rather than orbital arcs).
+- Restored the kg_node type legend (top-right of the SVG) to key
+  DISEASE / PROTEIN / GENE / COMPOUND / PATHWAY / DISCOVERY to
+  colour for the cards below.
+- Nav GitHub link now points to `github.com/synapseia-network/node`
+  (the actual node software repo) instead of the landing repo.
+
 ## [2026-05-10] feat(landing): turn HowItWorks stages into a tabbed switcher (245a9e7)
 
 Stages 1-5 used to render as five stacked sections; the StageNav
