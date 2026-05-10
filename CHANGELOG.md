@@ -1,5 +1,13 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.7 → 0.8.8 (c83fa35)
+
+Sync with the node-ui 0.8.8 release that fixes the
+`@synapseia/node` (legacy bin) collision blocking the boot-time
+auto-install on machines that had the pre-rename package
+globally installed. CF Pages function asset filename now
+templates against 0.8.8.
+
 ## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.6 → 0.8.7 (0f822d1)
 
 Sync with the node-ui 0.8.7 release that adds boot-time
