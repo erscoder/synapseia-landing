@@ -1,5 +1,15 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.3 → 0.8.5 (d3d869e)
+
+Aligns the download proxy filenames + the visible version chip on
+`/downloads` with the latest node-ui release. Bumped two constants:
+`components/landing/RunNode.client.tsx` and
+`functions/download/[platform].js`. Both must match the real
+release tag — the Cloudflare Pages Function templates the asset
+filename, so a stale version yields a silent 404 from the GitHub
+`releases/latest/download/<filename>` redirect.
+
 ## [2026-05-10] fix(landing): remove 'Intelligence compounds.' pull-quote (67fd1c9)
 
 The big bold pull-quote at the end of HowItWorks was AI-pitch
