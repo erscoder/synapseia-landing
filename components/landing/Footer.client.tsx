@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useRef } from 'react';
+import { Github } from 'lucide-react';
 import { animate, onScroll, stagger, useAnime } from '@/lib/anime';
 
 // Deterministic seed based on index - keeps SSR and CSR markup identical
@@ -73,9 +74,19 @@ export function Footer() {
           />
         ))}
       </svg>
-      <p className="relative text-slate-600 text-sm">
-        Synapseia Network {'©'} 2026 · Decentralized AI Research
-      </p>
+      <div className="relative flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 text-slate-600 text-sm">
+        <span>Synapseia Network · Decentralized AI Research</span>
+        <a
+          href="https://github.com/synapseia-network/node"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Synapseia node repository on GitHub"
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.06] bg-white/[0.02] text-slate-400 hover:text-white hover:border-white/15 hover:bg-white/[0.05] transition-colors"
+        >
+          <Github className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
+          <span className="text-xs">GitHub</span>
+        </a>
+      </div>
     </footer>
   );
 }

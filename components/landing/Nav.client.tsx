@@ -15,7 +15,6 @@ type NavLink = {
 const LINKS: NavLink[] = [
   { label: 'Docs', href: '/docs' },
   { label: 'Download', href: '/downloads' },
-  { label: 'GitHub', href: 'https://github.com/synapseia-network/node', external: true },
   { label: 'Dashboard', href: DASHBOARD_URL, external: true, cta: true },
 ];
 

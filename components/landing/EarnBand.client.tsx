@@ -192,24 +192,22 @@ export function EarnBand() {
                   <tr className="text-xs text-slate-500 uppercase tracking-wider border-b border-white/[0.06]">
                     <th className="text-left pb-3 pr-4">Tier</th>
                     <th className="text-left pb-3 pr-4">Stake Required</th>
-                    <th className="text-left pb-3 pr-4">Multiplier</th>
-                    <th className="text-left pb-3">Effective Pool Share</th>
+                    <th className="text-left pb-3">Multiplier</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/[0.04]">
                   {([
-                    { tier: 'T0', stake: '0 SYN',       mult: '1.0×', earn: 'baseline',     color: 'text-slate-400' },
-                    { tier: 'T1', stake: '500 SYN',     mult: '1.2×', earn: '+20% vs T0',   color: 'text-blue-400' },
-                    { tier: 'T2', stake: '2,000 SYN',   mult: '1.5×', earn: '+50% vs T0',   color: 'text-purple-400' },
-                    { tier: 'T3', stake: '8,000 SYN',   mult: '2.0×', earn: '2× T0',         color: 'text-amber-400' },
-                    { tier: 'T4', stake: '25,000 SYN',  mult: '2.5×', earn: '2.5× T0',       color: 'text-orange-400' },
-                    { tier: 'T5', stake: '75,000 SYN',  mult: '3.0×', earn: '3× T0',         color: 'text-emerald-400' },
-                  ] as const).map(({ tier, stake, mult, earn, color }) => (
+                    { tier: 'T0', stake: '0 SYN',       mult: '1.0×', color: 'text-slate-400' },
+                    { tier: 'T1', stake: '500 SYN',     mult: '1.2×', color: 'text-blue-400' },
+                    { tier: 'T2', stake: '2,000 SYN',   mult: '1.5×', color: 'text-purple-400' },
+                    { tier: 'T3', stake: '8,000 SYN',   mult: '2.0×', color: 'text-amber-400' },
+                    { tier: 'T4', stake: '25,000 SYN',  mult: '2.5×', color: 'text-orange-400' },
+                    { tier: 'T5', stake: '75,000 SYN',  mult: '3.0×', color: 'text-emerald-400' },
+                  ] as const).map(({ tier, stake, mult, color }) => (
                     <tr key={tier} className="hover:bg-white/[0.02] transition-colors">
                       <td className={'py-3 pr-4 font-bold font-mono ' + color}>{tier}</td>
                       <td className="py-3 pr-4 text-slate-400 font-mono">{stake}</td>
-                      <td className={'py-3 pr-4 font-bold font-mono ' + color}>{mult}</td>
-                      <td className={'py-3 font-mono ' + color}>{earn}</td>
+                      <td className={'py-3 font-bold font-mono ' + color}>{mult}</td>
                     </tr>
                   ))}
                 </tbody>
