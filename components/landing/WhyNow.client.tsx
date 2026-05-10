@@ -162,7 +162,7 @@ export function WhyNow() {
                   ref={(el) => {
                     valueRefs.current[i] = el;
                   }}
-                  className={`text-5xl sm:text-6xl font-bold font-mono bg-clip-text text-transparent leading-none mb-3 ${s.gradientClass}`}
+                  className={`text-3xl sm:text-4xl font-bold font-mono bg-clip-text text-transparent leading-none mb-3 whitespace-nowrap ${s.gradientClass}`}
                 >
                   {s.finalText}
                 </div>
