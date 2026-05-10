@@ -1,5 +1,13 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] fix(landing): drop Hero scroll chevron + simplify Cta docs CTA (8ac0d91)
+
+- Hero: removed the bouncing chevron-down at the bottom of the
+  hero section. It was purely decorative and the page already has
+  a clear visible 'How it works' button + the rest of the layout.
+- Cta: 'Read the docs ->' becomes just 'Docs', dropping the
+  trailing arrow svg.
+
 ## [2026-05-10] fix(landing): shrink WhyNow stat numbers to fit on one line (63fc3c0)
 
 Stats in the "Drug discovery has collapsed" band were sized
