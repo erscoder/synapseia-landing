@@ -67,11 +67,6 @@ export function Hero() {
           How it works
         </button>
       </div>
-      {/* Decorative scroll cue - `aria-hidden` so screen readers skip
-          it. The bouncing arrow is purely cosmetic. */}
-      <div aria-hidden="true" className="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-600 motion-safe:animate-bounce">
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" /></svg>
-      </div>
     </section>
   );
 }

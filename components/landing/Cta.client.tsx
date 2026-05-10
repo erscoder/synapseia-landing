@@ -87,8 +87,7 @@ export function Cta() {
                 data-cta-primary
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl backdrop-blur-md bg-blue-500/15 border border-blue-500/30 text-blue-200 font-semibold hover:bg-blue-500/25 hover:border-blue-400/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 text-base"
               >
-                Read the docs
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                Docs
               </Link>
               <a
                 href="https://github.com/erscoder/synapseia-landing"
