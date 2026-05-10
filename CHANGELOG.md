@@ -1,5 +1,18 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] fix(landing): drop Pool Share column + move GitHub to footer + drop date (f7da15e)
+
+EarnBand: removed the redundant `Effective Pool Share` column from
+the tier table. The multiplier column already conveys the same
+information.
+
+Nav: removed the GitHub link from the desktop nav and the mobile
+drawer.
+
+Footer: dropped the `© 2026` date and added a GitHub icon link
+(Lucide `Github`) pointing at `github.com/synapseia-network/node`
+so the repo is still one click away.
+
 ## [2026-05-10] feat(landing): swap EarnBand emoji icons for lucide-react (90cea7a)
 
 Replaces the WhatsApp-style emoji glyphs (🧠 🚀 🔬 ⚡ 🎯 🧬) in the
