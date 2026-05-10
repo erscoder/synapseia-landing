@@ -86,64 +86,9 @@ const ORBIT_EDGES: ReadonlyArray<[number, number]> = [
   [4, 5],
 ];
 
-const PEER_RADIUS = 32;
-
-// Each peer holds 3 kg_nodes wired by 2 kg_edges. Local coords are
-// relative to the peer centre; rendered inside a translated <g> so
-// the layout is identical for every peer regardless of position.
-//
-// Node-type palette pulled from the corpus:
-//   DISEASE (fuchsia), PROTEIN (cyan), GENE (blue), COMPOUND
-//   (purple), PATHWAY (amber), DISCOVERY (emerald + glow).
-type KGType = 'DISEASE' | 'PROTEIN' | 'GENE' | 'COMPOUND' | 'PATHWAY' | 'DISCOVERY';
-
-const KG_FILL: Record<KGType, string> = {
-  DISEASE: 'rgb(244 114 182)',
-  PROTEIN: 'rgb(34 211 238)',
-  GENE: 'rgb(96 165 250)',
-  COMPOUND: 'rgb(192 132 252)',
-  PATHWAY: 'rgb(251 191 36)',
-  DISCOVERY: 'rgb(110 231 183)',
-};
-
-// Per-peer kg slice. Index matches PEERS[i]. Each slice has 3 dots
-// arranged in a tight triangle (so they fit inside the hex) plus
-// the two edges that wire them.
-const KG_SLICES: ReadonlyArray<{ types: [KGType, KGType, KGType] }> = [
-  { types: ['DISEASE', 'GENE', 'PROTEIN'] },         // P0 - T0 generic
-  { types: ['COMPOUND', 'PATHWAY', 'GENE'] },        // P1 - T2 generic
-  { types: ['DISCOVERY', 'PROTEIN', 'GENE'] },       // P2 - T5 hosts a DISCOVERY
-  { types: ['PROTEIN', 'COMPOUND', 'GENE'] },        // P3 - T3 generic
-  { types: ['DISCOVERY', 'DISEASE', 'PATHWAY'] },    // P4 - T4 hosts a DISCOVERY
-  { types: ['GENE', 'COMPOUND', 'PROTEIN'] },        // P5 - T1 generic
-];
-
-// Triangle of kg_nodes inside a peer hex. Coords relative to peer
-// centre; r ~ 14 (well inside PEER_RADIUS=32).
-const KG_LOCAL: ReadonlyArray<{ x: number; y: number }> = [
-  { x: 0, y: -10 },
-  { x: -11, y: 8 },
-  { x: 11, y: 8 },
-];
-
-// Two intra-peer edges wiring node[0]→[1] and [1]→[2].
-const KG_EDGES_LOCAL: ReadonlyArray<[number, number]> = [
-  [0, 1],
-  [1, 2],
-  [2, 0],
-];
-
-function hexPath(cx: number, cy: number, r: number): string {
-  // Flat-top hexagon - six points starting at angle 0°.
-  const pts: string[] = [];
-  for (let i = 0; i < 6; i++) {
-    const a = (Math.PI / 3) * i;
-    const x = cx + Math.cos(a) * r;
-    const y = cy + Math.sin(a) * r;
-    pts.push(`${x.toFixed(2)},${y.toFixed(2)}`);
-  }
-  return `M ${pts[0]} L ${pts.slice(1).join(' L ')} Z`;
-}
+// Smaller peer markers - filled circles, no inner kg slice.
+// Halo size scales off this so the heartbeat pulse still reads.
+const PEER_RADIUS = 9;
 
 function curvedMeshPath(a: Peer, b: Peer): string {
   // Quadratic curve with control point biased towards midpoint
@@ -178,8 +123,7 @@ export function KnowledgeGraph() {
 
     if (reduceMotion) {
       utils.set('[data-kg-card-title]', { opacity: 1 });
-      utils.set('[data-kg-peer-hex]', { opacity: 1 });
-      utils.set('[data-kg-inner]', { opacity: 1, scale: 1 });
+      utils.set('[data-kg-peer]', { opacity: 1, scale: 1 });
       utils.set('[data-kg-mesh]', { opacity: 1 });
       utils.set('[data-kg-halo]', { opacity: 0 });
       utils.set('[data-kg-orb]', { opacity: 0 });
@@ -187,43 +131,32 @@ export function KnowledgeGraph() {
       return;
     }
 
-    // 1. Peer hexes - line-draw + halo wakeup.
-    const hexDrawables = svg.createDrawable('[data-kg-peer-hex]');
-    const hexAnim = animate(hexDrawables, {
-      draw: ['0 0', '0 1'],
-      delay: stagger(80),
-      duration: 600,
-      ease: 'inOutSine',
-      autoplay: false,
-    });
-
-    // 2. Inner kg slice (nodes + intra-peer edges) pop in once the
-    //    hex lands. Selector covers BOTH circles and short lines.
-    const innerAnim = animate('[data-kg-inner]', {
+    // 1. Peer dots scale-in.
+    const peerAnim = animate('[data-kg-peer]', {
       scale: [0, 1],
       opacity: [0, 1],
-      delay: stagger(20, { start: 600 }),
-      duration: 400,
+      delay: stagger(80),
+      duration: 480,
       ease: 'outBack',
       autoplay: false,
     });
 
-    // 3. Inter-peer mesh edges line-draw after inners settle.
+    // 2. Inter-peer mesh edges line-draw after peers land.
     const meshDrawables = svg.createDrawable('[data-kg-mesh]');
     const meshAnim = animate(meshDrawables, {
       draw: ['0 0', '0 1'],
-      delay: stagger(40, { start: 1100 }),
+      delay: stagger(40, { start: 700 }),
       duration: 480,
       ease: 'inOutSine',
       autoplay: false,
     });
 
-    // 4. Bootstrap node (deprecated Phase 6 piece) fades in last -
+    // 3. Bootstrap node (deprecated Phase 6 piece) fades in last -
     //    visually subordinate to the swarm.
     const bootAnim = animate('[data-kg-bootstrap]', {
       opacity: [0, 0.45],
       duration: 600,
-      delay: 1500,
+      delay: 1300,
       ease: 'outSine',
       autoplay: false,
     });
@@ -233,9 +166,9 @@ export function KnowledgeGraph() {
     //    real network, but we compress for visual rhythm). Pauses
     //    when offscreen.
     const haloAnim = animate('[data-kg-halo]', {
-      r: [PEER_RADIUS, PEER_RADIUS + 14],
+      r: [PEER_RADIUS, PEER_RADIUS + 18],
       opacity: [
-        { to: 0.25, duration: 200 },
+        { to: 0.35, duration: 200 },
         { to: 0, duration: 1300 },
       ],
       duration: 2500,
@@ -270,8 +203,7 @@ export function KnowledgeGraph() {
       ([entry]) => {
         if (entry?.isIntersecting && !played) {
           played = true;
-          hexAnim.play();
-          innerAnim.play();
+          peerAnim.play();
           meshAnim.play();
           bootAnim.play();
           titleAnim.play();
@@ -284,8 +216,7 @@ export function KnowledgeGraph() {
 
     return () => {
       io.disconnect();
-      hexAnim.pause();
-      innerAnim.pause();
+      peerAnim.pause();
       meshAnim.pause();
       bootAnim.pause();
       haloAnim.pause();
@@ -352,12 +283,12 @@ export function KnowledgeGraph() {
                 />
               ))}
 
-              {/* Peers. Each peer = halo + hex border + inner kg slice +
-                  identity label. Order matters: halo behind hex,
-                  inner kg above hex. */}
+              {/* Peers. Each peer = halo (heartbeat) + filled circle +
+                  identity strip. Emerald peers also get a soft glow
+                  to mark a DISCOVERY host. */}
               {PEERS.map((p) => {
-                const slice = KG_SLICES[p.i]!;
-                const border = ACCENT_BORDER[p.accent];
+                const accent = ACCENT_BORDER[p.accent];
+                const isDiscovery = p.accent === 'emerald';
                 return (
                   <g key={`peer-${p.i}`}>
                     {/* Pulsing halo (continuous heartbeat). */}
@@ -367,72 +298,40 @@ export function KnowledgeGraph() {
                       cy={p.y}
                       r={PEER_RADIUS}
                       fill="none"
-                      stroke={border}
+                      stroke={accent}
                       strokeOpacity={0.4}
                       strokeWidth={1}
                       opacity={0}
                     />
 
-                    {/* Peer hex - entrance line-draws this stroke. */}
-                    <path
-                      data-kg-peer-hex
-                      d={hexPath(p.x, p.y, PEER_RADIUS)}
-                      fill="rgba(15, 23, 42, 0.55)"
-                      stroke={border}
-                      strokeOpacity={0.7}
-                      strokeWidth={1.25}
-                      strokeLinejoin="round"
+                    {/* Discovery glow (emerald peers only). */}
+                    {isDiscovery && (
+                      <circle
+                        cx={p.x}
+                        cy={p.y}
+                        r={PEER_RADIUS + 8}
+                        fill="url(#kgDiscoveryGlow)"
+                        pointerEvents="none"
+                      />
+                    )}
+
+                    {/* Peer node - filled circle. */}
+                    <circle
+                      data-kg-peer
+                      cx={p.x}
+                      cy={p.y}
+                      r={PEER_RADIUS}
+                      fill={accent}
+                      fillOpacity={0.9}
+                      style={{ transformOrigin: `${p.x}px ${p.y}px`, transformBox: 'fill-box' }}
                     />
 
-                    {/* Intra-peer edges (kg_edges between local nodes). */}
-                    {KG_EDGES_LOCAL.map(([from, to], eidx) => {
-                      const a = KG_LOCAL[from]!;
-                      const b = KG_LOCAL[to]!;
-                      return (
-                        <line
-                          key={`kge-${p.i}-${eidx}`}
-                          data-kg-inner
-                          x1={p.x + a.x}
-                          y1={p.y + a.y}
-                          x2={p.x + b.x}
-                          y2={p.y + b.y}
-                          stroke="rgba(148, 163, 184, 0.45)"
-                          strokeWidth={0.8}
-                          style={{ transformOrigin: `${p.x}px ${p.y}px`, transformBox: 'fill-box' }}
-                        />
-                      );
-                    })}
-
-                    {/* Intra-peer kg_nodes. */}
-                    {slice.types.map((kgType, nidx) => {
-                      const local = KG_LOCAL[nidx]!;
-                      const fill = KG_FILL[kgType];
-                      const isDiscovery = kgType === 'DISCOVERY';
-                      return (
-                        <g
-                          key={`kgn-${p.i}-${nidx}`}
-                          data-kg-inner
-                          transform={`translate(${p.x + local.x} ${p.y + local.y})`}
-                          style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
-                        >
-                          {isDiscovery && (
-                            <circle r={9} fill="url(#kgDiscoveryGlow)" />
-                          )}
-                          <circle
-                            r={isDiscovery ? 3.2 : 2.4}
-                            fill={fill}
-                            fillOpacity={isDiscovery ? 1 : 0.85}
-                          />
-                        </g>
-                      );
-                    })}
-
-                    {/* Identity strip below the hex - Tier + Ed25519 prefix. */}
+                    {/* Identity strip below the peer - Tier + Ed25519 prefix. */}
                     <text
                       x={p.x}
-                      y={p.y + PEER_RADIUS + 14}
+                      y={p.y + PEER_RADIUS + 12}
                       textAnchor="middle"
-                      fill={border}
+                      fill={accent}
                       fillOpacity={0.85}
                       style={{ font: '600 9px ui-monospace, SFMono-Regular, monospace', letterSpacing: '0.08em' }}
                     >
@@ -440,7 +339,7 @@ export function KnowledgeGraph() {
                     </text>
                     <text
                       x={p.x}
-                      y={p.y + PEER_RADIUS + 26}
+                      y={p.y + PEER_RADIUS + 24}
                       textAnchor="middle"
                       fill="rgb(148 163 184)"
                       fillOpacity={0.6}
@@ -489,22 +388,6 @@ export function KnowledgeGraph() {
                 </text>
               </g>
 
-              {/* Mini legend (top-right) for the kg_node colour roles. */}
-              <g transform="translate(580 18)" opacity={0.85}>
-                {(['DISCOVERY', 'PROTEIN', 'GENE', 'COMPOUND', 'PATHWAY', 'DISEASE'] as KGType[]).map((t, i) => (
-                  <g key={`lg-${t}`} transform={`translate(${(i % 3) * 70} ${Math.floor(i / 3) * 14})`}>
-                    <circle r={2.4} cx={0} cy={-3} fill={KG_FILL[t]} />
-                    <text
-                      x={6}
-                      y={0}
-                      fill="rgb(148 163 184)"
-                      style={{ font: '500 7.5px ui-monospace, SFMono-Regular, monospace', letterSpacing: '0.05em' }}
-                    >
-                      {t}
-                    </text>
-                  </g>
-                ))}
-              </g>
             </svg>
           </G>
         </Reveal>
