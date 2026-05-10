@@ -1,5 +1,30 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-10] feat(landing): KG redrawn as semantic graph with typed nodes + edges (67e55e3)
+
+Replaces the peer-mesh visual with the actual semantic graph.
+22 typed nodes across DISEASE / PROTEIN / GENE / COMPOUND / PATHWAY
+/ DISCOVERY, wired by 22 edges labelled per the
+SynapseIA-How-It-Works edge taxonomy: TREATS, ENCODES,
+BIOMARKER_OF, BINDS, UPREGULATES, VALIDATES, BUILDS_ON,
+DERIVED_FROM.
+
+Layout follows the biomedical scope: ALS / Alzheimer's /
+Parkinson's / BRCA1 cancer along the top, their associated
+proteins (SOD1, TDP-43, Tau, Aβ, α-synuclein, BRCA1) below,
+encoding genes (SOD1, MAPT, APP, SNCA, BRCA1) below those,
+pathways (Mitochondrial, Glutamate, Apoptosis) and compounds
+(Riluzole, Edaravone, L-DOPA) ringing the diseases, and two
+DISCOVERY nodes that VALIDATE / BUILD_ON / DERIVED_FROM the
+relations. Each edge carries its relation label so a viewer can
+map it back to a real kg_edge row. DISCOVERY nodes carry a soft
+glow + heartbeat halo paused offscreen via onScroll.
+
+Dropped: the peer hexagons / mesh / bootstrap node / per-peer
+halo machinery. The cards below the diagram still describe
+SHARDING / GOSSIPSUB / BOOTSTRAP in prose so the visual can focus
+on the graph itself.
+
 ## [2026-05-10] fix(landing): KG peers as filled circles + legend + node GitHub link (b1cecad, 7ea0b48)
 
 - KnowledgeGraph peers redrawn as small (r=9) filled circles
