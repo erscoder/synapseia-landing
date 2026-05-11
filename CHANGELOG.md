@@ -1,5 +1,12 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-11] chore(downloads): bump NODE_UI_VERSION 0.8.10 → 0.8.11 (8e29c14)
+
+Sync with the node-ui 0.8.11 release that bundles the
+`@libp2p/utils` `onProgress` guard patch (node 0.8.11 ships the
+fix; node-ui auto-installs that node CLI). CF Pages Function and
+`RunNode.client.tsx` now template asset filenames against 0.8.11.
+
 ## [2026-05-10] chore(downloads): bump NODE_UI_VERSION 0.8.8 → 0.8.10 (944170a)
 
 Skips 0.8.9 (superseded same-day by the 0.8.10 security
