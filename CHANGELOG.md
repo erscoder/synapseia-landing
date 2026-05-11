@@ -1,5 +1,10 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-11] chore(downloads): bump NODE_UI_VERSION 0.8.12 → 0.8.13 (a125a89)
+
+Sync with the node-ui 0.8.13 release (README rewrite + CI Node 24
+base shipped via node 0.8.13).
+
 ## [2026-05-11] chore(downloads): bump NODE_UI_VERSION 0.8.11 → 0.8.12 (6e58efc)
 
 Sync with the node-ui 0.8.12 release (WeakMap iteration on the
