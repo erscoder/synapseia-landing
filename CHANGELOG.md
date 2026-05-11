@@ -1,5 +1,12 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-11] chore(downloads): bump NODE_UI_VERSION 0.8.11 → 0.8.12 (6e58efc)
+
+Sync with the node-ui 0.8.12 release (WeakMap iteration on the
+`@libp2p/utils` `onProgress` patch shipped via node 0.8.12). CF
+Pages Function and `RunNode.client.tsx` template asset filenames
+against 0.8.12.
+
 ## [2026-05-11] chore(downloads): bump NODE_UI_VERSION 0.8.10 → 0.8.11 (8e29c14)
 
 Sync with the node-ui 0.8.11 release that bundles the
