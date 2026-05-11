@@ -12,34 +12,38 @@
 //
 // Anything else → 404 with the supported list.
 //
-// Bump NODE_UI_VERSION whenever the node-ui release files change name
-// (Tauri embeds the semver in the filename). The GitHub redirect
-// `releases/latest/download/<exact-filename>` only resolves when the
-// filename matches a real asset on the latest published tag.
+// Per-platform release tag + filename. The GitHub URL
+// `releases/download/<tag>/<exact-filename>` is used (NOT
+// `releases/latest/download/...`) so each platform can independently
+// point at the most recent release that successfully shipped that
+// platform's asset. When a CI build job fails for a single platform,
+// the other platforms still upgrade and the failing platform stays
+// pinned at its last-good release.
 
-const NODE_UI_VERSION = '0.8.14';
 const REPO = 'erscoder/synapseia-node-ui';
 
-const FILES = {
-  'mac-arm64': `Synapseia.Node_${NODE_UI_VERSION}_aarch64.dmg`,
-  'mac-x64':   `Synapseia.Node_${NODE_UI_VERSION}_x64.dmg`,
-  'windows':   `Synapseia.Node_${NODE_UI_VERSION}_x64_en-US.msi`,
-  'linux':     `Synapseia.Node_${NODE_UI_VERSION}_amd64.AppImage`,
+const PLATFORM_RELEASES = {
+  'mac-arm64': { tag: 'node-ui-v0.8.16', file: 'Synapseia.Node_0.8.16_aarch64.dmg' },
+  'mac-x64':   { tag: 'node-ui-v0.8.16', file: 'Synapseia.Node_0.8.16_x64.dmg' },
+  'windows':   { tag: 'node-ui-v0.8.16', file: 'Synapseia.Node_0.8.16_x64_en-US.msi' },
+  // 0.8.16 ubuntu build failed; Linux pinned to last working AppImage.
+  'linux':     { tag: 'node-ui-v0.8.14', file: 'Synapseia.Node_0.8.14_amd64.AppImage' },
 };
 
 export async function onRequestGet({ params }) {
   const platform = String(params.platform || '').toLowerCase();
-  const file = FILES[platform];
+  const release = PLATFORM_RELEASES[platform];
 
-  if (!file) {
+  if (!release) {
     return new Response(
-      `Unknown platform "${platform}". Supported: ${Object.keys(FILES).join(', ')}`,
+      `Unknown platform "${platform}". Supported: ${Object.keys(PLATFORM_RELEASES).join(', ')}`,
       { status: 404, headers: { 'content-type': 'text/plain' } },
     );
   }
 
+  const { tag, file } = release;
   const upstream = await fetch(
-    `https://github.com/${REPO}/releases/latest/download/${file}`,
+    `https://github.com/${REPO}/releases/download/${tag}/${file}`,
     { redirect: 'follow' },
   );
 
