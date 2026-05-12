@@ -1,5 +1,19 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-12] feat(privacy): GDPR/CCPA privacy policy + Umami cookieless analytics
+
+Adds a standard long-form privacy policy at `/privacy` covering
+GDPR, UK GDPR, and CCPA: data controller, what we collect (Umami
+cookieless analytics, Cloudflare access logs, node telemetry,
+contact data), legal basis, retention windows, sub-processors
+(Cloudflare, Umami, Fly.io, GitHub, Solana RPC), international
+transfers, user rights, CCPA, security, children, contact at
+support@erslabs.net. Footer gains a discreet Privacy Policy
+link beside the GitHub button. Root layout loads Umami via
+`next/script` with `afterInteractive` strategy so it never blocks
+paint and runs on every route. No cookies, no PII, salted-IP
+country derivation - CNIL-compliant without a consent banner.
+
 ## [2026-05-11] chore(downloads): bump NODE_UI_VERSION 0.8.12 → 0.8.13 (a125a89)
 
 Sync with the node-ui 0.8.13 release (README rewrite + CI Node 24

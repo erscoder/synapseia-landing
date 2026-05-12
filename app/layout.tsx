@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -37,6 +38,14 @@ export default function RootLayout({
           Skip to content
         </a>
         <div className="relative z-10">{children}</div>
+        {/* Umami analytics - cookieless, no PII, salted-IP hashing.
+            Loaded with `afterInteractive` strategy so it never blocks
+            paint. See /privacy for the data we record. */}
+        <Script
+          src="https://cloud.umami.is/script.js"
+          data-website-id="7536f31c-ba22-48b9-8958-e38608a9620f"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

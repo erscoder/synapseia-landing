@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useRef } from 'react';
+import Link from 'next/link';
 import { Github } from 'lucide-react';
 import { animate, onScroll, stagger, useAnime } from '@/lib/anime';
 
@@ -76,6 +77,12 @@ export function Footer() {
       </svg>
       <div className="relative flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 text-slate-600 text-sm">
         <span>Synapseia Network · Decentralized AI Research</span>
+        <Link
+          href="/privacy"
+          className="text-slate-500 hover:text-white transition-colors text-xs"
+        >
+          Privacy Policy
+        </Link>
         <a
           href="https://github.com/synapseia-network/node"
           target="_blank"
