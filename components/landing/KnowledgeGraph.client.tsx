@@ -301,45 +301,49 @@ export function KnowledgeGraph() {
               })}
 
               {/* Nodes. DISCOVERY nodes get a soft radial glow. */}
+              {/* Outer <g> holds the static translate; inner <g> is what
+                  anime.js scales — keeping the two transforms on separate
+                  elements prevents anime from overwriting the translate
+                  attribute on each tick. */}
               {NODES.map((n) => {
                 const fill = KG_FILL[n.type];
                 const isDiscovery = n.type === 'DISCOVERY';
                 return (
-                  <g
-                    key={n.id}
-                    data-kg-node
-                    transform={`translate(${n.x} ${n.y})`}
-                    style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
-                  >
-                    {isDiscovery && (
-                      <>
-                        <circle r={14} fill="url(#kgDiscoveryGlow)" pointerEvents="none" />
-                        <circle
-                          data-kg-halo
-                          r={NODE_RADIUS + 2}
-                          fill="none"
-                          stroke={fill}
-                          strokeOpacity={0.45}
-                          strokeWidth={1}
-                          opacity={0}
-                        />
-                      </>
-                    )}
-                    <circle
-                      r={isDiscovery ? NODE_RADIUS + 1 : NODE_RADIUS}
-                      fill={fill}
-                      fillOpacity={isDiscovery ? 1 : 0.92}
-                    />
-                    <text
-                      x={0}
-                      y={NODE_RADIUS + 11}
-                      textAnchor="middle"
-                      fill="rgb(226 232 240)"
-                      fillOpacity={0.85}
-                      style={{ font: '600 8px ui-sans-serif, system-ui, sans-serif' }}
+                  <g key={n.id} transform={`translate(${n.x} ${n.y})`}>
+                    <g
+                      data-kg-node
+                      style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
                     >
-                      {n.label}
-                    </text>
+                      {isDiscovery && (
+                        <>
+                          <circle r={14} fill="url(#kgDiscoveryGlow)" pointerEvents="none" />
+                          <circle
+                            data-kg-halo
+                            r={NODE_RADIUS + 2}
+                            fill="none"
+                            stroke={fill}
+                            strokeOpacity={0.45}
+                            strokeWidth={1}
+                            opacity={0}
+                          />
+                        </>
+                      )}
+                      <circle
+                        r={isDiscovery ? NODE_RADIUS + 1 : NODE_RADIUS}
+                        fill={fill}
+                        fillOpacity={isDiscovery ? 1 : 0.92}
+                      />
+                      <text
+                        x={0}
+                        y={NODE_RADIUS + 11}
+                        textAnchor="middle"
+                        fill="rgb(226 232 240)"
+                        fillOpacity={0.85}
+                        style={{ font: '600 8px ui-sans-serif, system-ui, sans-serif' }}
+                      >
+                        {n.label}
+                      </text>
+                    </g>
                   </g>
                 );
               })}
