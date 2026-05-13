@@ -1,5 +1,15 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-13] fix(landing): KG nodes no longer drift to top-left after paint (9213d4c)
+
+anime.js v4 `scale` animation was overwriting the SVG `transform`
+attribute on each `<g data-kg-node>`, clobbering the `translate(x y)`
+that placed the node. All 22 nodes collapsed to (0,0) on tick 1.
+
+Fix: split into an outer `<g transform="translate(x y)">` for static
+position + an inner `<g data-kg-node>` for the scale animation. anime
+only touches the inner element now, so the outer translate survives.
+
 ## [2026-05-12] feat(privacy): GDPR/CCPA privacy policy + Umami cookieless analytics
 
 Adds a standard long-form privacy policy at `/privacy` covering
