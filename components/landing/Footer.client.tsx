@@ -93,6 +93,23 @@ export function Footer() {
           <Github className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
           <span className="text-xs">GitHub</span>
         </a>
+        <a
+          href="https://t.me/+ZLb7IVpWk3xlNDc8"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Join the Synapseia Telegram community"
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.04] text-cyan-300 hover:text-white hover:border-cyan-400/40 hover:bg-cyan-500/[0.08] transition-colors"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className="w-4 h-4"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+          </svg>
+          <span className="text-xs">Telegram</span>
+        </a>
       </div>
     </footer>
   );
