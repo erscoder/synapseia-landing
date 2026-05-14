@@ -225,15 +225,14 @@ export function RunNode() {
             </code>
           </div>
           <div className="max-w-2xl mx-auto mt-4 p-4 rounded-lg bg-slate-500/5 border border-slate-500/20">
-            <p className="text-xs text-slate-300 font-semibold mb-1">Terminal mode (for techies)</p>
+            <p className="text-xs text-slate-300 font-semibold mb-1">Terminal mode</p>
             <p className="text-xs text-slate-500 leading-relaxed">
               Prefer the CLI? Install the npm package directly. Headless-friendly, scriptable, drops the desktop shell.
             </p>
-            <code className="block mt-2 text-xs text-slate-300 bg-black/30 rounded px-3 py-2 font-mono select-all">
-              npm install -g @synapseia-network/node
-              {'\n'}
-              synapseia start
-            </code>
+            <pre className="block mt-2 text-xs text-slate-300 bg-black/30 rounded px-3 py-2 font-mono whitespace-pre overflow-x-auto select-all">
+{`npm install -g @synapseia-network/node
+synapseia start`}
+            </pre>
             <p className="text-xs text-slate-500 mt-2 leading-relaxed">
               Requires Node.js 22+. Full CLI reference on the{' '}
               <a
