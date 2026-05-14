@@ -1,5 +1,11 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.41 -> 0.8.42 (64ca444)
+
+Sync with node-ui-v0.8.42 GitHub release assets. Ships the
+plain-ASCII boot banner fix so the operator's first impression
+of the node-ui log viewer is not a wall of box-drawing mojibake.
+
 ## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.40 -> 0.8.41 (cda33fc)
 
 Sync with node-ui-v0.8.41 GitHub release assets. Ships the
