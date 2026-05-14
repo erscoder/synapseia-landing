@@ -1,5 +1,11 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.39 -> 0.8.40 (f7991b3)
+
+Sync with node-ui-v0.8.40 GitHub release assets. Ships the
+Tauri `bootstrap.js` spawn fix that finally activates the
+bigint-buffer warning filter on every platform.
+
 ## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.38 -> 0.8.39 (86bbfa8)
 
 Sync with node-ui-v0.8.39 GitHub release assets. Ships the cloud
