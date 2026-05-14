@@ -1,5 +1,14 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.40 -> 0.8.41 (cda33fc)
+
+Sync with node-ui-v0.8.41 GitHub release assets. Ships the
+Start/Stop button in LogsPanel + auto-respawn after CLI
+self-update + the npm publish workflow fix (patch-package now
+runs after `--ignore-scripts` install). 0.8.39 and 0.8.40 npm
+publishes failed (patch-package guard missed); 0.8.41 is the
+first successful npm publish after 0.8.38.
+
 ## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.39 -> 0.8.40 (f7991b3)
 
 Sync with node-ui-v0.8.40 GitHub release assets. Ships the
