@@ -193,7 +193,29 @@ export function RunNode() {
             Also available: <a href={RELEASE_DMG_X64} download className="text-slate-500 hover:text-white transition-colors underline underline-offset-2 inline-block" data-platform-btn>macOS Intel (.dmg)</a>
             {' '}· <a href={RELEASES_PAGE} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-white transition-colors underline underline-offset-2">release notes</a>
           </p>
-          <div className="max-w-2xl mx-auto mt-6 p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
+          <div className="max-w-2xl mx-auto mt-6 p-4 rounded-lg bg-[#76b900]/5 border border-[#76b900]/30">
+            <div className="flex items-center gap-2 mb-1.5">
+              {/* NVIDIA eye mark — nominative use (we direct users to register
+                  at build.nvidia.com to obtain their own personal API key). */}
+              <svg
+                viewBox="0 0 24 24"
+                className="w-5 h-5"
+                fill="#76b900"
+                aria-label="NVIDIA"
+              >
+                <path d="M8.948 8.798v-1.43a6.7 6.7 0 0 1 .424-.018c3.922-.124 6.493 3.374 6.493 3.374s-2.774 3.851-5.75 3.851c-.398 0-.787-.062-1.157-.185v-4.346c1.528.185 1.837.857 2.747 2.385l2.04-1.714s-1.491-1.952-4-1.952a6.247 6.247 0 0 0-.797.05m0-4.732v2.138l.424-.025c5.45-.185 9.01 4.47 9.01 4.47s-4.086 4.964-8.332 4.964c-.379 0-.733-.037-1.078-.099v1.321c.29.037.59.062.913.062 3.955 0 6.81-2.018 9.578-4.408.46.37 2.337 1.265 2.728 1.66-2.632 2.207-8.762 3.982-12.247 3.982-.335 0-.658-.024-.98-.06v1.85h15v-16zm0 10.396v1.13c-3.65-.65-4.667-4.456-4.667-4.456s1.756-1.948 4.668-2.26v1.236h-.005c-1.526-.185-2.72 1.244-2.72 1.244s.671 2.418 2.724 3.106M2.484 9.913s2.166-3.21 6.46-3.532V5.21C4.184 5.59 0 9.617 0 9.617s2.37 6.862 8.94 7.487v-1.235c-4.82-.611-6.456-5.956-6.456-5.956"/>
+              </svg>
+              <span className="text-xs font-semibold tracking-wide" style={{ color: '#76b900' }}>
+                NVIDIA NIM — research LLM, free
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              No local GPU? Pick <span className="font-mono" style={{ color: '#76b900' }}>NVIDIA NIM (free)</span> in the node setup screen for the research / review LLM path. Register at{' '}
+              <a href="https://build.nvidia.com" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:opacity-80" style={{ color: '#76b900' }}>build.nvidia.com</a>{' '}
+              to get a personal API key (~5,000 free credits/month). Training and docking work orders still run locally — use a node with a GPU for those.
+            </p>
+          </div>
+          <div className="max-w-2xl mx-auto mt-4 p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
             <p className="text-xs text-amber-300/80 font-semibold mb-1">macOS users</p>
             <p className="text-xs text-slate-500 leading-relaxed">
               The app is not yet code-signed. If macOS says {'"'}damaged and can&apos;t be opened{'"'}, run this in Terminal after installing:
