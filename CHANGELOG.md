@@ -1,5 +1,20 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] feat(run-node): Terminal mode install card for power users (13d0dda)
+
+Adds a muted slate card at the end of the Run a Node download section
+showing the npm CLI install path for operators who prefer the terminal:
+`npm install -g @synapseia-network/node` followed by `synapseia start`.
+Includes a Node.js 22+ prereq note and a link to the node repo README
+for the full CLI reference.
+
+Placement is intentional. The card sits last in the visual hierarchy,
+after the 3 desktop tiles, the NVIDIA NIM info card, and the macOS
+code-signing warning. The 90 percent non-technical operator audience
+sees the one-click desktop path first; the 10 percent CLI users scroll
+to find their flow without friction. Styling is muted slate (no green
+or amber) so the code block does not compete with the primary CTA.
+
 ## [2026-05-14] feat(run-node): NVIDIA NIM info block + inline brand mark (76a7aed)
 
 Emerald-tinted card under the download tiles tells operators without a
