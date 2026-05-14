@@ -1,5 +1,13 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.37 -> 0.8.38 (4a48a90)
+
+Sync with node-ui-v0.8.38 GitHub release assets. Ships the
+Windows bigint-buffer warning suppression: the
+`bigint: Failed to load bindings, pure JS will be used (try npm
+run rebuild?)` line no longer leaks into the SettingsPanel toast
+when Windows operators save their cloud LLM config.
+
 ## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.36 -> 0.8.37 (e451fb0)
 
 Sync with node-ui-v0.8.37 GitHub release assets. Ships the NVIDIA
