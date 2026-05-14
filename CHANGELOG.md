@@ -1,5 +1,12 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.38 -> 0.8.39 (86bbfa8)
+
+Sync with node-ui-v0.8.39 GitHub release assets. Ships the cloud
+LLM API key env-var fallback (node CLI now resolves the key from
+`NVIDIA_API_KEY` etc. when `--llm-key` is missing) plus the
+SettingsPanel revisit-dots fix.
+
 ## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.37 -> 0.8.38 (4a48a90)
 
 Sync with node-ui-v0.8.38 GitHub release assets. Ships the
