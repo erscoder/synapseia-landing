@@ -1,5 +1,19 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] feat(run-node): NVIDIA NIM info block + inline brand mark (76a7aed)
+
+Emerald-tinted card under the download tiles tells operators without a
+local GPU to pick NVIDIA NIM (free) as their LLM provider after
+install, with a link to register at build.nvidia.com for a personal
+nvapi-... key (~5,000 free credits/month). Inline NVIDIA eye logo
+(Simple Icons CC0) makes the value prop visually obvious without
+implying any partnership relationship.
+
+Copy is intentionally scoped: NIM covers the research / review LLM
+path only; training and docking work orders still run locally and
+need a GPU. Avoids the over-claim that any laptop without hardware
+can earn through the network.
+
 ## [2026-05-13] fix(landing): KG nodes no longer drift to top-left after paint (9213d4c)
 
 anime.js v4 `scale` animation was overwriting the SVG `transform`
