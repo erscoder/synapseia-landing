@@ -1,5 +1,11 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.34 -> 0.8.35 (0d67afc)
+
+Sync with node-ui-v0.8.35 GitHub release assets. Ships the Windows
+nvidia-smi hang hotfix to operators clicking the download tiles on
+synapseia.network.
+
 ## [2026-05-14] feat(run-node): Terminal mode install card for power users (13d0dda)
 
 Adds a muted slate card at the end of the Run a Node download section
