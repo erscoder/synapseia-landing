@@ -1,5 +1,14 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.35 -> 0.8.36 (dca2029)
+
+Sync with node-ui-v0.8.36 GitHub release assets. Ships the Windows
+cloud-LLM persistence fix: Settings panel now correctly persists
+provider + model + API key in Tauri ui-settings.json AND injects
+LLM_CLOUD_* env vars into every spawned CLI process, so operators
+selecting NVIDIA NIM (or any cloud provider) on Windows no longer
+silently revert to default Ollama on save.
+
 ## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.34 -> 0.8.35 (0d67afc)
 
 Sync with node-ui-v0.8.35 GitHub release assets. Ships the Windows
