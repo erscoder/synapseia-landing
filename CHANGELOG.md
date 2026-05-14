@@ -1,5 +1,14 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.36 -> 0.8.37 (e451fb0)
+
+Sync with node-ui-v0.8.37 GitHub release assets. Ships the NVIDIA
+NIM persistence fix: CLI `--set-model` regex now accepts
+multi-slash modelIds like `nvidia/meta/llama-3.3-70b-instruct`,
+so operators selecting NVIDIA NIM tiers on Mac, Windows, or Linux
+no longer see the Settings panel silently revert to default Ollama
+on save.
+
 ## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.35 -> 0.8.36 (dca2029)
 
 Sync with node-ui-v0.8.36 GitHub release assets. Ships the Windows
