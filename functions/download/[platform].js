@@ -23,10 +23,10 @@
 const REPO = 'erscoder/synapseia-node-ui';
 
 const PLATFORM_RELEASES = {
-  'mac-arm64': { tag: 'node-ui-v0.8.35', file: 'Synapseia.Node_0.8.35_aarch64.dmg' },
-  'mac-x64':   { tag: 'node-ui-v0.8.35', file: 'Synapseia.Node_0.8.35_x64.dmg' },
-  'windows':   { tag: 'node-ui-v0.8.35', file: 'Synapseia.Node_0.8.35_x64_en-US.msi' },
-  'linux':     { tag: 'node-ui-v0.8.35', file: 'Synapseia.Node_0.8.35_amd64.AppImage' },
+  'mac-arm64': { tag: 'node-ui-v0.8.36', file: 'Synapseia.Node_0.8.36_aarch64.dmg' },
+  'mac-x64':   { tag: 'node-ui-v0.8.36', file: 'Synapseia.Node_0.8.36_x64.dmg' },
+  'windows':   { tag: 'node-ui-v0.8.36', file: 'Synapseia.Node_0.8.36_x64_en-US.msi' },
+  'linux':     { tag: 'node-ui-v0.8.36', file: 'Synapseia.Node_0.8.36_amd64.AppImage' },
 };
 
 export async function onRequestGet({ params }) {
