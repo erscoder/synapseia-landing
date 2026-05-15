@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { FileText } from 'lucide-react';
 
 /**
  * Technical documentation page - single-page gitbook-style with a
@@ -191,11 +192,18 @@ export default function DocsPage() {
               <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight">
                 Synapseia Documentation
               </h1>
-              <p className="text-slate-400 text-lg leading-relaxed">
+              <p className="text-slate-400 text-lg leading-relaxed mb-5">
                 Technical handbook for operators, builders, and researchers
                 who want to understand how the network actually works - not
                 just the marketing surface.
               </p>
+              <a
+                href="/docs.md"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.02] text-slate-400 hover:text-white hover:border-white/15 hover:bg-white/[0.05] transition-colors text-xs"
+              >
+                <FileText className="w-3.5 h-3.5" strokeWidth={1.5} aria-hidden="true" />
+                <span>View as Markdown</span>
+              </a>
             </div>
 
             {/* OVERVIEW */}
