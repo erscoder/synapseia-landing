@@ -1,5 +1,28 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-16] fix(seo): one h2 per landing block + stage panels as h3 (81ae5c6)
+
+Slice 2 of the SEO + AI-search hardening pass. Heading outline is
+what AI agents parse from the accessibility tree first; a duplicate
+h2 in the same conceptual block confuses both Google's outline
+algorithm and assistive tech.
+
+Before: HowItWorks rendered two `<h2>` elements ("How a research
+cycle runs today" + "The Compounding Loop") inside the same engine
+wrapper, and every stage panel header (Stage1-5, via the shared
+`SH` helper in `Reveal.client.tsx`) was also `<h2>`.
+
+After: the engine wrapper is now `<section id="engine"
+aria-labelledby="how-it-works-title">` with the matching
+`<h2 id="how-it-works-title">`. "The Compounding Loop" demoted to
+`<h3>`. `SH` helper renders `<h3>`.
+
+Final outline on `out/index.html`: 1× h1 (Hero), 9× h2 (one per
+landing block), 2× h3 (currently-active stage panel + Compounding
+Loop). Tailwind classes preserved on both demoted headings, zero
+visual regression. Reviewer (`superpowers:code-reviewer`) confirmed
+`aria-labelledby` referential integrity and balanced JSX tags.
+
 ## [2026-05-16] feat(seo): per-route metadata + sitemap.xml + robots.txt (3a72253)
 
 Slice 1 of the SEO + AI-search hardening pass driven by Google's
