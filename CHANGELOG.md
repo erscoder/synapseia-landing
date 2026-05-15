@@ -5,6 +5,15 @@
 ### Changed
 - Sync LoRA per-WO reward copy 7,500 -> 5,000 SYN in `app/docs/page.tsx` (two occurrences: detailed "LoRA training" section + summary list). Mirrors coord `WORK_ORDER_REWARD_SYN[LORA_TRAINING]` reduction in `packages/coordinator/src/domain/constants.ts:24`. Other work-order reward amounts (CPU/GPU/DiLoCo/docking/inference) untouched.
 
+## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.45 -> 0.8.46 (5a48cbf)
+
+Carries the node `cf0577b5` canonical Ollama tag migration +
+auto-pull retry, plus the coord `726c6a07` REVISITABLE_TYPES
+rotation fix, to every new operator download. 0.8.45 left
+operator configs stuck with `ollama/<dash-name>` slugs that the
+Ollama daemon could not resolve; 0.8.46 self-heals those configs
+on next boot and auto-pulls the missing model as defense.
+
 ## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.44 -> 0.8.45 (68ec540)
 
 Carries the `a0bb328d` wizard + migration + catalog fix to every
