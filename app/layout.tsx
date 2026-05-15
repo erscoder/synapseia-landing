@@ -1,6 +1,31 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { JsonLd } from '@/components/JsonLd';
 import './globals.css';
+
+// schema.org Organization payload for the homepage. Stable `@id`
+// (`#org` fragment) lets every other JSON-LD block reference this
+// Organization instead of inlining a duplicate Organization node —
+// otherwise a strict parser sees three anonymous Organizations and
+// can't merge them.
+//
+// `sameAs` is intentionally empty: `github.com/erscoder` is a user
+// profile, not an org page, and pointing there would violate
+// schema.org's requirement that `sameAs` URLs unambiguously identify
+// the same entity. There is no live X/Twitter handle either. An
+// empty array is honest; a fabricated one risks a manual action.
+export const ORG_ID = 'https://synapseia.network/#org';
+
+const ORG_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': ORG_ID,
+  name: 'Synapseia Network',
+  url: 'https://synapseia.network',
+  logo: 'https://synapseia.network/synapseia-logo.png',
+  description:
+    'A peer-to-peer network of GPUs running LLM inference, evaluation, and knowledge-graph hosting. Secured by Solana, owned by its operators.',
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://synapseia.network'),
@@ -39,6 +64,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
+        <JsonLd data={ORG_SCHEMA} />
         {/* Skip-to-content link - first focusable element so keyboard
             users can bypass the fixed nav and the decorative hero
             motion. Visually hidden until focused. */}

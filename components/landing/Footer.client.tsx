@@ -84,7 +84,7 @@ export function Footer() {
           Privacy Policy
         </Link>
         <a
-          href="https://github.com/synapseia-network/node"
+          href="https://github.com/erscoder/synapseia-node"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Synapseia node repository on GitHub"
