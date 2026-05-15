@@ -1,5 +1,51 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-16] feat(seo): per-route metadata + sitemap.xml + robots.txt (3a72253)
+
+Slice 1 of the SEO + AI-search hardening pass driven by Google's
+official guidance
+(https://developers.google.com/search/docs/fundamentals/ai-optimization-guide).
+AEO/GEO is not a separate discipline; AI Overviews + AI Mode reuse
+the classic Search ranking systems, so the high-leverage fixes are
+the same ones that improve regular SEO.
+
+Per-route metadata via route-segment layouts + page exports:
+
+- `/` — root `app/layout.tsx` gains `metadataBase`, relative
+  canonical, OG `siteName`, Twitter `summary_large_image` card.
+- `/docs` — new `app/docs/layout.tsx` server file. The page itself
+  stays `'use client'` for scroll-spy, but the layout owns the title,
+  description, canonical, OG, and Twitter card. Before the fix, `/docs`
+  inherited the root metadata, so every search engine saw the home
+  title on the docs page.
+- `/downloads` and `/privacy` — existing metadata enhanced with
+  relative canonical, OG `siteName`, and Twitter cards.
+
+Discovery files:
+
+- `app/sitemap.ts` — emits `out/sitemap.xml` with the four routes.
+  Apex `<loc>` is `https://synapseia.network` (no trailing slash) to
+  match the home page's emitted canonical byte-for-byte; Next strips
+  the trailing slash when resolving `'/'` against `metadataBase`,
+  and Google treats `synapseia.network` and `synapseia.network/` as
+  different URLs in a sitemap context.
+- `app/robots.ts` — emits `out/robots.txt`. Open policy + sitemap
+  pointer + host. No `Disallow: /_next/` — blocking those chunks
+  breaks Googlebot's rendering signals without buying any indexing
+  protection (no HTML lives there).
+
+Reviewer round (`superpowers:code-reviewer`) flagged a root canonical
+vs sitemap byte-mismatch, a missing Twitter card on the apex, and
+hardcoded origin literals across four files. All addressed inside the
+same slice; only follow-up left is `og:image` (needs a 1200x630 design
+asset).
+
+Follow-up slices:
+- Slice 2: outline / `<h2>` cleanup in `HowItWorks.client.tsx`.
+- Slice 3: JSON-LD structured data (Article on `/docs`,
+  SoftwareApplication on `/downloads`).
+- Slice 4: `/docs.md` markdown view via MDX source-of-truth.
+
 ## [2026-05-15] chore(downloads): bump NODE_UI_VERSION to 0.8.53 (9e84464)
 
 `RunNode.client.tsx` + `functions/download/[platform].js` now
