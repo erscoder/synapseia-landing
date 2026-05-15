@@ -5,6 +5,16 @@
 ### Changed
 - Sync LoRA per-WO reward copy 7,500 -> 5,000 SYN in `app/docs/page.tsx` (two occurrences: detailed "LoRA training" section + summary list). Mirrors coord `WORK_ORDER_REWARD_SYN[LORA_TRAINING]` reduction in `packages/coordinator/src/domain/constants.ts:24`. Other work-order reward amounts (CPU/GPU/DiLoCo/docking/inference) untouched.
 
+## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.49 -> 0.8.50 (44664b8)
+
+Carries three node fixes to every new operator download:
+- node `f9544ba0` wallet-verify keystore-first (node-ui unlock
+  now works with vault passphrase).
+- node `188d0258` staking-cli `COORDINATOR_URL` defaults to the
+  official coord + prepends user SYN ATA create when missing.
+- node `d033a614` `constants/programs.ts` central + README
+  keystore docs.
+
 ## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.48 -> 0.8.49 (ee359a5)
 
 Carries the node `79a45084` staking-cli keystore migration +
