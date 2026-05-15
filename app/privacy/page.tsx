@@ -7,10 +7,27 @@ import Link from 'next/link';
 import { Nav } from '@/components/landing/Nav.client';
 import { Footer } from '@/components/landing/Footer.client';
 
+const TITLE = 'Privacy Policy - Synapseia Network';
+const DESCRIPTION =
+  'How Synapseia Network collects, uses, and protects personal data on synapseia.network and across its desktop node app.';
+const PATH = '/privacy';
+
 export const metadata: Metadata = {
-  title: 'Privacy Policy - Synapseia Network',
-  description:
-    'How Synapseia Network collects, uses, and protects personal data on synapseia.network and across its desktop node app.',
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: PATH },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    type: 'article',
+    url: PATH,
+    siteName: 'Synapseia Network',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 const EFFECTIVE_DATE = '12 May 2026';

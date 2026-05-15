@@ -8,10 +8,27 @@ import { Nav } from '@/components/landing/Nav.client';
 import { RunNode } from '@/components/landing/RunNode.client';
 import { Footer } from '@/components/landing/Footer.client';
 
+const TITLE = 'Download Synapseia Node - synapseia.network';
+const DESCRIPTION =
+  'Download the Synapseia node desktop app for macOS, Windows, and Linux. One-click install, wallet baked in, automatic updates.';
+const PATH = '/downloads';
+
 export const metadata: Metadata = {
-  title: 'Download Synapseia Node - synapseia.network',
-  description:
-    'Download the Synapseia node desktop app for macOS, Windows, and Linux. One-click install, wallet baked in, automatic updates.',
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: PATH },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    type: 'website',
+    url: PATH,
+    siteName: 'Synapseia Network',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export default function DownloadsPage() {

@@ -3,15 +3,26 @@ import Script from 'next/script';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://synapseia.network'),
   title: 'Synapseia Network - Decentralized AI compute',
   description:
     'A peer-to-peer network of GPUs running LLM inference, evaluation, and knowledge-graph hosting. Secured by Solana, owned by its operators.',
   icons: { icon: '/favicon.ico' },
+  // Relative canonical so Next resolves it through `metadataBase`. Keeps
+  // canonical + sitemap `<loc>` byte-aligned for every route and avoids
+  // re-hardcoding the origin in four files (reviewer P28).
+  alternates: { canonical: '/' },
   openGraph: {
     title: 'Synapseia Network',
     description: 'Decentralized AI compute for autonomous research.',
     type: 'website',
-    url: 'https://synapseia.network',
+    url: '/',
+    siteName: 'Synapseia Network',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Synapseia Network',
+    description: 'Decentralized AI compute for autonomous research.',
   },
 };
 
