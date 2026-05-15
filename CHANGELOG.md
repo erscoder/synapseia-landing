@@ -1,5 +1,17 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-15] chore(downloads): bump NODE_UI_VERSION to 0.8.53 (9e84464)
+
+`RunNode.client.tsx` + `functions/download/[platform].js` now
+point at the `node-ui-v0.8.53` GitHub release assets:
+
+- `Synapseia.Node_0.8.53_aarch64.dmg`  (mac-arm64)
+- `Synapseia.Node_0.8.53_x64.dmg`      (mac-x64)
+- `Synapseia.Node_0.8.53_x64_en-US.msi` (windows)
+- `Synapseia.Node_0.8.53_amd64.AppImage` (linux)
+
+Auto-deploys via Cloudflare Pages on push.
+
 ## [Unreleased]
 
 ### Changed
