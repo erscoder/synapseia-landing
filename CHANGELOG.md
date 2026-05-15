@@ -5,6 +5,16 @@
 ### Changed
 - Sync LoRA per-WO reward copy 7,500 -> 5,000 SYN in `app/docs/page.tsx` (two occurrences: detailed "LoRA training" section + summary list). Mirrors coord `WORK_ORDER_REWARD_SYN[LORA_TRAINING]` reduction in `packages/coordinator/src/domain/constants.ts:24`. Other work-order reward amounts (CPU/GPU/DiLoCo/docking/inference) untouched.
 
+## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.44 -> 0.8.45 (68ec540)
+
+Carries the `a0bb328d` wizard + migration + catalog fix to every
+new operator download. `syn config` on 0.8.44 wrote bare catalog
+names (e.g. `qwen2.5-coder-14b`) into `config.defaultModel` with
+no `ollama/` prefix; migration on next boot rewrote them to
+`anthropic/claude-sonnet-4-6` and refused to start with
+`Cloud model … requires --llm-key`. 0.8.45 patches all three
+layers (wizard, migration, catalog tag overrides).
+
 ## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.42 -> 0.8.44 (00da6f2)
 
 `/download/{mac-arm64,mac-x64,windows,linux}` Cloudflare Pages
