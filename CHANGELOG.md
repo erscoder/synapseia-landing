@@ -5,6 +5,14 @@
 ### Changed
 - Sync LoRA per-WO reward copy 7,500 -> 5,000 SYN in `app/docs/page.tsx` (two occurrences: detailed "LoRA training" section + summary list). Mirrors coord `WORK_ORDER_REWARD_SYN[LORA_TRAINING]` reduction in `packages/coordinator/src/domain/constants.ts:24`. Other work-order reward amounts (CPU/GPU/DiLoCo/docking/inference) untouched.
 
+## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.46 -> 0.8.47 (d100e36)
+
+Carries the node `44b43447` staking-cli mainnet RPC fallback +
+`20f718f0` fresh-install keystore-only path to every new operator
+download. 0.8.47 lets `syn stake N` run on a fresh pod without
+`SOLANA_RPC_URL=...` and creates the keystore with a single
+passphrase prompt (no legacy `wallet.json` side-by-side).
+
 ## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.45 -> 0.8.46 (5a48cbf)
 
 Carries the node `cf0577b5` canonical Ollama tag migration +
