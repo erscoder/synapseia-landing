@@ -1,5 +1,26 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-16] feat(docs): plain-markdown view at /docs.md + "View as Markdown" link (6fc63fc)
+
+Slice 4 (final) of the SEO + AI-search hardening pass.
+`https://synapseia.network/docs.md` now serves a plain GitHub-
+flavoured-markdown rendering of the docs page (257 lines, 15.6 KB).
+Two audiences: developers / operators who curl the page or paste it
+into an LLM context window, and AI agents grounding queries against
+the site. Mirrors Google's own `<page>.md.txt` convention from
+`developers.google.com/.../ai-optimization-guide.md.txt`.
+
+A small "View as Markdown" pill link sits below the docs intro
+paragraph (`app/docs/page.tsx`, `lucide-react` `FileText` icon,
+same border/bg tokens used elsewhere).
+
+Source-of-truth tradeoff documented in the markdown header: this is
+currently a hand-mirrored copy of `app/docs/page.tsx`. Full MDX
+source-of-truth migration is out of scope for this slice; if the two
+drift, file an issue. Reviewer (`superpowers:code-reviewer`) softened
+the original "Until MDX lands" language to remove an undeliverable
+promise (P10) and confirmed content parity + accessibility.
+
 ## [2026-05-16] feat(seo): JSON-LD structured data for Organization, TechArticle, SoftwareApplication (16b66f9)
 
 Slice 3 of the SEO + AI-search hardening pass. Per Google's official
