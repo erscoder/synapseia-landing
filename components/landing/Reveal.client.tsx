@@ -42,5 +42,8 @@ export function FA({ label }: { label?: string }) {
 }
 
 export function SH({ stage, title, subtitle }: { stage: number; title: string; subtitle: string }) {
-  return <div className="text-center mb-12"><div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 font-mono mb-4">STAGE {stage}</div><h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">{title}</h2><p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">{subtitle}</p></div>;
+  // h3 (not h2) because every stage panel is a subsection of the
+  // HowItWorks h2 "How a research cycle runs today". Keeps the home
+  // outline at h1 -> h2 (one per landing block) -> h3 (subsections).
+  return <div className="text-center mb-12"><div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 font-mono mb-4">STAGE {stage}</div><h3 className="text-3xl sm:text-4xl font-bold text-white mb-3">{title}</h3><p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">{subtitle}</p></div>;
 }

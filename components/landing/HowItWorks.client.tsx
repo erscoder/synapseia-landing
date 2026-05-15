@@ -105,10 +105,10 @@ export function HowItWorks() {
   );
 
   return (
-    <div id="engine">
+    <section id="engine" aria-labelledby="how-it-works-title">
       <Reveal>
         <div className="text-center py-16 px-6">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">How a research cycle runs today</h2>
+          <h2 id="how-it-works-title" className="text-4xl sm:text-5xl font-bold text-white mb-4">How a research cycle runs today</h2>
           <p className="text-slate-500 max-w-2xl mx-auto">
             Five stages, every one running in parallel across distributed
             operator nodes. Multiple training tracks active concurrently;
@@ -140,7 +140,7 @@ export function HowItWorks() {
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">The Compounding Loop</h2>
+              <h3 className="text-3xl sm:text-4xl font-bold text-white mb-3">The Compounding Loop</h3>
               <p className="text-slate-500">Why the network gets smarter over time</p>
             </div>
           </Reveal>
@@ -170,7 +170,7 @@ export function HowItWorks() {
           </Reveal>
         </div>
       </section>
-    </div>
+    </section>
   );
 }
 
