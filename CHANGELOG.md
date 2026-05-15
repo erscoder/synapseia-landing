@@ -5,6 +5,19 @@
 ### Changed
 - Sync LoRA per-WO reward copy 7,500 -> 5,000 SYN in `app/docs/page.tsx` (two occurrences: detailed "LoRA training" section + summary list). Mirrors coord `WORK_ORDER_REWARD_SYN[LORA_TRAINING]` reduction in `packages/coordinator/src/domain/constants.ts:24`. Other work-order reward amounts (CPU/GPU/DiLoCo/docking/inference) untouched.
 
+## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.50 -> 0.8.51 (622912a)
+
+Hotfix carries:
+- node `437775bf` syn start honours `SYNAPSEIA_WALLET_PASSWORD`
+  env on the keystore branch (Tauri start_node contract).
+- node `ea561e75` wallet-verify drops legacy cascade when
+  keystore exists.
+- node-ui `ae30c63` UnlockScreen labels the field "Vault
+  passphrase" with helper copy referencing the keystore.
+
+Together: node-ui 0.8.51 unlock + start are end-to-end clean
+when the operator types the vault passphrase.
+
 ## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.49 -> 0.8.50 (44664b8)
 
 Carries three node fixes to every new operator download:
