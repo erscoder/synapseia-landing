@@ -5,6 +5,21 @@
 ### Changed
 - Sync LoRA per-WO reward copy 7,500 -> 5,000 SYN in `app/docs/page.tsx` (two occurrences: detailed "LoRA training" section + summary list). Mirrors coord `WORK_ORDER_REWARD_SYN[LORA_TRAINING]` reduction in `packages/coordinator/src/domain/constants.ts:24`. Other work-order reward amounts (CPU/GPU/DiLoCo/docking/inference) untouched.
 
+## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.51 -> 0.8.52 (48b54a7)
+
+Both `components/landing/RunNode.client.tsx` and
+`functions/download/[platform].js` now template against
+`node-ui-v0.8.52` GitHub Release assets:
+
+- mac-arm64 → `Synapseia.Node_0.8.52_aarch64.dmg`
+- mac-x64   → `Synapseia.Node_0.8.52_x64.dmg`
+- windows   → `Synapseia.Node_0.8.52_x64_en-US.msi`
+- linux     → `Synapseia.Node_0.8.52_amd64.AppImage`
+
+Landing tracks the desktop UI release that decouples the auto-update
+freshness check from coord `/version` (lockstep with node-ui
+`f67ba91`).
+
 ## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.50 -> 0.8.51 (622912a)
 
 Hotfix carries:
