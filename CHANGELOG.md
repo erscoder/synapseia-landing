@@ -5,6 +5,16 @@
 ### Changed
 - Sync LoRA per-WO reward copy 7,500 -> 5,000 SYN in `app/docs/page.tsx` (two occurrences: detailed "LoRA training" section + summary list). Mirrors coord `WORK_ORDER_REWARD_SYN[LORA_TRAINING]` reduction in `packages/coordinator/src/domain/constants.ts:24`. Other work-order reward amounts (CPU/GPU/DiLoCo/docking/inference) untouched.
 
+## [2026-05-15] chore(downloads): bump NODE_UI_VERSION 0.8.42 -> 0.8.44 (00da6f2)
+
+`/download/{mac-arm64,mac-x64,windows,linux}` Cloudflare Pages
+functions and the in-page `NODE_UI_VERSION` constant now point at
+`node-ui-v0.8.44` GH release assets. Carries the Linux GPU pod
+hardware-detect hotfix (sub node `1f2f8857`) to every new operator
+download. Note the previous landing pin was at 0.8.42, so this also
+absorbs the 0.8.43 lockstep that never landed in the download
+pointer file.
+
 ## [2026-05-14] chore(downloads): bump NODE_UI_VERSION 0.8.41 -> 0.8.42 (64ca444)
 
 Sync with node-ui-v0.8.42 GitHub release assets. Ships the
