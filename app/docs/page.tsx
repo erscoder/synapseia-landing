@@ -332,7 +332,7 @@ export default function DocsPage() {
             </P>
             <H level={3}>LoRA training</H>
             <P>
-              Per-WO reward, <Code>7,500 SYN</Code> on validation pass -
+              Per-WO reward, <Code>5,000 SYN</Code> on validation pass -
               not a pool. Mission admins queue adapter requests; the
               coordinator mints a <Code>LORA_TRAINING</Code> work order
               and the trainer node uploads the resulting adapter for
@@ -599,7 +599,7 @@ export default function DocsPage() {
                 micro-transformers on the corpus.
               </li>
               <li>
-                <strong>LoRA training</strong> - <Code>7,500 SYN</Code> per work
+                <strong>LoRA training</strong> - <Code>5,000 SYN</Code> per work
                 order, paid only on automated validation pass. Two
                 subtypes: PubMedBERT (classification) and BioGPT-Large
                 (generation). GPU required, T2+ stake gate.
