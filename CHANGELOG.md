@@ -1,5 +1,34 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-16] feat(seo): JSON-LD structured data for Organization, TechArticle, SoftwareApplication (16b66f9)
+
+Slice 3 of the SEO + AI-search hardening pass. Per Google's official
+guidance, schema.org is for rich-result eligibility — NOT "AI feed"
+markup. Types added here map 1:1 to actual on-page content.
+
+- `/` (root layout): `Organization` block with stable `@id:
+  https://synapseia.network/#org`. Logo, description, no `sameAs`
+  (honest empty: no canonical org page to point at).
+- `/docs`: `TechArticle` referencing the root Organization by `@id`
+  for `author` and `publisher`.
+- `/downloads`: `SoftwareApplication` with
+  `applicationCategory: DeveloperApplication`,
+  `operatingSystem: [macOS, Windows, Linux]`,
+  `publisher: { @id: ORG_ID }`,
+  `offers: { price: '0', priceCurrency: 'USD' }` (binary is free).
+
+Shared helper `components/JsonLd.tsx` emits one
+`<script type="application/ld+json">` per call and escapes
+`</script>` in stringified output.
+
+Reviewer round fixed a 404 in the footer along the way: the GH link
+pointed at `github.com/synapseia-network/node` (that org doesn't
+exist); corrected to the actual repo remote
+`github.com/erscoder/synapseia-node`. The `sameAs` field that
+originally listed the maintainer's user profile was dropped — schema
+requires `sameAs` URLs to unambiguously identify the same entity, and
+a personal profile doesn't.
+
 ## [2026-05-16] fix(seo): one h2 per landing block + stage panels as h3 (81ae5c6)
 
 Slice 2 of the SEO + AI-search hardening pass. Heading outline is
