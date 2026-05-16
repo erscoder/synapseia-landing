@@ -1,5 +1,10 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-16] chore(downloads): bump all platforms to node-ui-v0.8.59 (1d15934)
+
+`NODE_UI_VERSION` + Cloudflare Pages download function bumped
+0.8.58 → 0.8.59.
+
 ## [2026-05-16] chore(downloads): bump all platforms to node-ui-v0.8.58 (9fa9b44)
 
 `NODE_UI_VERSION` + Cloudflare Pages download function bumped
