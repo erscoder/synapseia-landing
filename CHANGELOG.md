@@ -1,5 +1,25 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-16] feat(nav): shared header across all routes; current route swapped for Home (45932b8)
+
+Every landing route now renders the same `<Nav />` chrome. The
+`/docs` page used to ship its own inline `<nav>` element with a
+"Documentation" sub-badge and a "← Home" link; that drifted from the
+shared nav across release cycles and let users land on a page where
+the menu still contained a no-op link to itself.
+
+Behaviour: `/` → `[Docs, Download, Dashboard]`, `/docs` →
+`[Home, Download, Dashboard]`, `/downloads` →
+`[Home, Docs, Dashboard]`, anything else → `[Home, Docs, Download,
+Dashboard]`. `Nav.client.tsx` derives the link set per `usePathname()`
+inside a pure `linksFor()` switch; both desktop and the mobile drawer
+share the same `links` array. Static export pre-renders each route
+with the correct pathname so the filtered nav is in the initial HTML
+(no FOWC, crawler-safe).
+
+`app/docs/page.tsx` lost its hand-rolled `<nav>` and orphan
+`next/link` / `next/image` imports.
+
 ## [2026-05-16] feat(docs): plain-markdown view at /docs.md + "View as Markdown" link (6fc63fc)
 
 Slice 4 (final) of the SEO + AI-search hardening pass.
