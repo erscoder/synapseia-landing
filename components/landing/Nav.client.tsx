@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { DASHBOARD_URL } from '@/lib/landing-constants';
 import { animate, stagger, useAnime, DURATION, EASE } from '@/lib/anime';
 
@@ -12,13 +13,39 @@ type NavLink = {
   cta?: boolean;
 };
 
-const LINKS: NavLink[] = [
-  { label: 'Docs', href: '/docs' },
-  { label: 'Download', href: '/downloads' },
-  { label: 'Dashboard', href: DASHBOARD_URL, external: true, cta: true },
-];
+// Static link inventory. The visible set is filtered per pathname
+// inside the component so the link to the current route never points
+// at itself (a no-op anchor confuses both users and screen readers).
+const HOME: NavLink = { label: 'Home', href: '/' };
+const DOCS: NavLink = { label: 'Docs', href: '/docs' };
+const DOWNLOAD: NavLink = { label: 'Download', href: '/downloads' };
+const DASHBOARD: NavLink = {
+  label: 'Dashboard',
+  href: DASHBOARD_URL,
+  external: true,
+  cta: true,
+};
+
+function linksFor(pathname: string | null): NavLink[] {
+  // Normalize trailing slash so `/docs` and `/docs/` both match.
+  const path = (pathname ?? '/').replace(/\/+$/, '') || '/';
+  switch (path) {
+    case '/docs':
+      return [HOME, DOWNLOAD, DASHBOARD];
+    case '/downloads':
+      return [HOME, DOCS, DASHBOARD];
+    case '/':
+      return [DOCS, DOWNLOAD, DASHBOARD];
+    default:
+      // Any other route (e.g. /privacy) shows the full triad plus Home
+      // so visitors always have a one-click escape back to the apex.
+      return [HOME, DOCS, DOWNLOAD, DASHBOARD];
+  }
+}
 
 export function Nav() {
+  const pathname = usePathname();
+  const links = linksFor(pathname);
   const [open, setOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   // Tracks the previous `open` so we can run an exit animation
@@ -88,9 +115,10 @@ export function Nav() {
           <span className="font-bold text-white tracking-wide">Synapseia</span>
         </Link>
 
-        {/* Desktop links - hidden on small viewports. */}
+        {/* Desktop links - hidden on small viewports. Filtered per
+            pathname so the current route never links to itself. */}
         <div className="hidden md:flex items-center gap-3">
-          {LINKS.map((l) => renderLink(l, 'desktop'))}
+          {links.map((l) => renderLink(l, 'desktop'))}
         </div>
 
         {/* Mobile burger - visible <md. Animates between bars and X
@@ -141,7 +169,7 @@ export function Nav() {
           {/* Panel - full-screen on mobile, cleaner than a slide-in
               drawer for a 4-link nav. */}
           <div className="relative h-full w-full pt-24 pb-10 px-6 flex flex-col gap-2">
-            {LINKS.map((l) => renderLink(l, 'mobile', () => setOpen(false)))}
+            {links.map((l) => renderLink(l, 'mobile', () => setOpen(false)))}
 
             <p className="mt-auto text-center text-[11px] text-slate-600 font-mono">
               Synapseia Network · Source-available · FSL-1.1

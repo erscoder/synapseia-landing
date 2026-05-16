@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { FileText } from 'lucide-react';
+import { Nav } from '@/components/landing/Nav.client';
 
 /**
  * Technical documentation page - single-page gitbook-style with a
@@ -136,19 +135,12 @@ export default function DocsPage() {
 
   return (
     <div className="relative min-h-screen text-white">
-      {/* NAV */}
-      <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 sm:px-8 py-3 backdrop-blur-md bg-black/30 border-b border-white/[0.04]">
-        <Link href="/" className="flex items-center gap-3">
-          <Image src="/synapseia-logo.png" alt="Synapseia" width={36} height={36} className="w-9 h-9" />
-          <span className="font-bold text-white tracking-wide">Synapseia</span>
-          <span className="hidden sm:inline text-slate-500 text-sm">- Documentation</span>
-        </Link>
-        <div className="flex items-center gap-3 text-sm">
-          <Link href="/" className="text-slate-400 hover:text-white transition-colors">
-            ← Home
-          </Link>
-        </div>
-      </nav>
+      {/* Shared landing nav — same chrome as `/` and `/downloads`. The
+          `Nav` component hides the link that matches the current path
+          (here: `/docs`) and surfaces `Home` instead, so the menu
+          always offers a one-click escape without ever linking to the
+          page the user is already on. */}
+      <Nav />
 
       <div className="pt-24 px-4 sm:px-6 lg:px-10 pb-20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-8 lg:gap-14">
