@@ -1,5 +1,12 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-16] chore(downloads): bump all platforms to node-ui-v0.8.58 (9fa9b44)
+
+`NODE_UI_VERSION` + Cloudflare Pages download function bumped
+0.8.56 → 0.8.58. Skipped 0.8.57 in the landing because that
+release was superseded by 0.8.58 within minutes (0.8.58 added
+CRITICAL BIP44 mnemonic fix and keystore-aware `syn export-key`).
+
 ## [2026-05-16] chore(downloads): bump all platforms to node-ui-v0.8.56 (148130d)
 
 `NODE_UI_VERSION` + Cloudflare Pages download function bumped
