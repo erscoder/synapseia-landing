@@ -1,5 +1,17 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-16] chore(downloads): bump all platforms to node-ui-v0.8.54 (300fdc5)
+
+`NODE_UI_VERSION` constant in `components/landing/RunNode.client.tsx`
++ Cloudflare Pages Function `functions/download/[platform].js`
+bumped 0.8.53 → 0.8.54 so the landing's `/download/<platform>`
+redirect filenames match the new GitHub release assets
+(`Synapseia.Node_0.8.54_*.{dmg,msi,AppImage}`). Without this bump,
+the redirect would 404 on the upstream filename.
+
+Pairs with node-ui release `node-ui-v0.8.54` (assets up at
+github.com/erscoder/synapseia-node-ui/releases/tag/node-ui-v0.8.54).
+
 ## [2026-05-16] feat(nav): shared header across all routes; current route swapped for Home (45932b8)
 
 Every landing route now renders the same `<Nav />` chrome. The
