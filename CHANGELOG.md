@@ -1,5 +1,15 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.64 (4ac1213)
+
+Lockstep with sub node-ui 0.8.64 (4 assets verified live: Mac
+arm64/x64 DMG, Linux AppImage, Windows MSI).
+
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.63 (aa7cd06)
+
+Lockstep with sub node-ui 0.8.63 (4 assets uploaded: Mac arm64/x64
+DMG, Linux AppImage, Windows MSI).
+
 ## [2026-05-16] chore(downloads): bump all platforms to node-ui-v0.8.61 (db809ed)
 
 `NODE_UI_VERSION` + Cloudflare Pages download function bumped to
