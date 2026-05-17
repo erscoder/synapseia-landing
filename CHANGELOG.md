@@ -1,5 +1,13 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.68 (96187bf)
+
+Sync with node-ui 0.8.68 release. Bundles sub node 0.8.68 macOS Vina
+download URL fix (`mac_aarch64` / `mac_x86_64` instead of stale
+`macos_arm64`). Mac operators downloading 0.8.68 from the landing
+get a node-ui that boot-time installs Vina at
+`~/.synapseia/bin/vina` correctly.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.67 (80f88eff)
 
 Sync with node-ui 0.8.67 release. Bundles sub node 0.8.67 Bug 12 v3
