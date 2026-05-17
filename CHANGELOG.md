@@ -1,5 +1,9 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.72 (315f928)
+
+Sync with node-ui 0.8.72 — sub node Bug 23 probe timer leak fix.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.71 (ca39aec)
 
 Sync with node-ui 0.8.71 — sub node Bug 20 obabel timeout fix.
