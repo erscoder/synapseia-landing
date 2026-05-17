@@ -1,5 +1,10 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.67 (80f88eff)
+
+Sync with node-ui 0.8.67 release. Bundles sub node 0.8.67 Bug 12 v3
+caps-oscillation fix (hysteresis + cooldown + tick cache).
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.66 (c8e61f9)
 
 Sync with node-ui 0.8.66 release. `RunNode.client.tsx` +

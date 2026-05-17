@@ -18,7 +18,7 @@ import {
 // that proxy-streams the binary from synapseia.network). The function
 // hits github.com/erscoder/synapseia-node-ui/releases/latest/download
 // upstream - keep filenames in sync with the latest published tag.
-const NODE_UI_VERSION = '0.8.66';
+const NODE_UI_VERSION = '0.8.67';
 
 // Same-origin proxy routes (Cloudflare Pages Function). The browser
 // stays on synapseia.network during download; the binary streams
