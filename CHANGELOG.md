@@ -1,5 +1,9 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.70 (ded270c)
+
+Sync with node-ui 0.8.70 — sub node Bug 18 v3 DiLoCo runtime local-only.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.69 (b203a866)
 
 Sync with node-ui 0.8.69 release. Bundles sub node 0.8.69 Bug 22
