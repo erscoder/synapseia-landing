@@ -1,5 +1,10 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.73 (4c77b3a)
+
+Sync with node-ui 0.8.73 — sub node Bug 21 cgroup container memory
+gate + lock-conflict banner.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.72 (315f928)
 
 Sync with node-ui 0.8.72 — sub node Bug 23 probe timer leak fix.
