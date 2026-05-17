@@ -1,5 +1,10 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.69 (b203a866)
+
+Sync with node-ui 0.8.69 release. Bundles sub node 0.8.69 Bug 22
+cap-aware local accept gate.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.68 (96187bf)
 
 Sync with node-ui 0.8.68 release. Bundles sub node 0.8.68 macOS Vina
