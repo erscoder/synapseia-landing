@@ -1,5 +1,13 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.66 (c8e61f9)
+
+Sync with node-ui 0.8.66 release. `RunNode.client.tsx` +
+`functions/download/[platform].js` point at the new GH release assets
+(`Synapseia.Node_0.8.66_*`). Bundles node-side `claim_rewards`
+pause_state slot fix + LORA/DiLoCo memory floor bumps. See root
+CHANGELOG for full diff.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.65 (cbea41e6)
 
 Sync with node-ui 0.8.65 release. RunNode.client.tsx + functions/download
