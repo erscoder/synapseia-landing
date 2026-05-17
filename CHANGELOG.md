@@ -1,5 +1,9 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.75 (c414603)
+
+Sync with node-ui 0.8.75 — sub node Bug 26 docking cap name fix.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.74 (ab9615b)
 
 Sync with node-ui 0.8.74 — sub node Bug 25 fetch cap filter fix.
