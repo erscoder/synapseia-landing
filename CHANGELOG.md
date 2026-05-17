@@ -1,5 +1,11 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.65 (cbea41e6)
+
+Sync with node-ui 0.8.65 release. RunNode.client.tsx + functions/download
+template strings updated to `Synapseia.Node_0.8.65_*` filenames and
+`node-ui-v0.8.65` tag.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.64 (4ac1213)
 
 Lockstep with sub node-ui 0.8.64 (4 assets verified live: Mac
