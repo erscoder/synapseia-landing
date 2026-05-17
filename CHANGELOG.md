@@ -1,5 +1,9 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.74 (ab9615b)
+
+Sync with node-ui 0.8.74 — sub node Bug 25 fetch cap filter fix.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.73 (4c77b3a)
 
 Sync with node-ui 0.8.73 — sub node Bug 21 cgroup container memory
