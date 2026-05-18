@@ -1,5 +1,9 @@
 # Changelog - @synapseia/landing
 
+## [2026-05-18] chore(downloads): bump all platforms to node-ui-v0.8.84
+
+Sync with node-ui 0.8.84 — Slice 19 TRAINING WO hardware probe (parallel of Slice 18). Backfills Slices 17/18/19/20/21/22/23 download links since landing was last bumped at 0.8.76.
+
 ## [2026-05-17] chore(downloads): bump all platforms to node-ui-v0.8.76 (3024c09)
 
 Sync with node-ui 0.8.76 — sub node Bug 27 Ollama pause during DiLoCo.
